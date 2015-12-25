@@ -27,11 +27,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyListener;
-import java2dscrollinguniverse.Controller.UniverseController;
-import java2dscrollinguniverse.Model.TwoDRectangle;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
-import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.JPanel;
 
 /**
@@ -46,7 +43,15 @@ public class MainViewComponent extends JPanel{
         this.updatedUniverse = universe;
     }
     
-    public void addControllerAsListener(KeyListener listener){
+    /**
+     *This method allows us to pass in a KeyListener object
+     * which will detect any time the user presses a key on the keyboard.
+     * In our case, the listener that will be passed in will be the 'UniverseController'
+     * which implements KeyListener to handle any occurrence of the user pressing
+     * a directional arrow key.
+     * @param listener
+     */
+    public void addListener(KeyListener listener){
         addKeyListener(listener);
         setFocusable(true);
     }

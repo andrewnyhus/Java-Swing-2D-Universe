@@ -88,18 +88,5 @@ public class Actor {
         
     }
     
-
-    
-    /**
-     * A centerLocation object returned is the top left corner of the object, which is important
- because in Java Swing, the origin (0, 0) is at the top left corner of the window,
- and so our Actors and World objects must adhere to this.
-     * @return Location object of top left of object
-     */
-    /*public Location getTopLeftLocation(){
-        int x = this.getCenterLocation().getX() - ((int)(this.getShape().getBounds().getWidth())/2);
-        int y = this.getCenterLocation().getY() - ((int)(this.getShape().getBounds().getHeight())/2);
-        return new Location(x, y);
-    }*/
     
 }

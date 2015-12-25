@@ -50,7 +50,7 @@ public class Universe {
         
         this.perimeterWalls = this.factory.generateWalls();
         this.bgRect = this.factory.getBackgroundRect();
-        this.player = new Player(40);
+        this.player = new Player(40, 40);//create player with width 40 and height 40
     }
     
     public Actor getBackgroundRect(){
@@ -64,7 +64,7 @@ public class Universe {
         return this.player;
     }
     
-    public void movePlayer(TwoDimensionalMovement movement){
+    public void attemptToMovePlayer(TwoDimensionalMovement movement){
         Location origPlayerLoc = this.player.getTopLeftLocation();
         Location newLoc = new Location(origPlayerLoc.getX() + movement.getXMovement(), origPlayerLoc.getY() + movement.getYMovement());
         

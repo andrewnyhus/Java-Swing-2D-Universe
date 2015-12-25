@@ -23,10 +23,7 @@
  */
 package java2dscrollinguniverse;
 
-import java.awt.Dimension;
 import java2dscrollinguniverse.Controller.UniverseController;
-import java2dscrollinguniverse.View.MainViewComponent;
-import javax.swing.JFrame;
 
 /**
  *
@@ -39,17 +36,6 @@ public class Java2DScrollingUniverse {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        /*JFrame frame = new JFrame("2D Universe");
-        MainViewComponent comp = new MainViewComponent();
-        
-            Dimension origSizeOfFrame = frame.getSize();
-            frame.add(comp);
-            Dimension newSizeOfFrame = new Dimension((int)origSizeOfFrame.getWidth() + 500, (int)origSizeOfFrame.getHeight() + 25 + 500);
-            frame.setSize(newSizeOfFrame);
-            frame.setResizable(false);
-
-            frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
         
         UniverseController mainController = new UniverseController();
         

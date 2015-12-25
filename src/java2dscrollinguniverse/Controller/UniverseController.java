@@ -24,6 +24,8 @@
 package java2dscrollinguniverse.Controller;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
@@ -31,42 +33,96 @@ import java2dscrollinguniverse.Model.universe.Universe;
 import java2dscrollinguniverse.SettingsSingleton;
 import java2dscrollinguniverse.View.MainViewComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 /**
  *
  * @author andrewnyhus
  */
-public class UniverseController implements KeyListener{
+public class UniverseController implements KeyListener, ActionListener{
     
     private Universe universe;
-    private MainViewComponent view;
-    private int playerSpeed = 5; //to be implemented later in player class
+    private final MainViewComponent view;
+    private int playerSpeed = 13; //to be implemented later in player class
+    private final JFrame frame;
+    private JMenuBar menuBar;
+    private JLabel playerLocationLabel;
     
     public UniverseController(){
         
-        JFrame frame = new JFrame("2D Universe");
+        this.frame = new JFrame("2D Universe");
         
         this.universe = new Universe(SettingsSingleton.getInstance().getViewRectangle());
         this.view = new MainViewComponent(this.universe);
         
-        this.view.addControllerAsListener(this);
         
-        Dimension origSizeOfFrame = frame.getSize();
-        frame.add(this.view);
-        Dimension newSizeOfFrame = new Dimension((int)origSizeOfFrame.getWidth() + 500, (int)origSizeOfFrame.getHeight() + 25 + 500);
-        frame.setSize(newSizeOfFrame);
-        frame.setResizable(false);
+        Dimension origSizeOfFrame = this.frame.getSize();
+        
+        this.frame.add(this.view);
+        
+        Dimension newSizeOfFrame = new Dimension((int)origSizeOfFrame.getWidth() + 500,
+                (int)origSizeOfFrame.getHeight() + 45 + 500);
 
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        this.frame.setSize(newSizeOfFrame);
+        this.frame.setResizable(false);
+
+        this.addMenuBar();
+        this.frame.setVisible(true);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.addKeyListenerToView();
     }
     
     public Universe getUniverse(){
         return this.universe;
     }
     
+    private void addMenuBar(){
+        this.menuBar = new JMenuBar();
+        
+        JMenu newMenu = new JMenu("New");
+        
+        JMenuItem newWindowItem = new JMenuItem("New Window");
+        newWindowItem.setActionCommand("new_window");
+        
+        
+        JMenuItem settingsMenuItem = new JMenuItem("Settings");
+        settingsMenuItem.setActionCommand("settings");
+
+        newWindowItem.addActionListener(this);
+        settingsMenuItem.addActionListener(this);
+        
+        this.playerLocationLabel = new JLabel("Player's Location:");
+        
+        newMenu.add(newWindowItem);
+                
+        this.menuBar.add(newMenu);
+        this.menuBar.add(settingsMenuItem);
+        this.menuBar.add(this.playerLocationLabel);
+        
+        this.frame.setJMenuBar(this.menuBar);
+        this.updateLocationLabel();
+    }
     
+    private void addKeyListenerToView(){
+        this.view.addListener(this);
+    }
+    
+    
+    private void updateLocationLabel(){
+        String playerLocString = this.universe.getPlayer().getTopLeftLocation().toString();
+        this.playerLocationLabel.setText("Player location: " + playerLocString);        
+    }    
+    
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String actionCommand = e.getActionCommand();
+        System.out.println(actionCommand);
+    }
     
     
     
@@ -104,16 +160,19 @@ public class UniverseController implements KeyListener{
                 //if key pressed was left arrow
                 case KeyEvent.VK_LEFT:
                     movement = new TwoDimensionalMovement(-playerSpeed, 0);
-                    this.getUniverse().movePlayer(movement);
+                    this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
+                    this.updateLocationLabel();
                     
                     break;
                     
                 //if key pressed was right arrow    
                 case KeyEvent.VK_RIGHT:
                     movement = new TwoDimensionalMovement(playerSpeed, 0);
-                    this.getUniverse().movePlayer(movement);
+                    this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
+                    this.updateLocationLabel();
+
                     break;
                 
                 //if key pressed was up arrow
@@ -122,16 +181,19 @@ public class UniverseController implements KeyListener{
                     // is equivalent to a decrease in y value since the origin 0, 0 is
                     //in the top left.  Oh Java Swing, we love you. <3
                     movement = new TwoDimensionalMovement(0, -playerSpeed);
-                    this.getUniverse().movePlayer(movement);
+                    this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
+                    this.updateLocationLabel();
+
                     break;
                     
                 //if key pressed was down arrow 
                 case KeyEvent.VK_DOWN:
                     //similarly moving down visually is equivalent to an increase in y value
                     movement = new TwoDimensionalMovement(0, playerSpeed);
-                    this.getUniverse().movePlayer(movement);
+                    this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
+                    this.updateLocationLabel();
                     
                     break;
                     
@@ -140,6 +202,7 @@ public class UniverseController implements KeyListener{
                     //do nothing here, because if the user presses a key
                     //other then the up down left or right arrow key, the program 
                     //will land in this default case.
+                    this.updateLocationLabel();
                     break;
         }
         

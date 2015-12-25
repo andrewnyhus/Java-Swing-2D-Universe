@@ -24,7 +24,6 @@
 package java2dscrollinguniverse.Model.actors;
 
 import java.awt.Rectangle;
-import java2dscrollinguniverse.Model.TwoDRectangle;
 import java2dscrollinguniverse.Model.universe.Location;
 import java2dscrollinguniverse.SettingsSingleton;
 
@@ -33,12 +32,18 @@ import java2dscrollinguniverse.SettingsSingleton;
  * @author andrewnyhus
  */
 public class Player extends Actor{
-   // private final int playerWidth = 40;
-   // private final int playerHeight = 40;
-    //private TwoDRectangle viewRectangle = SettingsSingleton.getInstance().getViewRectangle();
     
-    public Player(int playerWidthandHeight){
-        super(ActorType.player, new Location(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidthandHeight/2, SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerWidthandHeight/2), SettingsSingleton.getInstance().getPlayerColor(), new Rectangle(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidthandHeight/2, SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerWidthandHeight/2, playerWidthandHeight, playerWidthandHeight));
+    public Player(int playerWidth, int playerHeight){
+        super(ActorType.player, 
+                new Location(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2,
+                        SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2),
+                SettingsSingleton.getInstance().getPlayerColor(), 
+                new Rectangle(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2, 
+                        SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2,
+                        playerWidth, 
+                        playerHeight));
+        //I know how ugly and disgusting the above call is, let me break it down
+            //
     }
     
 }
