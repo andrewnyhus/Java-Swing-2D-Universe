@@ -146,6 +146,8 @@ public class MainViewComponent extends JPanel{
             return returnShape;
         }
         
+        //TODO: include more shapes than just rectangle
+        
         return s;
     }
         

@@ -25,6 +25,7 @@ package java2dscrollinguniverse.Model.universe;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.TwoDRectangle;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
@@ -41,7 +42,7 @@ public class Universe {
     private TwoDRectangle universeRect;
     private MemberFactory factory;
     
-    private Wall[] perimeterWalls;
+    private Wall[] perimeterWalls;//wall: (0)left (1)top (2)right (3)bottom.
     private Actor bgRect;
     private Player player;
     
@@ -67,8 +68,15 @@ public class Universe {
     
     public void attemptToMovePlayer(TwoDimensionalMovement movement){
         Point origPlayerLoc = this.player.getTopLeftLocation();
-        Point newLoc = new Point(origPlayerLoc.x + movement.getXMovement(),
+        
+        Point playerLocIfMoveSuccessful = new Point(origPlayerLoc.x + movement.getXMovement(),
                 origPlayerLoc.y + movement.getYMovement());
+        
+        //init test player
+        Player testMoveOnPlayer = Player.copyInstanceOfPlayer(this.player);
+        
+        //complete move on test player
+        testMoveOnPlayer.setTopLeftLocation(playerLocIfMoveSuccessful);
         
         //TODO: later implement some checking of newLoc
             //to make sure that newLoc is on the universe still, and if it
@@ -76,10 +84,93 @@ public class Universe {
             //as the new location, the player's new location should give the appearance
             //that the players sprite was moving in the proper direction when it collided 
             //with the perimeter boundary.
+        int newX, newY;
+        
+        //if player too far left
+        if(testMoveOnPlayer.getLeftMostValue() < this.getXMin()){
+            newX = this.getXMin();
+            
+        //if player too far right    
+        }else if(testMoveOnPlayer.getRightMostValue() > this.getXMax()){
+            int playerWidth = testMoveOnPlayer.getWidth();
+            newX = this.getXMax() - playerWidth;
+            
+        //if player okay     
+        }else{
+            newX = playerLocIfMoveSuccessful.x;
+        }
+        
+        //if player too far up
+        if(testMoveOnPlayer.getTopMostValue() < this.getYMin()){
+            newY = this.getYMin();
+            
+        //if player too far down
+        }else if(testMoveOnPlayer.getBottomMostValue() > this.getYMax()){
+            int playerHeight = testMoveOnPlayer.getHeight();
+            newY = this.getYMax() - playerHeight;
+            
+        //if player is okay    
+        }else{
+            newY = playerLocIfMoveSuccessful.y;
+        }
+        
+        Point newLocForPlayer = new Point(newX, newY);
         
         //for now blindly add movement to player's location, even if it sends player off of universe:
-        this.player.setTopLeftLocation(newLoc);
+        this.player.setTopLeftLocation(newLocForPlayer);
+            //this.player.setTopLeftLocation(playerLocIfMoveSuccessful);
                 
     }
+    
+    /**
+     * Returns the minimum x (leftmost) value that a bounded actor should be able to have in the 
+     * universe.
+     * @return xMin
+     */
+    public int getXMin(){
+        PerimeterSide leftSide = PerimeterSide.LEFT;
+        
+        int xMin = this.perimeterWalls[leftSide.getValue()].getRightMostValue();
+        
+        return xMin;
+    }
+    
+    /**
+     * Returns maximum x (rightmost) value a bounded actor can have in the universe.
+     * @return xMax
+     */
+    public int getXMax(){
+        PerimeterSide rightSide = PerimeterSide.RIGHT;        
+        
+        int xMax = this.perimeterWalls[rightSide.getValue()].getLeftMostValue();
+        
+        return xMax;
+    }
+    
+    
+    /**
+     * Returns minimum y (topmost) value a bounded actor can have in the universe.
+     * @return yMin
+     */
+    public int getYMin(){
+        PerimeterSide topSide = PerimeterSide.TOP;
+        
+        int yMin = this.perimeterWalls[topSide.getValue()].getBottomMostValue();
+
+        return yMin;
+    }
+    
+    /**
+     * Returns maximum y (bottommost) value a bounded actor can have in the universe
+     * @return yMax
+     */
+    public int getYMax(){
+        PerimeterSide bottomSide = PerimeterSide.BOTTOM;
+        
+        int yMax = this.perimeterWalls[bottomSide.getValue()].getTopMostValue();
+        
+        return yMax;
+    }   
+    
     
 }

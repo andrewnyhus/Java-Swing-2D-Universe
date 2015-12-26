@@ -60,13 +60,63 @@ public class Actor {
         return this.shape;
     }
     
+    public int getWidth(){
+        return this.getShape().getBounds().width;
+    }
+    
+    public int getHeight(){
+        return this.getShape().getBounds().height;
+    }
+    
     public Color getColor(){
         return this.color;
     }
     
     /**
+     * Returns the left most (minimum x) value within the actors bounds.
+     * @return xMin
+     */
+    public int getLeftMostValue(){
+        int xMin = this.topLeftLocation.x;
+        return xMin;
+    }
+    
+    
+    /**
+     * Returns the right most (maximum x) value within the actors bounds.
+     * @return xMax
+     */
+    public int getRightMostValue(){
+        int xMax = this.topLeftLocation.x +
+                this.getWidth();
+
+        return xMax;
+    }
+    
+    
+    /**
+     * Returns the top most (minimum y) value within the actors bounds.
+     * @return yTop
+     */
+    public int getTopMostValue(){
+        int yTop = this.topLeftLocation.y;
+        
+        return yTop;
+    }
+    
+    /**
+     * Returns the bottom most (maximum y) value within the actors 
+     * @return 
+     */
+    public int getBottomMostValue(){
+        int yBottom = this.topLeftLocation.y +
+                this.getHeight();
+        return yBottom;
+    }
+    
+    /**
      * Gives access to the topLeftLocation object of this actor.
-     * @return this.topLeftLocation
+     * @return Point this.topLeftLocation
      */
     public Point getTopLeftLocation(){
         return this.topLeftLocation;

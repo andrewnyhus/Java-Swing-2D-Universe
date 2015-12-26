@@ -43,4 +43,9 @@ public class Player extends Actor{
                         //SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2),                
     }
     
+    
+    public static Player copyInstanceOfPlayer(Player p){
+        return new Player(p.getWidth(), p.getHeight());
+    }
+
 }

@@ -75,7 +75,7 @@ public class TwoDRectangle {
         return this.height;
     }
     
-    public Point getLocationOfCorner(Corner corner){
+    /*public Point getLocationOfCorner(Corner corner){
 
         int originX = this.topLeftOrigin.x;
         int originY = this.topLeftOrigin.y;
@@ -109,6 +109,6 @@ public class TwoDRectangle {
             return this.num;
         }
         
-    }
+    }*/
     
 }

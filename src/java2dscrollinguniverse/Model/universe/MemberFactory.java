@@ -25,6 +25,7 @@ package java2dscrollinguniverse.Model.universe;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.TwoDRectangle;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.ActorType;
@@ -59,20 +60,11 @@ public class MemberFactory {
         Point locWall2 = new Point(this.universeBounds.getWidth() - 10, 0);
         Point locWall3 = new Point(0, this.universeBounds.getHeight() - 10);
 
-                //walls[0] = new Wall(topLeftLoc, new Rectangle(0, 0, wallThickness, this.universeBounds.getHeight()));
-                //walls[1] = new Wall(topLeftLoc, new Rectangle(topLeftLoc.getX(), topLeftLoc.getY(), this.universeBounds.getWidth(), wallThickness));
-                //walls[2] = new Wall(topRightLoc, new Rectangle(topRightLoc.getX() - 10, topRightLoc.getY(), 10, this.universeBounds.getHeight()));
-                //walls[3] = new Wall(bottomLeftLoc, new Rectangle(bottomLeftLoc.getX(), bottomLeftLoc.getY() - 10, this.universeBounds.getWidth(), wallThickness));
-        
-        /*walls[0] = new Wall(topLeftLoc, new Rectangle(0, 0, wallThickness, this.universeBounds.getHeight()));
-        walls[1] = new Wall(topLeftLoc, new Rectangle(0, 0, this.universeBounds.getWidth(), wallThickness));
-        walls[2] = new Wall(topRightLoc, new Rectangle(0, 0, 10, this.universeBounds.getHeight()));
-        walls[3] = new Wall(bottomLeftLoc, new Rectangle(0, 0, this.universeBounds.getWidth(), wallThickness));*/
 
-        walls[0] = new Wall(locWall0, new Rectangle(0, 0, wallThickness, this.universeBounds.getHeight()));
-        walls[1] = new Wall(locWall1, new Rectangle(0, 0, this.universeBounds.getWidth(), wallThickness));
-        walls[2] = new Wall(locWall2, new Rectangle(0, 0, 10, this.universeBounds.getHeight()));
-        walls[3] = new Wall(locWall3, new Rectangle(0, 0, this.universeBounds.getWidth(), wallThickness));
+        walls[PerimeterSide.LEFT.getValue()] = new Wall(locWall0, new Rectangle(0, 0, wallThickness, this.universeBounds.getHeight()));
+        walls[PerimeterSide.TOP.getValue()] = new Wall(locWall1, new Rectangle(0, 0, this.universeBounds.getWidth(), wallThickness));
+        walls[PerimeterSide.RIGHT.getValue()] = new Wall(locWall2, new Rectangle(0, 0, 10, this.universeBounds.getHeight()));
+        walls[PerimeterSide.BOTTOM.getValue()] = new Wall(locWall3, new Rectangle(0, 0, this.universeBounds.getWidth(), wallThickness));
         
         return walls;
     }
