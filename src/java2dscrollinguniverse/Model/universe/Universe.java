@@ -23,6 +23,7 @@
  */
 package java2dscrollinguniverse.Model.universe;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDRectangle;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
@@ -65,10 +66,11 @@ public class Universe {
     }
     
     public void attemptToMovePlayer(TwoDimensionalMovement movement){
-        Location origPlayerLoc = this.player.getTopLeftLocation();
-        Location newLoc = new Location(origPlayerLoc.getX() + movement.getXMovement(), origPlayerLoc.getY() + movement.getYMovement());
+        Point origPlayerLoc = this.player.getTopLeftLocation();
+        Point newLoc = new Point(origPlayerLoc.x + movement.getXMovement(),
+                origPlayerLoc.y + movement.getYMovement());
         
-        //*** dont forget***later implement some checking of newLoc
+        //TODO: later implement some checking of newLoc
             //to make sure that newLoc is on the universe still, and if it
             //is no longer on the universe, then instead of using newLoc
             //as the new location, the player's new location should give the appearance

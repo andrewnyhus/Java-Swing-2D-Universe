@@ -24,8 +24,8 @@
 package java2dscrollinguniverse.Model.actors;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Shape;
-import java2dscrollinguniverse.Model.universe.Location;
 import java2dscrollinguniverse.SettingsSingleton;
 
 /**
@@ -35,7 +35,7 @@ import java2dscrollinguniverse.SettingsSingleton;
 public class Wall extends Actor{
     
     
-    public Wall(Location topLeftLoc, Shape s){
+    public Wall(Point topLeftLoc, Shape s){
         super(ActorType.wall, topLeftLoc, SettingsSingleton.getInstance().getPerimeterColor(), s);
     }
     

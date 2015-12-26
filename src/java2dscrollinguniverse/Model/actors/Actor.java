@@ -24,9 +24,8 @@
 package java2dscrollinguniverse.Model.actors;
 
 import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.Shape;
-import java2dscrollinguniverse.Model.universe.Location;
 
 /**
  *
@@ -34,17 +33,18 @@ import java2dscrollinguniverse.Model.universe.Location;
  */
 public class Actor {
     private ActorType type;
-    private Location topLeftLocation;
+    //private Location topLeftLocation;
+    private Point topLeftLocation;
     Color color;
     private Shape shape;
     
-    public Actor(ActorType type, Location loc, Color color){
+    public Actor(ActorType type, Point loc, Color color){
         this.type = type;
         this.topLeftLocation = loc;
         this.color = color;
     }
     
-    public Actor(ActorType type, Location loc, Color color, Shape s){
+    public Actor(ActorType type, Point loc, Color color, Shape s){
         this.type = type;
         this.topLeftLocation = loc;
         this.color = color;
@@ -68,7 +68,7 @@ public class Actor {
      * Gives access to the topLeftLocation object of this actor.
      * @return this.topLeftLocation
      */
-    public Location getTopLeftLocation(){
+    public Point getTopLeftLocation(){
         return this.topLeftLocation;
     }
     
@@ -78,13 +78,13 @@ public class Actor {
  the currently drawn portion of the world (Java Swing stuff).
      * @param newLoc 
      */
-    public void setTopLeftLocation(Location newLoc){
+    public void setTopLeftLocation(Point newLoc){
         this.topLeftLocation = newLoc;
 
-        int width = (int) this.getShape().getBounds().getWidth();
-        int height = (int) this.getShape().getBounds().getHeight();
+        //int width = (int) this.getShape().getBounds().getWidth();
+        //int height = (int) this.getShape().getBounds().getHeight();
         
-        this.shape = new Rectangle(this.topLeftLocation.getX(), this.topLeftLocation.getY(), width, height);
+        //this.shape = new Rectangle(this.topLeftLocation.getX(), this.topLeftLocation.getY(), width, height);
         
     }
     

@@ -67,7 +67,7 @@ public class UniverseController implements KeyListener, ActionListener{
                 (int)origSizeOfFrame.getHeight() + 45 + 500);
 
         this.frame.setSize(newSizeOfFrame);
-        this.frame.setResizable(false);
+        this.frame.setResizable(true);
 
         this.addMenuBar();
         this.frame.setVisible(true);

@@ -25,7 +25,10 @@ package java2dscrollinguniverse.View;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.KeyListener;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
@@ -79,19 +82,71 @@ public class MainViewComponent extends JPanel{
             
             //Begin painting :) ...picasso style
             
+            //set "pen" with proper color for background rectangle
             g2d.setColor(this.updatedUniverse.getBackgroundRect().getColor());
 
-            g2d.fill(this.updatedUniverse.getBackgroundRect().getShape());
+            //get shape of background rect
+            Shape bgRectShape = this.updatedUniverse.getBackgroundRect().getShape();
             
+            //get top left location of backgroundRect
+            Point bgRectTopLeftLocationToDraw = this.updatedUniverse.getBackgroundRect().getTopLeftLocation();
+            
+            //** TODO: update this top left loc to be appropriate with the offset of centering 
+            //the player within the view.
+            
+            //set topLeft location to the bgRectShape variable, and use it to draw
+            //bgRectShape.getBounds2D()..setLocation(bgRectTopLeftLocationToDraw.getX(), bgRectTopLeftLocationToDraw.getX());
+            
+            g2d.fill(this.getShapeWithOffset(bgRectShape, bgRectTopLeftLocationToDraw));
+            
+            //iterate through all walls in perimeter of universe
             for(Wall w: this.updatedUniverse.getPerimeterWalls()){
+                //set "pen" to proper color for walls
                 g2d.setColor(w.getColor());
                 
-                g2d.fill(w.getShape());
+                // get shape of current wall in iteration
+                Shape currentWallShape = w.getShape();
+                
+                //get top left location of the current wall
+                Point currentWallTopLeftLocationToDraw = w.getTopLeftLocation();
+                
+                //** TODO: update this top left loc to be appropriate with the offset of centering 
+                //the player within the view.
+                
+                //set topLeft location to the currentWallShape variable, and then fill it
+                //currentWallShape.getBounds().translate(currentWallTopLeftLocationToDraw.x, currentWallTopLeftLocationToDraw.y);
+                
+                
+                g2d.fill(this.getShapeWithOffset(currentWallShape, currentWallTopLeftLocationToDraw));
             }
             
+            //set "pen" to proper color for drawing the player
             g2d.setColor(this.updatedUniverse.getPlayer().getColor());
-            g2d.fill(this.updatedUniverse.getPlayer().getShape());
             
+            // get shape of player 
+            Shape playerShape = this.updatedUniverse.getPlayer().getShape();
+            
+            // get top left location of player 
+            Point playerTopLeftLocationToDraw = this.updatedUniverse.getPlayer().getTopLeftLocation();
+            
+            //** TODO: center player in the view but keep surroundings intact  in relation to player
+            
+            //set top left location of the playerShape variable, and then fill it
+            //playerShape.getBounds().setLocation(playerTopLeftLocationToDraw.x, playerTopLeftLocationToDraw.y);
+            
+            g2d.fill(this.getShapeWithOffset(playerShape, playerTopLeftLocationToDraw));
+            
+    }
+    
+    
+    public Shape getShapeWithOffset(Shape s, Point p){
+                
+        if(s instanceof Rectangle){
+            Rectangle returnShape = new Rectangle(p.x, p.y, s.getBounds().width, s.getBounds().height);
+            return returnShape;
+        }
+        
+        return s;
     }
         
 }

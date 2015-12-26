@@ -23,7 +23,8 @@
  */
 package java2dscrollinguniverse.Model;
 
-import java2dscrollinguniverse.Model.universe.Location;
+import java.awt.Point;
+
 
 /**
  *
@@ -31,7 +32,7 @@ import java2dscrollinguniverse.Model.universe.Location;
  */
 public class TwoDRectangle {
     
-    private final Location topLeftOrigin;
+    private final Point topLeftOrigin;
     private final int width;
     private final int height;
     
@@ -41,7 +42,7 @@ public class TwoDRectangle {
      * @param height 
      */
     public TwoDRectangle(int width, int height){
-        this.topLeftOrigin = new Location(0, 0);
+        this.topLeftOrigin = new Point(0, 0);
         this.width = width;
         this.height = height;
     }
@@ -52,7 +53,7 @@ public class TwoDRectangle {
      * @param width
      * @param height 
      */
-    public TwoDRectangle(Location loc, int width, int height){
+    public TwoDRectangle(Point loc, int width, int height){
         this.topLeftOrigin = loc;
         this.width = width;
         this.height = height;
@@ -74,19 +75,19 @@ public class TwoDRectangle {
         return this.height;
     }
     
-    public Location getLocationOfCorner(Corner corner){
+    public Point getLocationOfCorner(Corner corner){
 
-        int originX = this.topLeftOrigin.getX();
-        int originY = this.topLeftOrigin.getY();
+        int originX = this.topLeftOrigin.x;
+        int originY = this.topLeftOrigin.y;
         
         if(corner.getValue() == corner.bottomLeft.getValue()){
-            return new Location(originX, originY + this.getHeight());
+            return new Point(originX, originY + this.getHeight());
         }else if(corner.getValue() == corner.bottomRight.getValue()){
-            return new Location(originX + this.getWidth(), originY + this.getHeight());
+            return new Point(originX + this.getWidth(), originY + this.getHeight());
         }else if(corner.getValue() == corner.topLeft.getValue()){
             return this.topLeftOrigin;
         }else if(corner.getValue() == corner.topRight.getValue()){
-            return new Location(originX + this.getWidth(), originY);
+            return new Point(originX + this.getWidth(), originY);
         }else{
             return this.topLeftOrigin;            
         }

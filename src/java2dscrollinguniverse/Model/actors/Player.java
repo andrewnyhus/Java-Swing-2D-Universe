@@ -23,8 +23,8 @@
  */
 package java2dscrollinguniverse.Model.actors;
 
+import java.awt.Point;
 import java.awt.Rectangle;
-import java2dscrollinguniverse.Model.universe.Location;
 import java2dscrollinguniverse.SettingsSingleton;
 
 /**
@@ -35,15 +35,12 @@ public class Player extends Actor{
     
     public Player(int playerWidth, int playerHeight){
         super(ActorType.player, 
-                new Location(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2,
-                        SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2),
+                new Point(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2,//x
+                        SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2),//y
                 SettingsSingleton.getInstance().getPlayerColor(), 
-                new Rectangle(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2, 
-                        SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2,
-                        playerWidth, 
-                        playerHeight));
-        //I know how ugly and disgusting the above call is, let me break it down
-            //
+                new Rectangle(0, 0, playerWidth, playerHeight));
+                //new Location(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2,
+                        //SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2),                
     }
     
 }
