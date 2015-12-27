@@ -140,8 +140,8 @@ public class MainViewComponent extends JPanel{
             //experimental
             Dimension viewDimensions = SettingsSingleton.getInstance().getScreenDimension();
             
-            Point centerViewPoint = new Point( (viewDimensions.width/2) + (playerShape.getBounds().width/2) ,
-                    (viewDimensions.height/2) + (playerShape.getBounds().height/2) );
+            Point centerViewPoint = new Point( (viewDimensions.width/2),
+                    (viewDimensions.height/2) );
             
             //** TODO: center player in the view but keep surroundings intact  in relation to player
             
@@ -152,16 +152,16 @@ public class MainViewComponent extends JPanel{
     
     public TwoDimensionalMovement getOffPlayerOffsetFromModelToView(){
         
-        Rectangle playerBounds = this.updatedUniverse.getPlayer().getShape().getBounds();
+        //Rectangle playerBounds = this.updatedUniverse.getPlayer().getShape().getBounds();
         
         Dimension viewDimensions = SettingsSingleton.getInstance().getScreenDimension();
-        Dimension playerDimensions = new Dimension(playerBounds.width, playerBounds.height);
+        //Dimension playerDimensions = new Dimension(playerBounds.width, playerBounds.height);
         
         Point centerViewPoint = new Point(viewDimensions.width/2, viewDimensions.height/2);
         Point playerPointInModel = this.updatedUniverse.getPlayer().getTopLeftLocation();
         
-        return new TwoDimensionalMovement(centerViewPoint.x - playerPointInModel.x + (playerDimensions.width/2),
-                centerViewPoint.y - playerPointInModel.y + (playerDimensions.height/2));        
+        return new TwoDimensionalMovement(centerViewPoint.x - playerPointInModel.x,
+                centerViewPoint.y - playerPointInModel.y);        
     }
     
     public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){

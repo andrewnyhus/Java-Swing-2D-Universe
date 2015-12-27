@@ -51,7 +51,6 @@ public class UniverseController implements KeyListener, ActionListener{
     private int playerSpeed = 20; //to be implemented later in player class
     private final JFrame frame;
     private JMenuBar menuBar;
-    private JLabel playerLocationLabel;
     
     public UniverseController(){
         
@@ -154,27 +153,20 @@ public class UniverseController implements KeyListener, ActionListener{
         newWindowItem.addActionListener(this);
         settingsMenuItem.addActionListener(this);
         
-        this.playerLocationLabel = new JLabel("Player's Location:");
         
         newMenu.add(newWindowItem);
                 
         this.menuBar.add(newMenu);
         this.menuBar.add(settingsMenuItem);
-        this.menuBar.add(this.playerLocationLabel);
         
         this.frame.setJMenuBar(this.menuBar);
-        this.updateLocationLabel();
+        
     }
     
     private void addKeyListenerToView(){
         this.view.addListener(this);
     }
     
-    
-    private void updateLocationLabel(){
-        String playerLocString = this.universe.getPlayer().getTopLeftLocation().toString();
-        this.playerLocationLabel.setText("Player location: " + playerLocString);        
-    }    
     
     
     @Override
@@ -221,7 +213,6 @@ public class UniverseController implements KeyListener, ActionListener{
                     movement = new TwoDimensionalMovement(-playerSpeed, 0);
                     this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
-                    this.updateLocationLabel();
                     
                     break;
                     
@@ -230,7 +221,6 @@ public class UniverseController implements KeyListener, ActionListener{
                     movement = new TwoDimensionalMovement(playerSpeed, 0);
                     this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
-                    this.updateLocationLabel();
 
                     break;
                 
@@ -242,7 +232,6 @@ public class UniverseController implements KeyListener, ActionListener{
                     movement = new TwoDimensionalMovement(0, -playerSpeed);
                     this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
-                    this.updateLocationLabel();
 
                     break;
                     
@@ -252,7 +241,6 @@ public class UniverseController implements KeyListener, ActionListener{
                     movement = new TwoDimensionalMovement(0, playerSpeed);
                     this.getUniverse().attemptToMovePlayer(movement);
                     this.view.updateUniverse(this.getUniverse());
-                    this.updateLocationLabel();
                     
                     break;
                     
@@ -261,7 +249,6 @@ public class UniverseController implements KeyListener, ActionListener{
                     //do nothing here, because if the user presses a key
                     //other then the up down left or right arrow key, the program 
                     //will land in this default case.
-                    this.updateLocationLabel();
                     break;
         }
         
