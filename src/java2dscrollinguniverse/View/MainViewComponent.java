@@ -23,6 +23,7 @@
  */
 package java2dscrollinguniverse.View;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -30,8 +31,10 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.KeyListener;
+import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
+import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.JPanel;
 
 /**
@@ -82,6 +85,9 @@ public class MainViewComponent extends JPanel{
             
             //Begin painting :) ...picasso style
             
+            //gets the difference of (center of view) - (player location in model)
+            TwoDimensionalMovement playerOffsetFromModel = this.getOffPlayerOffsetFromModelToView();
+            
             //set "pen" with proper color for background rectangle
             g2d.setColor(this.updatedUniverse.getBackgroundRect().getColor());
 
@@ -89,7 +95,8 @@ public class MainViewComponent extends JPanel{
             Shape bgRectShape = this.updatedUniverse.getBackgroundRect().getShape();
             
             //get top left location of backgroundRect
-            Point bgRectTopLeftLocationToDraw = this.updatedUniverse.getBackgroundRect().getTopLeftLocation();
+            Point bgRectTopLeftLocationToDraw = 
+                    playerOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedUniverse.getBackgroundRect().getTopLeftLocation());
             
             //** TODO: update this top left loc to be appropriate with the offset of centering 
             //the player within the view.
@@ -97,7 +104,7 @@ public class MainViewComponent extends JPanel{
             //set topLeft location to the bgRectShape variable, and use it to draw
             //bgRectShape.getBounds2D()..setLocation(bgRectTopLeftLocationToDraw.getX(), bgRectTopLeftLocationToDraw.getX());
             
-            g2d.fill(this.getShapeWithOffset(bgRectShape, bgRectTopLeftLocationToDraw));
+            g2d.fill(this.getShapeWithOffsetFromOrigin(bgRectShape, bgRectTopLeftLocationToDraw));
             
             //iterate through all walls in perimeter of universe
             for(Wall w: this.updatedUniverse.getPerimeterWalls()){
@@ -108,7 +115,8 @@ public class MainViewComponent extends JPanel{
                 Shape currentWallShape = w.getShape();
                 
                 //get top left location of the current wall
-                Point currentWallTopLeftLocationToDraw = w.getTopLeftLocation();
+                Point currentWallTopLeftLocationToDraw =
+                        playerOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
                 
                 //** TODO: update this top left loc to be appropriate with the offset of centering 
                 //the player within the view.
@@ -117,7 +125,7 @@ public class MainViewComponent extends JPanel{
                 //currentWallShape.getBounds().translate(currentWallTopLeftLocationToDraw.x, currentWallTopLeftLocationToDraw.y);
                 
                 
-                g2d.fill(this.getShapeWithOffset(currentWallShape, currentWallTopLeftLocationToDraw));
+                g2d.fill(this.getShapeWithOffsetFromOrigin(currentWallShape, currentWallTopLeftLocationToDraw));
             }
             
             //set "pen" to proper color for drawing the player
@@ -127,19 +135,36 @@ public class MainViewComponent extends JPanel{
             Shape playerShape = this.updatedUniverse.getPlayer().getShape();
             
             // get top left location of player 
-            Point playerTopLeftLocationToDraw = this.updatedUniverse.getPlayer().getTopLeftLocation();
+                //**was working: Point playerTopLeftLocationToDraw = this.updatedUniverse.getPlayer().getTopLeftLocation();
+            
+            //experimental
+            Dimension viewDimensions = SettingsSingleton.getInstance().getScreenDimension();
+            
+            Point centerViewPoint = new Point( (viewDimensions.width/2) + (playerShape.getBounds().width/2) ,
+                    (viewDimensions.height/2) + (playerShape.getBounds().height/2) );
             
             //** TODO: center player in the view but keep surroundings intact  in relation to player
             
-            //set top left location of the playerShape variable, and then fill it
-            //playerShape.getBounds().setLocation(playerTopLeftLocationToDraw.x, playerTopLeftLocationToDraw.y);
             
-            g2d.fill(this.getShapeWithOffset(playerShape, playerTopLeftLocationToDraw));
+            g2d.fill(this.getShapeWithOffsetFromOrigin(playerShape, centerViewPoint));
             
     }
     
+    public TwoDimensionalMovement getOffPlayerOffsetFromModelToView(){
+        
+        Rectangle playerBounds = this.updatedUniverse.getPlayer().getShape().getBounds();
+        
+        Dimension viewDimensions = SettingsSingleton.getInstance().getScreenDimension();
+        Dimension playerDimensions = new Dimension(playerBounds.width, playerBounds.height);
+        
+        Point centerViewPoint = new Point(viewDimensions.width/2, viewDimensions.height/2);
+        Point playerPointInModel = this.updatedUniverse.getPlayer().getTopLeftLocation();
+        
+        return new TwoDimensionalMovement(centerViewPoint.x - playerPointInModel.x + (playerDimensions.width/2),
+                centerViewPoint.y - playerPointInModel.y + (playerDimensions.height/2));        
+    }
     
-    public Shape getShapeWithOffset(Shape s, Point p){
+    public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){
                 
         if(s instanceof Rectangle){
             Rectangle returnShape = new Rectangle(p.x, p.y, s.getBounds().width, s.getBounds().height);
@@ -150,5 +175,6 @@ public class MainViewComponent extends JPanel{
         
         return s;
     }
+    
         
 }

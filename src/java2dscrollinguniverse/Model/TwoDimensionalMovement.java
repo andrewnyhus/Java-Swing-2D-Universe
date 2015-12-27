@@ -23,6 +23,8 @@
  */
 package java2dscrollinguniverse.Model;
 
+import java.awt.Point;
+
 /**
  *
  * @author andrewnyhus
@@ -42,6 +44,10 @@ public class TwoDimensionalMovement {
     
     public int getYMovement(){
         return this.yMovement;
+    }
+    
+    public Point getPointWithMovementAppliedFromPoint(Point p){
+        return new Point(this.xMovement + p.x, this.yMovement + p.y);
     }
     
 }
