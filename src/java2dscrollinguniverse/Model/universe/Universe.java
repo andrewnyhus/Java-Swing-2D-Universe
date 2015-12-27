@@ -23,10 +23,10 @@
  */
 package java2dscrollinguniverse.Model.universe;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
 import java2dscrollinguniverse.Model.PerimeterSide;
-import java2dscrollinguniverse.Model.TwoDRectangle;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.Player;
@@ -39,16 +39,16 @@ import java2dscrollinguniverse.Model.actors.Wall;
 public class Universe {
     
     private ArrayList<Actor> membersOfUniverse;
-    private TwoDRectangle universeRect;
+    private Dimension boundsDimension;
     private MemberFactory factory;
     
     private Wall[] perimeterWalls;//wall: (0)left (1)top (2)right (3)bottom.
     private Actor bgRect;
     private Player player;
     
-    public Universe(TwoDRectangle rect){
-        this.universeRect = rect;
-        this.factory = new MemberFactory(this.universeRect);
+    public Universe(Dimension boundsDimension){
+        this.boundsDimension = boundsDimension;
+        this.factory = new MemberFactory(this.boundsDimension);
         
         this.perimeterWalls = this.factory.generateWalls();
         this.bgRect = this.factory.getBackgroundRect();

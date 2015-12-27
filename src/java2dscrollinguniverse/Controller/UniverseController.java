@@ -37,6 +37,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -46,7 +48,7 @@ public class UniverseController implements KeyListener, ActionListener{
     
     private Universe universe;
     private final MainViewComponent view;
-    private int playerSpeed = 13; //to be implemented later in player class
+    private int playerSpeed = 20; //to be implemented later in player class
     private final JFrame frame;
     private JMenuBar menuBar;
     private JLabel playerLocationLabel;
@@ -55,16 +57,21 @@ public class UniverseController implements KeyListener, ActionListener{
         
         this.frame = new JFrame("2D Universe");
         
-        this.universe = new Universe(SettingsSingleton.getInstance().getViewRectangle());
-        this.view = new MainViewComponent(this.universe);
+        Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
         
+        this.universe = new Universe(d);
+        
+        this.view = new MainViewComponent(this.universe);
         
         Dimension origSizeOfFrame = this.frame.getSize();
         
         this.frame.add(this.view);
         
-        Dimension newSizeOfFrame = new Dimension((int)origSizeOfFrame.getWidth() + 500,
-                (int)origSizeOfFrame.getHeight() + 45 + 500);
+        Dimension newSizeOfFrame = 
+                new Dimension(
+                        (int)origSizeOfFrame.getWidth() + SettingsSingleton.getInstance().getScreenWidth(),
+                        (int)origSizeOfFrame.getHeight() + 45 + SettingsSingleton.getInstance().getScreenHeight());
+        
 
         this.frame.setSize(newSizeOfFrame);
         this.frame.setResizable(true);
@@ -78,6 +85,58 @@ public class UniverseController implements KeyListener, ActionListener{
     
     public Universe getUniverse(){
         return this.universe;
+    }
+ 
+    private Dimension getDimensionFromUser(String messageString){
+        
+
+        boolean userResponseIsValid = false;
+        JTextField widthField = null, heightField = null;
+
+        while(!userResponseIsValid){
+
+            widthField = new JTextField();
+            heightField = new JTextField();
+            
+            Object[] message = {
+                messageString,
+                "Width:", widthField,
+                "Height:", heightField
+            };
+            
+            int option = JOptionPane.showConfirmDialog(null, message, "WxH (Pixels)", JOptionPane.DEFAULT_OPTION);
+
+            if (option == JOptionPane.OK_OPTION) {
+
+                if ( this.inputStringIsAValidInt(widthField.getText()) && this.inputStringIsAValidInt(heightField.getText()) ) {
+                    userResponseIsValid = true;
+                } else {
+                    userResponseIsValid = false;
+                    JOptionPane.showMessageDialog(this.frame, "Invalid input, please make sure to enter only numerical characters (0-9) and no spaces");
+                }
+
+            }else{
+                userResponseIsValid = false;
+                JOptionPane.showMessageDialog(this.frame, "Invalid input, please make sure to enter only numerical characters (0-9) and no spaces");
+            }
+        }
+        
+        @SuppressWarnings("null")
+        int widthDimension = Integer.parseInt(widthField.getText());
+        @SuppressWarnings("null")
+        int heightDimension = Integer.parseInt(heightField.getText());
+               
+        return new Dimension(widthDimension, heightDimension);
+    }
+    
+    private boolean inputStringIsAValidInt(String s){
+        
+        try{
+            int stringToIntConvertAttempt = Integer.parseInt(s);
+            return true;
+        }catch(NumberFormatException e){
+            return false;
+        }
     }
     
     private void addMenuBar(){

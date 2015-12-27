@@ -24,7 +24,7 @@
 package java2dscrollinguniverse;
 
 import java.awt.Color;
-import java2dscrollinguniverse.Model.TwoDRectangle;
+import java.awt.Dimension;
 
 /**
  *
@@ -41,8 +41,9 @@ public class SettingsSingleton {
     private final Color defaultUniverseBackgroundColorValue = new Color(133, 133, 133);
     private final Color defaultPerimeterColorValue = new Color(245, 238, 49);
     private final Color defaultPlayerColorValue = new Color(255, 255, 255);
-    private int gameScreenWidth = 500;
-    private int gameScreenHeight = 500;
+    private Dimension screenDimension = new Dimension(500, 500);
+    //private int gameScreenWidth = 1000;
+    //private int gameScreenHeight = 500;
     
     
     private SettingsSingleton(){
@@ -80,16 +81,32 @@ public class SettingsSingleton {
         return settings.playerColor;
     }
     
-    public TwoDRectangle getViewRectangle(){
+    /*public TwoDRectangle getViewRectangle(){
         return new TwoDRectangle(this.gameScreenWidth, this.gameScreenHeight);
+    }*/
+    
+    public Dimension getScreenDimension(){
+        return this.screenDimension;
+    }
+    
+    public int getScreenWidth(){
+        return this.screenDimension.width;
+    }
+    
+    public int getScreenHeight(){
+        return this.screenDimension.height;
+    }
+    
+    public void setScreenDimension(Dimension d){
+        this.screenDimension = d;
     }
     
     public void setScreenWidth(int newWidth){
-        this.gameScreenWidth = newWidth;
+        this.screenDimension.width = newWidth;
     }
     
     public void setScreenHeight(int newHeight){
-        this.gameScreenHeight = newHeight;
+        this.screenDimension.height = newHeight;
     }
     
     public void setUniverseBackgroundColor(Color c){

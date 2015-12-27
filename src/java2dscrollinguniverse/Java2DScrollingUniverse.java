@@ -23,6 +23,7 @@
  */
 package java2dscrollinguniverse;
 
+import java.awt.Dimension;
 import java2dscrollinguniverse.Controller.UniverseController;
 
 /**
