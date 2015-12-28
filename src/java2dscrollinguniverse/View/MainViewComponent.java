@@ -89,7 +89,7 @@ public class MainViewComponent extends JPanel{
             TwoDimensionalMovement playerOffsetFromModel = this.getOffPlayerOffsetFromModelToView();
             
             //set "pen" with proper color for background rectangle
-            g2d.setColor(this.updatedUniverse.getBackgroundRect().getColor());
+            g2d.setColor(SettingsSingleton.getInstance().getUniverseBackgroundColor());
 
             //get shape of background rect
             Shape bgRectShape = this.updatedUniverse.getBackgroundRect().getShape();
@@ -109,7 +109,7 @@ public class MainViewComponent extends JPanel{
             //iterate through all walls in perimeter of universe
             for(Wall w: this.updatedUniverse.getPerimeterWalls()){
                 //set "pen" to proper color for walls
-                g2d.setColor(w.getColor());
+                g2d.setColor(SettingsSingleton.getInstance().getPerimeterColor());
                 
                 // get shape of current wall in iteration
                 Shape currentWallShape = w.getShape();
@@ -129,7 +129,7 @@ public class MainViewComponent extends JPanel{
             }
             
             //set "pen" to proper color for drawing the player
-            g2d.setColor(this.updatedUniverse.getPlayer().getColor());
+            g2d.setColor(SettingsSingleton.getInstance().getPlayerColor());
             
             // get shape of player 
             Shape playerShape = this.updatedUniverse.getPlayer().getShape();
@@ -138,7 +138,7 @@ public class MainViewComponent extends JPanel{
                 //**was working: Point playerTopLeftLocationToDraw = this.updatedUniverse.getPlayer().getTopLeftLocation();
             
             //experimental
-            Dimension viewDimensions = SettingsSingleton.getInstance().getScreenDimension();
+            Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
             
             Point centerViewPoint = new Point( (viewDimensions.width/2),
                     (viewDimensions.height/2) );
@@ -154,7 +154,7 @@ public class MainViewComponent extends JPanel{
         
         //Rectangle playerBounds = this.updatedUniverse.getPlayer().getShape().getBounds();
         
-        Dimension viewDimensions = SettingsSingleton.getInstance().getScreenDimension();
+        Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
         //Dimension playerDimensions = new Dimension(playerBounds.width, playerBounds.height);
         
         Point centerViewPoint = new Point(viewDimensions.width/2, viewDimensions.height/2);

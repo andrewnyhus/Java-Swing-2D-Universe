@@ -23,6 +23,8 @@
  */
 package java2dscrollinguniverse.Controller;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,13 +34,20 @@ import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.universe.Universe;
 import java2dscrollinguniverse.SettingsSingleton;
 import java2dscrollinguniverse.View.MainViewComponent;
+import java2dscrollinguniverse.View.SettingsMenu;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -48,15 +57,15 @@ public class UniverseController implements KeyListener, ActionListener{
     
     private Universe universe;
     private final MainViewComponent view;
-    private int playerSpeed = 20; //to be implemented later in player class
     private final JFrame frame;
     private JMenuBar menuBar;
     
-    public UniverseController(){
-        
+    public UniverseController() {
         this.frame = new JFrame("2D Universe");
+            
+        //actionPerformed( new ActionEvent(this, 2, "settings") );
         
-        Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
+        Dimension d = new Dimension(500, 500);//this.getDimensionFromUser("Please enter the size of the universe");
         
         this.universe = new Universe(d);
         
@@ -86,6 +95,11 @@ public class UniverseController implements KeyListener, ActionListener{
         return this.universe;
     }
  
+    /**
+     * Prompts user for a pixel size for height and width
+     * @param messageString
+     * @return user defined screen Dimension
+     */
     private Dimension getDimensionFromUser(String messageString){
         
 
@@ -128,6 +142,12 @@ public class UniverseController implements KeyListener, ActionListener{
         return new Dimension(widthDimension, heightDimension);
     }
     
+    /**
+     * Returns a boolean which indicated if String s is able to be 
+     * parsed into an int.
+     * @param s
+     * @return boolean isParsableToInt
+     */
     private boolean inputStringIsAValidInt(String s){
         
         try{
@@ -138,6 +158,9 @@ public class UniverseController implements KeyListener, ActionListener{
         }
     }
     
+    /**
+     * Setup, and set JMenuBar to this.frame.
+     */
     private void addMenuBar(){
         this.menuBar = new JMenuBar();
         
@@ -172,6 +195,84 @@ public class UniverseController implements KeyListener, ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
+        
+        switch (actionCommand) {
+            case "new_window":
+                
+                break;
+            case "settings":
+                
+                SettingsMenu pane = new SettingsMenu();
+                JDialog d = pane.createDialog("Settings");
+                d.setSize(500, 500);
+                d.setVisible(true);
+                
+                System.out.println();
+                
+                /*JButton a = new JButton("a");
+                a.setBackground(Color.green);
+
+                a.addActionListener((ActionEvent e1) -> {
+                    System.out.println("a");
+                    a.setBackground(Color.red);
+                });
+                
+                JPanel settingsPanel = new JPanel();
+                settingsPanel.setOpaque(true);
+                settingsPanel.setBackground(Color.YELLOW);
+                settingsPanel.add(a);
+                
+                JOptionPane.showMessageDialog(frame, settingsPanel, "Hello World!",
+                                        JOptionPane.INFORMATION_MESSAGE);  */              
+                
+                /*JTextField screenSizeWidth = new JTextField("" + SettingsSingleton.getInstance().getScreenWidth()),
+                        screenSizeHeight = new JTextField("" + SettingsSingleton.getInstance().getScreenHeight());
+                
+                        //JColorChooser colorChooserBgUniverse = new JColorChooser(SettingsSingleton.getInstance().getUniverseBackgroundColor());
+
+                JButton btnUniverseBGColor = new JButton(" ");
+                btnUniverseBGColor.setBackground(SettingsSingleton.getInstance().getUniverseBackgroundColor());
+
+                btnUniverseBGColor.addActionListener((ActionEvent e1) -> {
+                    Color c;
+                    c = JColorChooser.showDialog(((Component) e1.getSource()).getParent(), "Set Background Color Of Universe (Main)", 
+                            SettingsSingleton.getInstance().getUniverseBackgroundColor());
+                    System.out.println("color: " + c);
+                    if(c != null){
+                        btnUniverseBGColor.setBackground(c);
+                    }
+                    
+                });
+               
+                
+                
+                Object[] message = {
+                    "Appearance: ", "-----------",
+                    "Screen Size", "W: ", screenSizeWidth, "H: ", screenSizeHeight,
+                    "Colors:\n-----------\nBackground:", btnUniverseBGColor
+                    
+                };
+                
+                
+                int option = JOptionPane.showOptionDialog(this.frame, 
+                        message, 
+                        "Settings Menu", 
+                        JOptionPane.DEFAULT_OPTION, 
+                        JOptionPane.INFORMATION_MESSAGE, 
+                        null, 
+                        new String[]{"Update Settings"}, // this is the array
+                        "default");
+                System.out.println("opt: " + option);
+                
+                if(option == 0){
+                    
+                }*/
+                
+                         
+                
+                break;
+        }
+        
         System.out.println(actionCommand);
     }
     
@@ -204,7 +305,7 @@ public class UniverseController implements KeyListener, ActionListener{
         
         TwoDimensionalMovement movement;
         
-        
+        int playerSpeed = SettingsSingleton.getInstance().getPlayerSpeed();
         //handle various cases of the keycode value.
         switch(keycode){
                 

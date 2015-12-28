@@ -41,9 +41,10 @@ public class SettingsSingleton {
     private final Color defaultUniverseBackgroundColorValue = new Color(133, 133, 133);
     private final Color defaultPerimeterColorValue = new Color(245, 238, 49);
     private final Color defaultPlayerColorValue = new Color(255, 255, 255);
-    private Dimension screenDimension = new Dimension(500, 500);
+    private Dimension windowDimension = new Dimension(500, 500);
     //private int gameScreenWidth = 1000;
     //private int gameScreenHeight = 500;
+    private int playerSpeed = 20; //to be implemented later in player class
     
     
     private SettingsSingleton(){
@@ -69,44 +70,35 @@ public class SettingsSingleton {
     }
     
     
-    public Color getUniverseBackgroundColor(){
-        return settings.universeBackgroundColor;
-    }
+  
     
-    public Color getPerimeterColor(){
-        return settings.perimeterColor;
-    }
-
-    public Color getPlayerColor(){
-        return settings.playerColor;
-    }
-    
-    /*public TwoDRectangle getViewRectangle(){
-        return new TwoDRectangle(this.gameScreenWidth, this.gameScreenHeight);
-    }*/
-    
-    public Dimension getScreenDimension(){
-        return this.screenDimension;
+    public Dimension getWindowDimension(){
+        return this.windowDimension;
     }
     
     public int getScreenWidth(){
-        return this.screenDimension.width;
+        return this.windowDimension.width;
     }
     
     public int getScreenHeight(){
-        return this.screenDimension.height;
+        return this.windowDimension.height;
     }
     
-    public void setScreenDimension(Dimension d){
-        this.screenDimension = d;
+    
+    private void updateWindowSize(){
+    
+    }
+    
+    public void setWindowDimension(Dimension d){
+        this.windowDimension = d;
     }
     
     public void setScreenWidth(int newWidth){
-        this.screenDimension.width = newWidth;
+        this.windowDimension.width = newWidth;
     }
     
     public void setScreenHeight(int newHeight){
-        this.screenDimension.height = newHeight;
+        this.windowDimension.height = newHeight;
     }
     
     public void setUniverseBackgroundColor(Color c){
@@ -140,6 +132,44 @@ public class SettingsSingleton {
     public void revertToDefaultPlayerColor(){
         settings.setPlayerColor(defaultPlayerColorValue);
     }
+
+    /**
+     * @return the playerSpeed
+     */
+    public int getPlayerSpeed() {
+        return playerSpeed;
+    }
+
+    /**
+     * @param playerSpeed the playerSpeed to set
+     */
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
+
+    /**
+     * @return the universeBackgroundColor
+     */
+    public Color getUniverseBackgroundColor() {
+        return universeBackgroundColor;
+    }
+
+    /**
+     * @return the perimeterColor
+     */
+    public Color getPerimeterColor() {
+        return perimeterColor;
+    }
+
+    /**
+     * @return the playerColor
+     */
+    public Color getPlayerColor() {
+        return playerColor;
+    }
+    
+    
+    
     
     
 }

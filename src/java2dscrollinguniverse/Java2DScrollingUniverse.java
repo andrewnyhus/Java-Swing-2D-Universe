@@ -23,8 +23,9 @@
  */
 package java2dscrollinguniverse;
 
-import java.awt.Dimension;
+
 import java2dscrollinguniverse.Controller.UniverseController;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -38,8 +39,9 @@ public class Java2DScrollingUniverse {
     public static void main(String[] args) {
         // TODO code application logic here
         
+        SwingUtilities.invokeLater(() -> {
         UniverseController mainController = new UniverseController();
-        
+        });
     }
     
 }
