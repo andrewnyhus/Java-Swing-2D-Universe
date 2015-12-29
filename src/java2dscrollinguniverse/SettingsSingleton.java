@@ -39,7 +39,7 @@ public class SettingsSingleton {
     private Color playerColor;
     
     private final Color defaultUniverseBackgroundColorValue = new Color(133, 133, 133);
-    private final Color defaultPerimeterColorValue = new Color(245, 238, 49);
+    private final Color defaultPerimeterColorValue = new Color(255, 127, 0);
     private final Color defaultPlayerColorValue = new Color(255, 255, 255);
     private Dimension windowDimension = new Dimension(500, 500);
     //private int gameScreenWidth = 1000;

@@ -38,7 +38,7 @@ import java2dscrollinguniverse.Model.actors.Wall;
  */
 public class Universe {
     
-    private ArrayList<Actor> membersOfUniverse;
+    private Actor[] membersOfUniverse;
     private Dimension boundsDimension;
     private MemberFactory factory;
     
@@ -52,7 +52,9 @@ public class Universe {
         
         this.perimeterWalls = this.factory.generateWalls();
         this.bgRect = this.factory.getBackgroundRect();
-        this.player = new Player(40, 40);//create player with width 40 and height 40
+        this.player = new Player(15, 15);//create player with width and height
+        
+        this.membersOfUniverse = this.factory.generateActors();
     }
     
     public Actor getBackgroundRect(){
@@ -65,6 +67,8 @@ public class Universe {
     public Player getPlayer(){
         return this.player;
     }
+    
+    
     
     public void attemptToMovePlayer(TwoDimensionalMovement movement){
         Point origPlayerLoc = this.player.getTopLeftLocation();
@@ -171,6 +175,13 @@ public class Universe {
         
         return yMax;
     }   
+
+    /**
+     * @return the membersOfUniverse
+     */
+    public Actor[] getMembersOfUniverse() {
+        return membersOfUniverse;
+    }
     
     
 }

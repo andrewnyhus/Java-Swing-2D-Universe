@@ -31,7 +31,9 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.KeyListener;
+import java.awt.geom.Ellipse2D;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
+import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
 import java2dscrollinguniverse.SettingsSingleton;
@@ -128,6 +130,30 @@ public class MainViewComponent extends JPanel{
                 g2d.fill(this.getShapeWithOffsetFromOrigin(currentWallShape, currentWallTopLeftLocationToDraw));
             }
             
+            
+            
+            for(Actor a: this.updatedUniverse.getMembersOfUniverse()){
+            
+                //set "pen" to proper color for actors
+                g2d.setColor(a.getColor());
+                
+                // get shape of current actor in iteration
+                Shape currentActorShape = a.getShape();
+                
+                //get top left location of the current Actor
+                Point currentActorTopLeftLocationToDraw =
+                        playerOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+
+                g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
+            
+            }
+            
+            
+            
+            
+            
+            
+            
             //set "pen" to proper color for drawing the player
             g2d.setColor(SettingsSingleton.getInstance().getPlayerColor());
             
@@ -147,6 +173,11 @@ public class MainViewComponent extends JPanel{
             
             
             g2d.fill(this.getShapeWithOffsetFromOrigin(playerShape, centerViewPoint));
+            
+            
+            
+            
+            
             
     }
     
@@ -168,6 +199,9 @@ public class MainViewComponent extends JPanel{
                 
         if(s instanceof Rectangle){
             Rectangle returnShape = new Rectangle(p.x, p.y, s.getBounds().width, s.getBounds().height);
+            return returnShape;
+        }else if(s instanceof Ellipse2D.Double){
+            Ellipse2D.Double returnShape = new Ellipse2D.Double(p.getX(), p.getY(), s.getBounds().getWidth(), s.getBounds().getHeight());
             return returnShape;
         }
         

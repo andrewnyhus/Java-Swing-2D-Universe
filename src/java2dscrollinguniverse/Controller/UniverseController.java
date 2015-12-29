@@ -65,7 +65,7 @@ public class UniverseController implements KeyListener, ActionListener{
             
         //actionPerformed( new ActionEvent(this, 2, "settings") );
         
-        Dimension d = new Dimension(500, 500);//this.getDimensionFromUser("Please enter the size of the universe");
+        Dimension d = new Dimension(2000, 500);//this.getDimensionFromUser("Please enter the size of the universe");
         
         this.universe = new Universe(d);
         
@@ -207,7 +207,8 @@ public class UniverseController implements KeyListener, ActionListener{
                 d.setSize(500, 500);
                 d.setVisible(true);
                 
-                System.out.println();
+                this.view.repaint();
+                
                 
                 /*JButton a = new JButton("a");
                 a.setBackground(Color.green);

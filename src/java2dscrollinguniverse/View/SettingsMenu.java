@@ -116,10 +116,8 @@ public class SettingsMenu extends JOptionPane{
         
         this.setColorButton.addActionListener((ActionEvent e) -> {
             //TODO: update color
-            System.out.println("update color");
                     Color c = null, cInit = null;
                     String objectToSet = (String)this.colorUpdateObjectSelector.getSelectedItem();
-                    System.out.println(":" + objectToSet + ":");
                         switch(objectToSet){
                             case "Perimeter":
                                 cInit = this.currentPerimeterColor;

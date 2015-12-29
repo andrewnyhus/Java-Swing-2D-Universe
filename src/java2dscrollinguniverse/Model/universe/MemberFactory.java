@@ -23,9 +23,13 @@
  */
 package java2dscrollinguniverse.Model.universe;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+import java.util.Random;
 import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.ActorType;
@@ -40,8 +44,8 @@ public class MemberFactory {
 
     private Dimension universeBounds;
     private final int wallThickness = 10;
-    public MemberFactory(Dimension universeRect) {
-        this.universeBounds = universeRect;
+    public MemberFactory(Dimension universeBounds) {
+        this.universeBounds = universeBounds;
     }
     
     public Actor getBackgroundRect(){
@@ -71,6 +75,70 @@ public class MemberFactory {
         return walls;
     }
     
-    
+    public Actor[] generateActors(){
+        int widthInset = (int)(this.universeBounds.getWidth() * .05);
+        int heightInset = (int)(this.universeBounds.getHeight() * .05);
+                
+        int acceptableWidth = (this.universeBounds.width - (widthInset*2));
+        int acceptableHeight = (this.universeBounds.height - (heightInset*2));
+        
+        int minimumX = widthInset;
+        int maximumX = this.universeBounds.width - widthInset;
+        
+        int minimumY = heightInset;
+        int maximumY = this.universeBounds.height - heightInset;
+        
+        int acceptableArea = acceptableWidth*acceptableHeight;
+        
+        int maxFrequencyOfActorPerSquareSize = 40000;//40000 = 200 x 200 pixels
+
+        int maxNumActors = acceptableArea/maxFrequencyOfActorPerSquareSize;
+        
+        Random randomGen = new Random();
+        
+        int numActors = randomGen.nextInt(maxNumActors);
+        
+        Actor[] actors = new Actor[numActors];
+        
+        for(int i = 0; i < numActors; i++){
+            //ActorType type, Point loc, Color color, Shape s
+            
+            //256 because the bound is exclusive and 255 is the largest number we want.
+            int r = randomGen.nextInt(256);
+            int g = randomGen.nextInt(256);
+            int b = randomGen.nextInt(256);
+            
+            Color c = new Color(r,g,b);
+            
+            int x = minimumX + randomGen.nextInt(acceptableWidth);
+            int y = minimumY + randomGen.nextInt(acceptableHeight);
+            
+            Point p = new Point(x, y);
+            
+            int numOfOptionsOfShapeType = 2;
+            
+            int shapeTypeNum = randomGen.nextInt(numOfOptionsOfShapeType);
+            
+            Shape s;
+            
+            int width = 20 + randomGen.nextInt(25);
+            int height = 20 + randomGen.nextInt(25);
+            
+            if(shapeTypeNum == 0){
+                //shape is ellipse2d.double
+                s = new Ellipse2D.Double(0.0, 0.0, (double)width, (double)height);
+            }else if(shapeTypeNum == 1){
+                //shape is rectangle
+                s = new Rectangle(0, 0, width, height);
+            }else{
+                s = null;
+            }
+            
+            actors[i] = new Actor(ActorType.miscObject, p, c, s);
+        
+        }
+        
+        return actors;
+    }
     
 }
