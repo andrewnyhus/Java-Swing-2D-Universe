@@ -59,30 +59,31 @@ public class UniverseController implements KeyListener, ActionListener{
     private final MainViewComponent view;
     private final JFrame frame;
     private JMenuBar menuBar;
+    private final Dimension origSizeOfFrame;
     
     public UniverseController() {
         this.frame = new JFrame("2D Universe");
             
-        //actionPerformed( new ActionEvent(this, 2, "settings") );
+
         
         Dimension d = new Dimension(2000, 500);//this.getDimensionFromUser("Please enter the size of the universe");
-        
+                
         this.universe = new Universe(d);
         
         this.view = new MainViewComponent(this.universe);
         
-        Dimension origSizeOfFrame = this.frame.getSize();
+        this.origSizeOfFrame = this.frame.getSize();
         
         this.frame.add(this.view);
         
         Dimension newSizeOfFrame = 
                 new Dimension(
-                        (int)origSizeOfFrame.getWidth() + SettingsSingleton.getInstance().getScreenWidth(),
-                        (int)origSizeOfFrame.getHeight() + 45 + SettingsSingleton.getInstance().getScreenHeight());
+                        origSizeOfFrame.width+ SettingsSingleton.getInstance().getWindowWidth(),
+                        origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
         
 
         this.frame.setSize(newSizeOfFrame);
-        this.frame.setResizable(true);
+        this.frame.setResizable(false);
 
         this.addMenuBar();
         this.frame.setVisible(true);
@@ -204,9 +205,17 @@ public class UniverseController implements KeyListener, ActionListener{
                 
                 SettingsMenu pane = new SettingsMenu();
                 JDialog d = pane.createDialog("Settings");
-                d.setSize(500, 500);
+                d.setSize(750, 500);
                 d.setVisible(true);
                 
+                Dimension newSizeOfFrame = 
+                        new Dimension(
+                                this.origSizeOfFrame.width + SettingsSingleton.getInstance().getWindowWidth(),
+                                this.origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
+                
+                
+                this.frame.setSize(newSizeOfFrame);
+                this.view.setSize(SettingsSingleton.getInstance().getWindowDimension());
                 this.view.repaint();
                 
                 

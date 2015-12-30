@@ -41,9 +41,7 @@ public class SettingsSingleton {
     private final Color defaultUniverseBackgroundColorValue = new Color(133, 133, 133);
     private final Color defaultPerimeterColorValue = new Color(255, 127, 0);
     private final Color defaultPlayerColorValue = new Color(255, 255, 255);
-    private Dimension windowDimension = new Dimension(500, 500);
-    //private int gameScreenWidth = 1000;
-    //private int gameScreenHeight = 500;
+    private Dimension windowDimension = new Dimension(500, 500);//default window size
     private int playerSpeed = 20; //to be implemented later in player class
     
     
@@ -76,28 +74,23 @@ public class SettingsSingleton {
         return this.windowDimension;
     }
     
-    public int getScreenWidth(){
+    public int getWindowWidth(){
         return this.windowDimension.width;
     }
     
-    public int getScreenHeight(){
+    public int getWindowHeight(){
         return this.windowDimension.height;
     }
-    
-    
-    private void updateWindowSize(){
-    
-    }
-    
+        
     public void setWindowDimension(Dimension d){
         this.windowDimension = d;
     }
     
-    public void setScreenWidth(int newWidth){
+    public void setWindowWidth(int newWidth){
         this.windowDimension.width = newWidth;
     }
     
-    public void setScreenHeight(int newHeight){
+    public void setWindowHeight(int newHeight){
         this.windowDimension.height = newHeight;
     }
     

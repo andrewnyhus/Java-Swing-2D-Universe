@@ -30,6 +30,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -41,6 +43,9 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 
 /**
@@ -52,7 +57,7 @@ public class SettingsMenu extends JOptionPane{
     private Color initialUniverseBGColor = SettingsSingleton.getInstance().getUniverseBackgroundColor();
     private Color initialPlayerColor = SettingsSingleton.getInstance().getPlayerColor();
     private Color initialPerimeterColor = SettingsSingleton.getInstance().getPerimeterColor();
-    private Dimension initialScreenDimension = SettingsSingleton.getInstance().getWindowDimension();
+    private Dimension initialViewDimension = SettingsSingleton.getInstance().getWindowDimension();
     private int initialPlayerSpeed = SettingsSingleton.getInstance().getPlayerSpeed();
     
     //---===---===---===---===---===---===---===---===---===---===---===---===
@@ -62,14 +67,15 @@ public class SettingsMenu extends JOptionPane{
     private Color currentUniverseBGColor;
     private Color currentPlayerColor;
     private Color currentPerimeterColor;
-    private Dimension currentScreenDimension;
+    private Dimension currentViewDimension;
     private int currentPlayerSpeed;
     //---===---===---===---===---===---===---===---===---===---===---===---===    
     //end of class variables
     
     
     //---===---===---===---===---===---===---===---===---===---===---===---===
-    private JTextField screenWidthField, screenHeightField;
+    private EnterNumericalValueField viewWidthField, viewHeightField;
+    private JLabel viewWidthLabel, viewHeightLabel;
     private String[] colorObjectChoices = {"Perimeter", "Player", "Background Of Universe"};
 
     private JComboBox colorUpdateObjectSelector = new JComboBox(colorObjectChoices);
@@ -85,14 +91,16 @@ public class SettingsMenu extends JOptionPane{
     //---===---===---===---===---===---===---===---===---===---===---===---===    
     //end of GUI components
     
+
     
     public SettingsMenu(){
         super("", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
-        this.currentUniverseBGColor = initialUniverseBGColor;
-        this.currentPlayerColor = initialPlayerColor;
-        this.currentPerimeterColor = initialPerimeterColor;
-        this.currentScreenDimension = initialScreenDimension;
-        this.currentPlayerSpeed = initialPlayerSpeed;
+        
+        this.currentUniverseBGColor = this.initialUniverseBGColor;
+        this.currentPlayerColor = this.initialPlayerColor;
+        this.currentPerimeterColor = this.initialPerimeterColor;
+        this.currentViewDimension = new Dimension(this.initialViewDimension.width, this.initialViewDimension.height);
+        this.currentPlayerSpeed = this.initialPlayerSpeed;
         
         this.initGUIComponents();
         
@@ -107,12 +115,40 @@ public class SettingsMenu extends JOptionPane{
             this.updateColorIcon();
             this.updateApplyChangesButton();
         });
+                
+
+        DocumentListener listener = new DocumentListener(){
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handle();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                handle();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                handle();
+            }
+            
+            public void handle(){
+                if(!viewWidthField.getText().equals("") && !viewHeightField.getText().equals(""))
+                    updateCurrentViewDimension();
+            }
+            
+        };
         
         
-        this.screenWidthField = new JTextField(this.currentScreenDimension.width);
-        this.screenHeightField = new JTextField(this.currentScreenDimension.height);
+        this.viewWidthField = new EnterNumericalValueField(this.currentViewDimension.width, listener);
+        this.viewHeightField = new EnterNumericalValueField(this.currentViewDimension.height, listener);
         
-        this.setColorButton = new JButton("Set Color of: ");
+        
+        
+        
+        this.setColorButton = new JButton("Choose an object in the dropdown and click here\nto customize color.");
         
         this.setColorButton.addActionListener((ActionEvent e) -> {
             //TODO: update color
@@ -170,7 +206,9 @@ public class SettingsMenu extends JOptionPane{
             this.applyChanges();
         });
         
-        //this.setIcon(new ColorIcon(Color.RED));
+        this.viewWidthLabel = new JLabel("Initial Width (" + this.initialViewDimension.width + "):");
+        this.viewHeightLabel = new JLabel("Initial Height (" + this.initialViewDimension.height + "):");
+        
         this.updateColorIcon();
         this.updatePlayerSpeedLabel();        
         this.updateApplyChangesButton();
@@ -178,11 +216,16 @@ public class SettingsMenu extends JOptionPane{
     }
     
     private Object[] getMessageObjectArray(){
+        String increaseWindowString = "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\nIncrease Window Size (enter only numeric characters)\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n ";
+        
+        
+        
         Object[] message = {
             this.setColorButton, this.colorUpdateObjectSelector, 
-            "Change Window Size (enter only numeric characters)", "Width:", this.screenWidthField,
-            "Height:", this.screenHeightField, 
-            this.playerSpeedLabel, this.playerSpeedSlider, this.applyChangesButton
+            this.playerSpeedLabel, this.playerSpeedSlider,
+            increaseWindowString, this.viewWidthLabel, this.viewWidthField,
+            this.viewHeightLabel, this.viewHeightField, 
+            this.applyChangesButton
         };
         
         return message;
@@ -192,11 +235,47 @@ public class SettingsMenu extends JOptionPane{
         this.playerSpeedLabel.setText("Player speed was: " + this.initialPlayerSpeed + ", set speed to: " + this.currentPlayerSpeed);
     }
     
+    private void updateCurrentViewDimension(){
+        
+        int addedWidth = 0;
+        int addedHeight = 0;
+        int currentWidth = 0;
+        int currentHeight = 0;
+
+        try{
+            addedWidth = Integer.parseInt(this.viewWidthField.getText());
+        }catch(NumberFormatException e){
+            addedWidth = 0;
+        }
+        
+        
+        try{
+            addedHeight = Integer.parseInt(this.viewHeightField.getText());
+        }catch(NumberFormatException e){
+            addedHeight = 0;
+        }
+        
+        
+        currentWidth = addedWidth + this.initialViewDimension.width;
+        currentHeight = addedHeight + this.initialViewDimension.height;
+        
+        this.currentViewDimension = new Dimension(currentWidth, currentHeight);
+        
+        this.viewWidthLabel.setText("Initial Width (" + this.initialViewDimension.width +
+                ") + " + addedWidth + " = " + this.currentViewDimension.width + ":");
+
+        this.viewHeightLabel.setText("Initial Height (" + this.initialViewDimension.height +
+                ") + " + addedHeight + " = " + this.currentViewDimension.height + ":");
+    
+        this.updateApplyChangesButton();
+    
+    }
+    
     private void updateApplyChangesButton(){
     
         boolean changesFound = true;
         if(this.initialUniverseBGColor.equals(this.currentUniverseBGColor)&&
-                this.initialScreenDimension.equals(this.currentScreenDimension)&&
+                this.initialViewDimension.equals(this.currentViewDimension)&&
                 this.initialPlayerSpeed == this.currentPlayerSpeed&&
                 this.initialPlayerColor.equals(this.currentPlayerColor)&&
                 this.initialPerimeterColor.equals(this.currentPerimeterColor)){
@@ -212,13 +291,13 @@ public class SettingsMenu extends JOptionPane{
         this.initialPerimeterColor = this.currentPerimeterColor;
         this.initialPlayerColor = this.currentPlayerColor;
         this.initialPlayerSpeed = this.currentPlayerSpeed;
-        this.initialScreenDimension = this.currentScreenDimension;
+        this.initialViewDimension = this.currentViewDimension;
         
         SettingsSingleton.getInstance().setUniverseBackgroundColor(this.initialUniverseBGColor);
         SettingsSingleton.getInstance().setPerimeterColor(this.initialPerimeterColor);
         SettingsSingleton.getInstance().setPlayerColor(this.initialPlayerColor);
         SettingsSingleton.getInstance().setPlayerSpeed(this.initialPlayerSpeed);
-        SettingsSingleton.getInstance().setWindowDimension(this.initialScreenDimension);
+        SettingsSingleton.getInstance().setWindowDimension(this.initialViewDimension);
         
         this.updateApplyChangesButton();
     }

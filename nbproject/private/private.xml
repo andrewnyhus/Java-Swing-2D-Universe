@@ -22,9 +22,10 @@
         <group>
             <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/Model/actors/Actor.java</file>
             <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/SettingsSingleton.java</file>
+            <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/Model/universe/Universe.java</file>
             <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/Java2DScrollingUniverse.java</file>
-            <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/View/SettingsMenu.java</file>
             <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/Controller/UniverseController.java</file>
+            <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/Model/universe/MemberFactory.java</file>
             <file>file:/Users/andrewnyhus/NetBeansProjects/Java2DScrollingUniverse/src/java2dscrollinguniverse/View/MainViewComponent.java</file>
         </group>
     </open-files>

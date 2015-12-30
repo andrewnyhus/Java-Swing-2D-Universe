@@ -75,9 +75,9 @@ public class MemberFactory {
         return walls;
     }
     
-    public Actor[] generateActors(){
-        int widthInset = (int)(this.universeBounds.getWidth() * .05);
-        int heightInset = (int)(this.universeBounds.getHeight() * .05);
+    public Actor[] generateMiscellaneousActorsRandomly(){
+        int widthInset = (int)(this.universeBounds.getWidth() * .15);
+        int heightInset = (int)(this.universeBounds.getHeight() * .15);
                 
         int acceptableWidth = (this.universeBounds.width - (widthInset*2));
         int acceptableHeight = (this.universeBounds.height - (heightInset*2));
@@ -121,8 +121,8 @@ public class MemberFactory {
             
             Shape s;
             
-            int width = 20 + randomGen.nextInt(25);
-            int height = 20 + randomGen.nextInt(25);
+            int width = 40 + randomGen.nextInt(25);
+            int height = 40 + randomGen.nextInt(25);
             
             if(shapeTypeNum == 0){
                 //shape is ellipse2d.double

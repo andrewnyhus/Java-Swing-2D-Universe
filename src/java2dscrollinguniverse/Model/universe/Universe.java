@@ -54,7 +54,7 @@ public class Universe {
         this.bgRect = this.factory.getBackgroundRect();
         this.player = new Player(15, 15);//create player with width and height
         
-        this.membersOfUniverse = this.factory.generateActors();
+        this.membersOfUniverse = this.factory.generateMiscellaneousActorsRandomly();
     }
     
     public Actor getBackgroundRect(){
