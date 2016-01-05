@@ -34,6 +34,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
+import java2dscrollinguniverse.Model.actors.ActorType;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
 import java2dscrollinguniverse.SettingsSingleton;
@@ -133,19 +134,90 @@ public class MainViewComponent extends JPanel{
             
             
             for(Actor a: this.updatedUniverse.getMembersOfUniverse()){
-            
-                //set "pen" to proper color for actors
-                g2d.setColor(a.getColor());
                 
-                // get shape of current actor in iteration
-                Shape currentActorShape = a.getShape();
                 
-                //get top left location of the current Actor
-                Point currentActorTopLeftLocationToDraw =
-                        playerOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+                if(a.getType().viewLocationShouldChange()){
+                
+                    //set "pen" to proper color for current actor
+                    g2d.setColor(a.getColor());
 
-                g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
-            
+                    // get shape of current actor in iteration
+                    Shape currentActorShape = a.getShape();
+
+                    //get top left location of the current Actor
+                    Point currentActorTopLeftLocationToDraw =
+                            playerOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+
+                    g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
+                }else{
+                
+                    //set "pen" to proper color for current actor 
+                    g2d.setColor(a.getColor());
+                    
+                    // get shape of current actor
+                    Shape currentActorShapeToConvert = a.getShape();
+
+                    @SuppressWarnings("UnusedAssignment")
+                    Shape currentActorShape = null;
+                    
+                    Point currentActorPoint = a.getTopLeftLocation();
+                    
+                    if(currentActorShapeToConvert instanceof Rectangle){
+                        
+                        currentActorShape = new Rectangle(currentActorPoint.x,
+                                currentActorPoint.y,
+                                currentActorShapeToConvert.getBounds().width,
+                                currentActorShapeToConvert.getBounds().height);
+                        
+                    }else if(currentActorShapeToConvert instanceof Ellipse2D.Double){
+                        
+                        currentActorShape = new Ellipse2D.Double(currentActorPoint.getX(),
+                                currentActorPoint.getY(),
+                                currentActorShapeToConvert.getBounds().getWidth(),
+                                currentActorShapeToConvert.getBounds().getHeight());
+                        
+                        
+                    }else{
+                        currentActorShape = currentActorShapeToConvert;
+                    }
+                    
+                    g2d.fill(currentActorShape);
+
+                    if(a.getChildActors() != null){
+                        for(Actor childActor: a.getChildActors()){
+                            //set "pen" to proper color for current child actor 
+                            g2d.setColor(childActor.getColor());
+
+                            // get shape of current child actor
+                            Shape currentChildActorShapeToConvert = childActor.getShape();
+                            Shape currentChildActorShape = null;
+
+                            Point currentChildActorPoint = childActor.getTopLeftLocation();
+
+                            if(currentChildActorShapeToConvert instanceof Rectangle){
+
+                                currentChildActorShape = new Rectangle(currentChildActorPoint.x,
+                                        currentChildActorPoint.y,
+                                        currentChildActorShapeToConvert.getBounds().width,
+                                        currentChildActorShapeToConvert.getBounds().height);
+
+                            }else if(currentChildActorShapeToConvert instanceof Ellipse2D.Double){
+
+                                currentChildActorShape = new Ellipse2D.Double(currentChildActorPoint.getX(),
+                                        currentChildActorPoint.getY(),
+                                        currentChildActorShapeToConvert.getBounds().getWidth(),
+                                        currentChildActorShapeToConvert.getBounds().getHeight());
+
+
+                            }else{
+                                currentChildActorShape = currentChildActorShapeToConvert;
+                            }                          
+                            
+                            g2d.fill(currentChildActorShape);
+                        }
+                    }  
+                    
+                }
             }
             
             
@@ -194,6 +266,7 @@ public class MainViewComponent extends JPanel{
         return new TwoDimensionalMovement(centerViewPoint.x - playerPointInModel.x,
                 centerViewPoint.y - playerPointInModel.y);        
     }
+    
     
     public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){
                 

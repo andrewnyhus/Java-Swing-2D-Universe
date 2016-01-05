@@ -48,7 +48,7 @@ public class Universe {
     
     public Universe(Dimension boundsDimension){
         this.boundsDimension = boundsDimension;
-        this.factory = new MemberFactory(this.boundsDimension);
+        this.factory = new MemberFactory(this.getBoundsDimension());
         
         this.perimeterWalls = this.factory.generateWalls();
         this.bgRect = this.factory.getBackgroundRect();
@@ -181,6 +181,20 @@ public class Universe {
      */
     public Actor[] getMembersOfUniverse() {
         return membersOfUniverse;
+    }
+
+    /**
+     * @return the boundsDimension
+     */
+    public Dimension getBoundsDimension() {
+        return boundsDimension;
+    }
+
+    /**
+     * @param boundsDimension the boundsDimension to set
+     */
+    public void setBoundsDimension(Dimension boundsDimension) {
+        this.boundsDimension = boundsDimension;
     }
     
     
