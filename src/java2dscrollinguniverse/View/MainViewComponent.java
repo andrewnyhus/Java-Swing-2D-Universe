@@ -92,143 +92,159 @@ public class MainViewComponent extends JPanel{
             //gets the offset of view's center from origin of the container (0, 0)
             TwoDimensionalMovement centerOfViewOffsetFromModel = this.getCenterOfViewActorOffsetFromModelToView();
             
-            //set "pen" with proper color for background rectangle
-            g2d.setColor(SettingsSingleton.getInstance().getContainerBackgroundColor());
-
-            //get shape of background rect
-            Shape bgRectShape = this.updatedContainer.getBackgroundRect().getShape();
+            drawContainerBackground(g2d, centerOfViewOffsetFromModel);
             
-            //get top left location of backgroundRect
-            Point bgRectTopLeftLocationToDraw = 
-                    centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedContainer.getBackgroundRect().getTopLeftLocation());
+            drawWalls(g2d, centerOfViewOffsetFromModel);
             
+            drawMembersOfContainer(g2d, centerOfViewOffsetFromModel);
+            
+            Dimension viewDimensions = drawCenterOfViewActor(g2d);            
+            drawHUDMap(viewDimensions, g2d);
                         
-            //set topLeft location to the bgRectShape variable, and use it to draw
-            //bgRectShape.getBounds2D()..setLocation(bgRectTopLeftLocationToDraw.getX(), bgRectTopLeftLocationToDraw.getX());
             
-            g2d.fill(this.getShapeWithOffsetFromOrigin(bgRectShape, bgRectTopLeftLocationToDraw));
             
-            //iterate through all walls in perimeter of the container
-            for(Wall w: this.updatedContainer.getPerimeterWalls()){
-                //set "pen" to proper color for walls
-                g2d.setColor(SettingsSingleton.getInstance().getPerimeterColor());
+    }
+
+    private void drawMembersOfContainer(Graphics2D g2d, TwoDimensionalMovement centerOfViewOffsetFromModel) {
+        for(Actor a: this.updatedContainer.getMembersOfContainer()){
+            
+            
+            if(a.getType().viewLocationShouldChange()){
                 
-                // get shape of current wall in iteration
-                Shape currentWallShape = w.getShape();
+                //set "pen" to proper color for current actor
+                g2d.setColor(a.getColor());
                 
-                //get top left location of the current wall
-                Point currentWallTopLeftLocationToDraw =
-                        centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
+                // get shape of current actor in iteration
+                Shape currentActorShape = a.getShape();
                 
+                //get top left location of the current Actor
+                Point currentActorTopLeftLocationToDraw =
+                        centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
                 
+                g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
                 
-                g2d.fill(this.getShapeWithOffsetFromOrigin(currentWallShape, currentWallTopLeftLocationToDraw));
             }
+        }
+    }
+
+    private void drawWalls(Graphics2D g2d, TwoDimensionalMovement centerOfViewOffsetFromModel) {
+        //iterate through all walls in perimeter of the container
+        for(Wall w: this.updatedContainer.getPerimeterWalls()){
+            //set "pen" to proper color for walls
+            g2d.setColor(SettingsSingleton.getInstance().getPerimeterColor());
+            
+            // get shape of current wall in iteration
+            Shape currentWallShape = w.getShape();
+            
+            //get top left location of the current wall
+            Point currentWallTopLeftLocationToDraw =
+                    centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
             
             
             
-            for(Actor a: this.updatedContainer.getMembersOfContainer()){
-                
-                
-                if(a.getType().viewLocationShouldChange()){
-                
-                    //set "pen" to proper color for current actor
-                    g2d.setColor(a.getColor());
+            g2d.fill(this.getShapeWithOffsetFromOrigin(currentWallShape, currentWallTopLeftLocationToDraw));
+        }
+    }
 
-                    // get shape of current actor in iteration
-                    Shape currentActorShape = a.getShape();
+    private void drawContainerBackground(Graphics2D g2d, TwoDimensionalMovement centerOfViewOffsetFromModel) {
+        //set "pen" with proper color for background rectangle
+        g2d.setColor(SettingsSingleton.getInstance().getContainerBackgroundColor());
+        
+        //get shape of background rect
+        Shape bgRectShape = this.updatedContainer.getBackgroundRect().getShape();
+        
+        //get top left location of backgroundRect
+        Point bgRectTopLeftLocationToDraw =
+                centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedContainer.getBackgroundRect().getTopLeftLocation());
+        
+        
+        //set topLeft location to the bgRectShape variable, and use it to draw
+        //bgRectShape.getBounds2D()..setLocation(bgRectTopLeftLocationToDraw.getX(), bgRectTopLeftLocationToDraw.getX());
+        
+        g2d.fill(this.getShapeWithOffsetFromOrigin(bgRectShape, bgRectTopLeftLocationToDraw));
+    }
 
-                    //get top left location of the current Actor
-                    Point currentActorTopLeftLocationToDraw =
-                            centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+    private Dimension drawCenterOfViewActor(Graphics2D g2d) {
+        //set "pen" to proper color for drawing the centerOfViewActor
+        g2d.setColor(SettingsSingleton.getInstance().getCenterOfViewActorColor());
+        // get shape of centerOfViewActor
+        Shape centerOfViewActorShape = this.updatedContainer.getCenterOfViewActor().getShape();
+        Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
+        Point centerViewPoint = new Point( (viewDimensions.width/2),
+                (viewDimensions.height/2) );
+        g2d.fill(this.getShapeWithOffsetFromOrigin(centerOfViewActorShape, centerViewPoint));
+        
+        Point centerOfViewActorLabelLoc = new Point(centerViewPoint.x +
+                            centerOfViewActorShape.getBounds().width + 15,
+                            centerViewPoint.y + centerOfViewActorShape.getBounds().height/2 );
+        
+        g2d.drawString("<< Center Of View",
+                                            centerOfViewActorLabelLoc.x,
+                                            centerOfViewActorLabelLoc.y);
+        
+        return viewDimensions;
+    }
 
-                    g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
-                
+
+    private void drawHUDMap(Dimension viewDimensions, Graphics2D g2d) {
+        boolean showHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
+        
+        if(showHUDMap){
+            WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
+            
+            HUDMap map = new HUDMap(this.getCenterOfViewActorOffsetFromModelToView(),
+                    viewDimensions, this.updatedContainer, HUDMapWindowCorner);
+            
+            g2d.setColor(map.getColor());
+            
+            Shape mapShapeToConvert = map.getShape();
+            
+            Shape mapActorShape;
+            
+            Point mapActorPoint = map.getTopLeftLocation();
+            
+            mapActorShape = new Rectangle(mapActorPoint.x, mapActorPoint.y,
+                    mapShapeToConvert.getBounds().width,
+                    mapShapeToConvert.getBounds().height);
+            
+            
+            g2d.fill(mapActorShape);
+            
+            
+            if(map.getChildActors() != null){
+                for(Actor childActor: map.getChildActors()){
+                    //set "pen" to proper color for current child actor
+                    g2d.setColor(childActor.getColor());
+                    
+                    // get shape of current child actor
+                    Shape currentChildActorShapeToConvert = childActor.getShape();
+                    Shape currentChildActorShape = null;
+                    
+                    Point currentChildActorPoint = childActor.getTopLeftLocation();
+                    
+                    if(currentChildActorShapeToConvert instanceof Rectangle){
+                        
+                        currentChildActorShape = new Rectangle(currentChildActorPoint.x,
+                                currentChildActorPoint.y,
+                                currentChildActorShapeToConvert.getBounds().width,
+                                currentChildActorShapeToConvert.getBounds().height);
+                        
+                    }else if(currentChildActorShapeToConvert instanceof Ellipse2D.Double){
+                        
+                        currentChildActorShape = new Ellipse2D.Double(currentChildActorPoint.getX(),
+                                currentChildActorPoint.getY(),
+                                currentChildActorShapeToConvert.getBounds().getWidth(),
+                                currentChildActorShapeToConvert.getBounds().getHeight());
+                        
+                        
+                    }else{
+                        currentChildActorShape = currentChildActorShapeToConvert;
+                    }
+                    
+                    g2d.fill(currentChildActorShape);
                 }
             }
-            
-            
-            
-            
-            
-            
-            
-            //set "pen" to proper color for drawing the centerOfViewActor
-            g2d.setColor(SettingsSingleton.getInstance().getCenterOfViewActorColor());
-            
-            // get shape of centerOfViewActor 
-            Shape centerOfViewActorShape = this.updatedContainer.getCenterOfViewActor().getShape();
-            
-            Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
-            
-            Point centerViewPoint = new Point( (viewDimensions.width/2),
-                    (viewDimensions.height/2) );
-            
-            
-            
-            g2d.fill(this.getShapeWithOffsetFromOrigin(centerOfViewActorShape, centerViewPoint));
-            
-            boolean showHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
-                        
-            if(showHUDMap){
-                WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
-                
-                HUDMap map = new HUDMap(this.getCenterOfViewActorOffsetFromModelToView(),
-                        viewDimensions, this.updatedContainer, HUDMapWindowCorner);
-
-                g2d.setColor(map.getColor());
-
-                Shape mapShapeToConvert = map.getShape();
-
-                Shape mapActorShape;
-
-                Point mapActorPoint = map.getTopLeftLocation();
-
-                mapActorShape = new Rectangle(mapActorPoint.x, mapActorPoint.y,
-                        mapShapeToConvert.getBounds().width, 
-                        mapShapeToConvert.getBounds().height);
-
-
-                g2d.fill(mapActorShape);
-
-
-                if(map.getChildActors() != null){
-                            for(Actor childActor: map.getChildActors()){
-                                //set "pen" to proper color for current child actor 
-                                g2d.setColor(childActor.getColor());
-
-                                // get shape of current child actor
-                                Shape currentChildActorShapeToConvert = childActor.getShape();
-                                Shape currentChildActorShape = null;
-
-                                Point currentChildActorPoint = childActor.getTopLeftLocation();
-
-                                if(currentChildActorShapeToConvert instanceof Rectangle){
-
-                                    currentChildActorShape = new Rectangle(currentChildActorPoint.x,
-                                            currentChildActorPoint.y,
-                                            currentChildActorShapeToConvert.getBounds().width,
-                                            currentChildActorShapeToConvert.getBounds().height);
-
-                                }else if(currentChildActorShapeToConvert instanceof Ellipse2D.Double){
-
-                                    currentChildActorShape = new Ellipse2D.Double(currentChildActorPoint.getX(),
-                                            currentChildActorPoint.getY(),
-                                            currentChildActorShapeToConvert.getBounds().getWidth(),
-                                            currentChildActorShapeToConvert.getBounds().getHeight());
-
-
-                                }else{
-                                    currentChildActorShape = currentChildActorShapeToConvert;
-                                }                          
-
-                                g2d.fill(currentChildActorShape);
-                            }
-                        }            
-            }
-                        
-            
-            
+        }
     }
     
     public TwoDimensionalMovement getCenterOfViewActorOffsetFromModelToView(){
