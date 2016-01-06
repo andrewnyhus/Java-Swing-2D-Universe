@@ -25,7 +25,6 @@ package java2dscrollinguniverse.Model.universe;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.ArrayList;
 import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
@@ -68,62 +67,57 @@ public class Universe {
         return this.player;
     }
     
-    
-    
-    public void attemptToMovePlayer(TwoDimensionalMovement movement){
-        Point origPlayerLoc = this.player.getTopLeftLocation();
+    public void attemptToMoveActor(Actor a, TwoDimensionalMovement movement){
         
-        Point playerLocIfMoveSuccessful = new Point(origPlayerLoc.x + movement.getXMovement(),
-                origPlayerLoc.y + movement.getYMovement());
+        //get actor's current location
+        Point origActorLoc = a.getTopLeftLocation();
+        //store actor's location if the move is completed successfully
+        Point actorLocIfMoveCompleted = new Point(origActorLoc.x + movement.getXMovement(),
+                                                  origActorLoc.y + movement.getYMovement());
+
+        //clone Actor 'a' for assessing move before completing it on 'a'
+        Actor cloneActorToTest = Actor.copyInstanceOfActor(a);
         
-        //init test player
-        Player testMoveOnPlayer = Player.copyInstanceOfPlayer(this.player);
+        //completing move on the clone actor
+        cloneActorToTest.setTopLeftLocation(actorLocIfMoveCompleted);
         
-        //complete move on test player
-        testMoveOnPlayer.setTopLeftLocation(playerLocIfMoveSuccessful);
-        
-        //TODO: later implement some checking of newLoc
-            //to make sure that newLoc is on the universe still, and if it
-            //is no longer on the universe, then instead of using newLoc
-            //as the new location, the player's new location should give the appearance
-            //that the players sprite was moving in the proper direction when it collided 
-            //with the perimeter boundary.
+        //
         int newX, newY;
         
-        //if player too far left
-        if(testMoveOnPlayer.getLeftMostValue() < this.getXMin()){
+        //if clone actor too far left
+        if(cloneActorToTest.getLeftMostValue() < this.getXMin()){
             newX = this.getXMin();
             
-        //if player too far right    
-        }else if(testMoveOnPlayer.getRightMostValue() > this.getXMax()){
-            int playerWidth = testMoveOnPlayer.getWidth();
-            newX = this.getXMax() - playerWidth;
+        //if clone actor too far right    
+        }else if(cloneActorToTest.getRightMostValue() > this.getXMax()){
+            int cloneActorWidth = cloneActorToTest.getWidth();
+            newX = this.getXMax() - cloneActorWidth;
             
-        //if player okay     
+        //if clone actor location is okay     
         }else{
-            newX = playerLocIfMoveSuccessful.x;
+            newX = actorLocIfMoveCompleted.x;
         }
         
-        //if player too far up
-        if(testMoveOnPlayer.getTopMostValue() < this.getYMin()){
+        //if clone actor is too far up
+        if(cloneActorToTest.getTopMostValue() < this.getYMin()){
             newY = this.getYMin();
             
-        //if player too far down
-        }else if(testMoveOnPlayer.getBottomMostValue() > this.getYMax()){
-            int playerHeight = testMoveOnPlayer.getHeight();
-            newY = this.getYMax() - playerHeight;
+        //if clone actor is too far down
+        }else if(cloneActorToTest.getBottomMostValue() > this.getYMax()){
+            int cloneActorHeight = cloneActorToTest.getHeight();
+            newY = this.getYMax() - cloneActorHeight;
             
-        //if player is okay    
+        //if clone actor location is okay     
         }else{
-            newY = playerLocIfMoveSuccessful.y;
+            newY = actorLocIfMoveCompleted.y;
         }
         
-        Point newLocForPlayer = new Point(newX, newY);
+        //store new location for actor 'a'
+        Point newLocForActor = new Point(newX, newY);
         
-        //for now blindly add movement to player's location, even if it sends player off of universe:
-        this.player.setTopLeftLocation(newLocForPlayer);
-            //this.player.setTopLeftLocation(playerLocIfMoveSuccessful);
-                
+        //set new location for actor 'a'
+        a.setTopLeftLocation(newLocForActor);
+        
     }
     
     /**

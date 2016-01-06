@@ -177,6 +177,10 @@ public class Actor {
     }
     
     
+    public static Actor copyInstanceOfActor(Actor a){
+        return new Actor(a.getType(), a.getTopLeftLocation(),
+                a.getColor(), a.getShape(), a.getChildActors());
+    }
     
     
 }

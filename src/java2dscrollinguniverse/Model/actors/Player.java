@@ -39,8 +39,6 @@ public class Player extends Actor{
                         SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
                 SettingsSingleton.getInstance().getPlayerColor(), 
                 new Ellipse2D.Double(0.0, 0.0, 1.0*playerWidth, 1.0*playerHeight));
-                //new Location(SettingsSingleton.getInstance().getViewRectangle().getWidth()/2 - playerWidth/2,
-                        //SettingsSingleton.getInstance().getViewRectangle().getHeight()/2 - playerHeight/2),                
     }
     
     
