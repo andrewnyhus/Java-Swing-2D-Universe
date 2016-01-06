@@ -35,11 +35,11 @@ public class SettingsSingleton {
     
     private static SettingsSingleton settings;
     
-    private Color universeBackgroundColor;
+    private Color containerBackgroundColor;
     private Color perimeterColor;
     private Color centerOfViewActorColor;
     
-    private final Color defaultUniverseBackgroundColorValue = new Color(133, 133, 133);
+    private final Color defaultContainerBackgroundColorValue = new Color(133, 133, 133);
     private final Color defaultPerimeterColorValue = new Color(255, 127, 0);
     private final Color defaultCenterOfViewActorColorValue = new Color(255, 255, 255);
     private Dimension windowDimension = new Dimension(500, 500);//default window size
@@ -50,8 +50,8 @@ public class SettingsSingleton {
     
     private SettingsSingleton(){
         
-        //set universe background color to be gray
-        this.universeBackgroundColor = defaultUniverseBackgroundColorValue;
+        //set container background color to be gray
+        this.containerBackgroundColor = defaultContainerBackgroundColorValue;
         
         //set perimeter yellow
         this.perimeterColor = defaultPerimeterColorValue;
@@ -97,8 +97,8 @@ public class SettingsSingleton {
         this.windowDimension.height = newHeight;
     }
     
-    public void setUniverseBackgroundColor(Color c){
-        this.universeBackgroundColor = c;
+    public void setContainerBackgroundColor(Color c){
+        this.containerBackgroundColor = c;
     }
     
     
@@ -112,13 +112,13 @@ public class SettingsSingleton {
     }
     
     public void revertToDefaultColors(){
-        settings.revertToDefaultUniverseColor();
+        settings.revertToDefaultContainerColor();
         settings.revertToDefaultPerimeterColor();
         settings.revertToDefaultCenterOfViewActorColor();
     }
     
-    public void revertToDefaultUniverseColor(){
-        settings.setUniverseBackgroundColor(defaultUniverseBackgroundColorValue);
+    public void revertToDefaultContainerColor(){
+        settings.setContainerBackgroundColor(defaultContainerBackgroundColorValue);
     }
     
     public void revertToDefaultPerimeterColor(){
@@ -144,10 +144,10 @@ public class SettingsSingleton {
     }
 
     /**
-     * @return the universeBackgroundColor
+     * @return the containerBackgroundColor
      */
-    public Color getUniverseBackgroundColor() {
-        return universeBackgroundColor;
+    public Color getContainerBackgroundColor() {
+        return containerBackgroundColor;
     }
 
     /**

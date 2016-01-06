@@ -32,7 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.universe.Universe;
+import java2dscrollinguniverse.Model.container.Container;
 import java2dscrollinguniverse.SettingsSingleton;
 import java2dscrollinguniverse.View.MainViewComponent;
 import java2dscrollinguniverse.View.SettingsMenu;
@@ -53,7 +53,7 @@ import javax.swing.JTextField;
  */
 public class UniverseController implements KeyListener, ActionListener{
     
-    private Universe universe;
+    private Container container;
     private final MainViewComponent view;
     private final JFrame frame;
     private JMenuBar menuBar;
@@ -62,12 +62,12 @@ public class UniverseController implements KeyListener, ActionListener{
     public UniverseController() {
         this.frame = new JFrame("2D Universe");
                     
-        //Dimension d = new Dimension(3000, 1000);
-        Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
+        Dimension d = new Dimension(3000, 1000);
+        //Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
                 
-        this.universe = new Universe(d);
+        this.container = new Container(d);
         
-        this.view = new MainViewComponent(this.universe);
+        this.view = new MainViewComponent(this.container);
         
         this.origSizeOfFrame = this.frame.getSize();
         
@@ -89,8 +89,8 @@ public class UniverseController implements KeyListener, ActionListener{
         this.addKeyListenerToView();
     }
     
-    public Universe getUniverse(){
-        return this.universe;
+    public Container getContainer(){
+        return this.container;
     }
  
     /**
@@ -260,16 +260,16 @@ public class UniverseController implements KeyListener, ActionListener{
                 //if key pressed was left arrow
                 case KeyEvent.VK_LEFT:
                     movement = new TwoDimensionalMovement(-centerOfViewActorVelocity, 0);
-                    this.getUniverse().attemptToMoveActor(this.universe.getCenterOfViewActor(), movement);
-                    this.view.updateUniverse(this.getUniverse());
+                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
+                    this.view.updatedContainer(this.getContainer());
                     
                     break;
                     
                 //if key pressed was right arrow    
                 case KeyEvent.VK_RIGHT:
                     movement = new TwoDimensionalMovement(centerOfViewActorVelocity, 0);
-                    this.getUniverse().attemptToMoveActor(this.universe.getCenterOfViewActor(), movement);
-                    this.view.updateUniverse(this.getUniverse());
+                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
+                    this.view.updatedContainer(this.getContainer());
 
                     break;
                 
@@ -279,8 +279,8 @@ public class UniverseController implements KeyListener, ActionListener{
                     // is equivalent to a decrease in y value since the origin 0, 0 is
                     //in the top left.  Oh Java Swing, we love you. 
                     movement = new TwoDimensionalMovement(0, -centerOfViewActorVelocity);
-                    this.getUniverse().attemptToMoveActor(this.universe.getCenterOfViewActor(), movement);
-                    this.view.updateUniverse(this.getUniverse());
+                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
+                    this.view.updatedContainer(this.getContainer());
 
                     break;
                     
@@ -288,8 +288,8 @@ public class UniverseController implements KeyListener, ActionListener{
                 case KeyEvent.VK_DOWN:
                     //similarly moving down visually is equivalent to an increase in y value
                     movement = new TwoDimensionalMovement(0, centerOfViewActorVelocity);
-                    this.getUniverse().attemptToMoveActor(this.universe.getCenterOfViewActor(), movement);
-                    this.view.updateUniverse(this.getUniverse());
+                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
+                    this.view.updatedContainer(this.getContainer());
                     
                     break;
                     
@@ -310,10 +310,10 @@ public class UniverseController implements KeyListener, ActionListener{
  //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
     /**
-     * @param universe the universe to set
+     * @param container the container to set
      */
-    public void setUniverse(Universe universe) {
-        this.universe = universe;
+    public void setContainer(Container container) {
+        this.container = container;
     }
     
 }

@@ -38,7 +38,7 @@ import java2dscrollinguniverse.Model.actors.ActorType;
 import java2dscrollinguniverse.Model.actors.HUDMap;
 import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 import java2dscrollinguniverse.Model.actors.Wall;
-import java2dscrollinguniverse.Model.universe.Universe;
+import java2dscrollinguniverse.Model.container.Container;
 import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.JPanel;
 
@@ -48,10 +48,9 @@ import javax.swing.JPanel;
  */
 public class MainViewComponent extends JPanel{
     
-    //private Universe universe;
-    private Universe updatedUniverse;
-    public MainViewComponent(Universe universe){
-        this.updatedUniverse = universe;
+    private Container updatedContainer;
+    public MainViewComponent(Container container){
+        this.updatedContainer = container;
     }
     
     /**
@@ -67,8 +66,8 @@ public class MainViewComponent extends JPanel{
         setFocusable(true);
     }
     
-    public void updateUniverse(Universe uni){
-        this.updatedUniverse = uni;
+    public void updatedContainer(Container container){
+        this.updatedContainer = container;
         this.repaint();
     }
     
@@ -90,18 +89,18 @@ public class MainViewComponent extends JPanel{
             
             //Begin painting :) ...picasso style
             
-            //gets the offset of view's center from origin of the universe
+            //gets the offset of view's center from origin of the container (0, 0)
             TwoDimensionalMovement centerOfViewOffsetFromModel = this.getCenterOfViewActorOffsetFromModelToView();
             
             //set "pen" with proper color for background rectangle
-            g2d.setColor(SettingsSingleton.getInstance().getUniverseBackgroundColor());
+            g2d.setColor(SettingsSingleton.getInstance().getContainerBackgroundColor());
 
             //get shape of background rect
-            Shape bgRectShape = this.updatedUniverse.getBackgroundRect().getShape();
+            Shape bgRectShape = this.updatedContainer.getBackgroundRect().getShape();
             
             //get top left location of backgroundRect
             Point bgRectTopLeftLocationToDraw = 
-                    centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedUniverse.getBackgroundRect().getTopLeftLocation());
+                    centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedContainer.getBackgroundRect().getTopLeftLocation());
             
                         
             //set topLeft location to the bgRectShape variable, and use it to draw
@@ -109,8 +108,8 @@ public class MainViewComponent extends JPanel{
             
             g2d.fill(this.getShapeWithOffsetFromOrigin(bgRectShape, bgRectTopLeftLocationToDraw));
             
-            //iterate through all walls in perimeter of universe
-            for(Wall w: this.updatedUniverse.getPerimeterWalls()){
+            //iterate through all walls in perimeter of the container
+            for(Wall w: this.updatedContainer.getPerimeterWalls()){
                 //set "pen" to proper color for walls
                 g2d.setColor(SettingsSingleton.getInstance().getPerimeterColor());
                 
@@ -128,7 +127,7 @@ public class MainViewComponent extends JPanel{
             
             
             
-            for(Actor a: this.updatedUniverse.getMembersOfUniverse()){
+            for(Actor a: this.updatedContainer.getMembersOfContainer()){
                 
                 
                 if(a.getType().viewLocationShouldChange()){
@@ -158,7 +157,7 @@ public class MainViewComponent extends JPanel{
             g2d.setColor(SettingsSingleton.getInstance().getCenterOfViewActorColor());
             
             // get shape of centerOfViewActor 
-            Shape centerOfViewActorShape = this.updatedUniverse.getCenterOfViewActor().getShape();
+            Shape centerOfViewActorShape = this.updatedContainer.getCenterOfViewActor().getShape();
             
             Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
             
@@ -175,7 +174,7 @@ public class MainViewComponent extends JPanel{
                 WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
                 
                 HUDMap map = new HUDMap(this.getCenterOfViewActorOffsetFromModelToView(),
-                        viewDimensions, this.updatedUniverse, HUDMapWindowCorner);
+                        viewDimensions, this.updatedContainer, HUDMapWindowCorner);
 
                 g2d.setColor(map.getColor());
 
@@ -238,7 +237,7 @@ public class MainViewComponent extends JPanel{
         Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
         
         Point centerViewPoint = new Point(viewDimensions.width/2, viewDimensions.height/2);
-        Point centerOfViewActorPointInModel = this.updatedUniverse.getCenterOfViewActor().getTopLeftLocation();
+        Point centerOfViewActorPointInModel = this.updatedContainer.getCenterOfViewActor().getTopLeftLocation();
         
         return new TwoDimensionalMovement(centerViewPoint.x - centerOfViewActorPointInModel.x,
                 centerViewPoint.y - centerOfViewActorPointInModel.y);        

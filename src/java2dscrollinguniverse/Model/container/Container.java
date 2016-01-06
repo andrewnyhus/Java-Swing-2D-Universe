@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.universe;
+package java2dscrollinguniverse.Model.container;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -35,9 +35,9 @@ import java2dscrollinguniverse.Model.actors.Wall;
  *
  * @author andrewnyhus
  */
-public class Universe {
+public class Container {
     
-    private Actor[] membersOfUniverse;
+    private Actor[] membersOfContainer;
     private Dimension boundsDimension;
     private MemberFactory factory;
     
@@ -45,7 +45,7 @@ public class Universe {
     private Actor bgRect;
     private CenterOfViewActor centerOfViewActor;
     
-    public Universe(Dimension boundsDimension){
+    public Container(Dimension boundsDimension){
         this.boundsDimension = boundsDimension;
         this.factory = new MemberFactory(this.getBoundsDimension());
         
@@ -53,7 +53,7 @@ public class Universe {
         this.bgRect = this.factory.getBackgroundRect();
         this.centerOfViewActor = new CenterOfViewActor(15, 15);//create centerOfViewActor with width and height
         
-        this.membersOfUniverse = this.factory.generateMiscellaneousActorsRandomly();
+        this.membersOfContainer = this.factory.generateMiscellaneousActorsRandomly();
     }
     
     public Actor getBackgroundRect(){
@@ -122,7 +122,7 @@ public class Universe {
     
     /**
      * Returns the minimum x (leftmost) value that a bounded actor should be able to have in the 
-     * universe.
+     * container.
      * @return xMin
      */
     public int getXMin(){
@@ -134,7 +134,7 @@ public class Universe {
     }
     
     /**
-     * Returns maximum x (rightmost) value a bounded actor can have in the universe.
+     * Returns maximum x (rightmost) value a bounded actor can have in the container.
      * @return xMax
      */
     public int getXMax(){
@@ -147,7 +147,7 @@ public class Universe {
     
     
     /**
-     * Returns minimum y (topmost) value a bounded actor can have in the universe.
+     * Returns minimum y (topmost) value a bounded actor can have in the container.
      * @return yMin
      */
     public int getYMin(){
@@ -159,7 +159,7 @@ public class Universe {
     }
     
     /**
-     * Returns maximum y (bottommost) value a bounded actor can have in the universe
+     * Returns maximum y (bottommost) value a bounded actor can have in the container
      * @return yMax
      */
     public int getYMax(){
@@ -171,10 +171,10 @@ public class Universe {
     }   
 
     /**
-     * @return the membersOfUniverse
+     * @return the membersOfContainer
      */
-    public Actor[] getMembersOfUniverse() {
-        return membersOfUniverse;
+    public Actor[] getMembersOfContainer() {
+        return membersOfContainer;
     }
 
     /**

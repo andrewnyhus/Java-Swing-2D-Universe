@@ -30,7 +30,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.universe.Universe;
+import java2dscrollinguniverse.Model.container.Container;
 
 /**
  *
@@ -40,58 +40,58 @@ public class HUDMap extends Actor{
     
     private WindowCorner cornerOfWindow;
     private Dimension windowDimension;
-    private Universe universe;
+    private Container container;
     private Actor[] childActors;
     private Shape shape;
-    private TwoDimensionalMovement centerViewOffsetFromUniverseOrigin;
+    private TwoDimensionalMovement centerViewOffsetFromContainerOrigin;
 
     private final double percentOfWindowMapCanHave = 0.18;
     
     private final int inset = 20;
-    private final Color colorOfUniverseRepresentation = Color.BLACK;
+    private final Color colorOfContainerRepresentation = Color.BLACK;
     private final Color colorOfWindowRepresentation = new Color(255, 255, 255, 100);//gray
     private final Color colorOfOtherChildActors = new Color(227, 148, 0);//orange
     
     public HUDMap(TwoDimensionalMovement centerViewOffset,
             Dimension windowDimension,
-            Universe universe){
+            Container container){
         
         super(ActorType.HUDElement, new Point(0, 0), Color.BLACK);
-        //^^ that call to super disregarded colorOfUniverseRepresentation because super must be the first
+        //^^ that call to super disregarded colorOfContainerRepresentation because super must be the first
         //call in the constructor.  That is why the wrong location or point was entered at first as
         // 0, 0  It is simply using the actor class to setup the object so that we can tinker with
         //the data members afterwards
         
         this.windowDimension = windowDimension;
-        this.universe = universe;
+        this.container = container;
         this.cornerOfWindow = WindowCorner.BOTTOM_LEFT;
-        this.centerViewOffsetFromUniverseOrigin = centerViewOffset;
-        this.generateScaledUniverseRectForMap();
+        this.centerViewOffsetFromContainerOrigin = centerViewOffset;
+        this.generateScaledContainerRectForMap();
     }
         
     public HUDMap(TwoDimensionalMovement centerViewOffset,
             Dimension windowDimension,
-            Universe universe,
+            Container container,
             WindowCorner cornerOfWindow){
         
         
         super(ActorType.HUDElement, new Point(0, 0), Color.BLACK);
         //^^same description/explanation as other constructor's call to super
         this.windowDimension = windowDimension;
-        this.universe = universe;
+        this.container = container;
         this.cornerOfWindow = cornerOfWindow;
-        this.centerViewOffsetFromUniverseOrigin = centerViewOffset;
-        this.generateScaledUniverseRectForMap();
+        this.centerViewOffsetFromContainerOrigin = centerViewOffset;
+        this.generateScaledContainerRectForMap();
     }
 
     
     
-    private Actor[] generateChildActors(int ratioUniverseToMapOf){
+    private Actor[] generateChildActors(int ratioContainerToMapOf){
 
         //setting up
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=                        
         TwoDimensionalMovement scaledCenterViewOffset =
-                this.centerViewOffsetFromUniverseOrigin.getMovementDividedByFactor(ratioUniverseToMapOf);
+                this.centerViewOffsetFromContainerOrigin.getMovementDividedByFactor(ratioContainerToMapOf);
 
         int viewMapPointX = this.getTopLeftLocation().x -
                 scaledCenterViewOffset.getXMovement();
@@ -101,28 +101,28 @@ public class HUDMap extends Actor{
         
         Point viewMapPoint = new Point(viewMapPointX, viewMapPointY);
 
-        Actor[] membersOfUniverse = this.universe.getMembersOfUniverse();
-        int numChildActors = 2/*for viewMap & center point*/ + membersOfUniverse.length;
+        Actor[] membersOfContainer = this.container.getMembersOfContainer();
+        int numChildActors = 2/*for viewMap & center point*/ + membersOfContainer.length;
         
         Actor[] childActors = new Actor[numChildActors];
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=                
         //done w/ setup
         
         
-        //scaling and re-creating members of universe
+        //scaling and re-creating members of container
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=                
         int i = 0;
-        for(Actor member: membersOfUniverse){
+        for(Actor member: membersOfContainer){
             
-            Point memberUniverseLoc = member.getTopLeftLocation();
+            Point memberOfContainerLoc = member.getTopLeftLocation();
             
-            int scaledX = this.getTopLeftLocation().x + (memberUniverseLoc.x/ratioUniverseToMapOf);
+            int scaledX = this.getTopLeftLocation().x + (memberOfContainerLoc.x/ratioContainerToMapOf);
             
-            int scaledY = this.getTopLeftLocation().y + (memberUniverseLoc.y/ratioUniverseToMapOf);
+            int scaledY = this.getTopLeftLocation().y + (memberOfContainerLoc.y/ratioContainerToMapOf);
             Point convertedPoint = new Point(scaledX, scaledY);
             
             Shape memberShapeForMap = this.getShapeShrunkByFactorPositionedAtPoint(
-                                            member.getShape(),ratioUniverseToMapOf,
+                                            member.getShape(),ratioContainerToMapOf,
                                             convertedPoint);
             
             Actor currentActorConvertedForMap = new Actor(ActorType.HUDElement,
@@ -133,14 +133,14 @@ public class HUDMap extends Actor{
             i++;
         }
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=        
-        //done scaling and re-creating members of universe
+        //done scaling and re-creating members of container
 
         
         //creating map view actor
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=        
         
-        int viewMapWidth = this.getWindowDimension().width/ratioUniverseToMapOf;
-        int viewMapHeight = this.getWindowDimension().height/ratioUniverseToMapOf;
+        int viewMapWidth = this.getWindowDimension().width/ratioContainerToMapOf;
+        int viewMapHeight = this.getWindowDimension().height/ratioContainerToMapOf;
         Rectangle viewMapRect = new Rectangle(0, 0, viewMapWidth, viewMapHeight);
         
         Actor viewMap = new Actor(ActorType.HUDElement, viewMapPoint, this.colorOfWindowRepresentation, viewMapRect);
@@ -170,29 +170,28 @@ public class HUDMap extends Actor{
     }
     
 
-    private void generateScaledUniverseRectForMap(){
+    private void generateScaledContainerRectForMap(){
         
         
         int maxMapWidthOrHeight = (int)(percentOfWindowMapCanHave*this.windowDimension.getHeight());        
         
-        Dimension universeRect = this.getProperSizeForDimensionWithLimits(
-                this.universe.getBoundsDimension(),
+        Dimension containerRect = this.getProperSizeForDimensionWithLimits(this.container.getBoundsDimension(),
                 maxMapWidthOrHeight);
 
-        int scaleRatioUniverseOverMapRepr = (this.universe.getBoundsDimension().width/
-                                                universeRect.width);
+        int scaleRatioContainerOverMapRepr = (this.container.getBoundsDimension().width/
+                                                containerRect.width);
 
-        universeRect.width += (int)(universeRect.getWidth()*.10);
-        universeRect.height += (int)(universeRect.getHeight()*.10);
+        containerRect.width += (int)(containerRect.getWidth()*.10);
+        containerRect.height += (int)(containerRect.getHeight()*.10);
         
-        this.shape = new Rectangle(0, 0, universeRect.width, universeRect.height);
+        this.shape = new Rectangle(0, 0, containerRect.width, containerRect.height);
         
         int pointX = 0, pointY = 0;
         
         switch(this.getCornerOfWindow()){
         
             case TOP_RIGHT:
-                pointX = (this.windowDimension.width - universeRect.width) - this.inset;
+                pointX = (this.windowDimension.width - containerRect.width) - this.inset;
                 pointY = this.inset;
                 break;
                 
@@ -204,21 +203,21 @@ public class HUDMap extends Actor{
                 
             case BOTTOM_LEFT:
                 pointX = this.inset;
-                pointY = (this.windowDimension.height - universeRect.height) - this.inset;
+                pointY = (this.windowDimension.height - containerRect.height) - this.inset;
                 
                 break;
                 
             case BOTTOM_RIGHT:
-                pointX = (this.windowDimension.width - universeRect.width) - this.inset;
-                pointY = (this.windowDimension.height - universeRect.height) - this.inset;
+                pointX = (this.windowDimension.width - containerRect.width) - this.inset;
+                pointY = (this.windowDimension.height - containerRect.height) - this.inset;
 
                 break;
         }
         
-        Point mapUniverseRectPoint = new Point(pointX, pointY);
+        Point mapContainerRectPoint = new Point(pointX, pointY);
                 
-        this.setTopLeftLocation(mapUniverseRectPoint);
-        this.setChildActors(this.generateChildActors(scaleRatioUniverseOverMapRepr));
+        this.setTopLeftLocation(mapContainerRectPoint);
+        this.setChildActors(this.generateChildActors(scaleRatioContainerOverMapRepr));
         
     }
 
@@ -261,17 +260,17 @@ public class HUDMap extends Actor{
     }
 
     /**
-     * @return the universe
+     * @return the container
      */
-    private Universe getUniverse() {
-        return universe;
+    private Container getContainer() {
+        return container;
     }
 
     /**
-     * @param universe the universe to set
+     * @param container the container to set
      */
-    public void setUniverse(Universe universe) {
-        this.universe = universe;
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     /**

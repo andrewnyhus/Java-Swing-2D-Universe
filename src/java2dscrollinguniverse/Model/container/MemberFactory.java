@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.universe;
+package java2dscrollinguniverse.Model.container;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -42,51 +42,51 @@ import java2dscrollinguniverse.SettingsSingleton;
  */
 public class MemberFactory {
 
-    private Dimension universeBounds;
+    private Dimension containerBounds;
     private final int wallThickness = 10;
-    public MemberFactory(Dimension universeBounds) {
-        this.universeBounds = universeBounds;
+    public MemberFactory(Dimension containerBounds) {
+        this.containerBounds = containerBounds;
     }
     
     public Actor getBackgroundRect(){
         return new Actor(ActorType.miscObject, new Point(0, 0),
-                SettingsSingleton.getInstance().getUniverseBackgroundColor(),
-                new Rectangle(0, 0, this.universeBounds.width, this.universeBounds.height));
+                SettingsSingleton.getInstance().getContainerBackgroundColor(),
+                new Rectangle(0, 0, this.containerBounds.width, this.containerBounds.height));
     }
     
     public Wall[] generateWalls(){
         Wall[] walls = new Wall[4];
         
         Point topLeftLoc = new Point(0, 0);
-        Point topRightLoc = new Point(this.universeBounds.width, 0);
-        Point bottomLeftLoc = new Point(0, this.universeBounds.height);
+        Point topRightLoc = new Point(this.containerBounds.width, 0);
+        Point bottomLeftLoc = new Point(0, this.containerBounds.height);
         
         Point locWall0 = new Point(0, 0);
         Point locWall1 = new Point(0, 0);
-        Point locWall2 = new Point(this.universeBounds.width - 10, 0);
-        Point locWall3 = new Point(0, this.universeBounds.height - 10);
+        Point locWall2 = new Point(this.containerBounds.width - 10, 0);
+        Point locWall3 = new Point(0, this.containerBounds.height - 10);
 
 
-        walls[PerimeterSide.LEFT.getValue()] = new Wall(locWall0, new Rectangle(0, 0, wallThickness, this.universeBounds.height));
-        walls[PerimeterSide.TOP.getValue()] = new Wall(locWall1, new Rectangle(0, 0, this.universeBounds.width, wallThickness));
-        walls[PerimeterSide.RIGHT.getValue()] = new Wall(locWall2, new Rectangle(0, 0, 10, this.universeBounds.height));
-        walls[PerimeterSide.BOTTOM.getValue()] = new Wall(locWall3, new Rectangle(0, 0, this.universeBounds.width, wallThickness));
+        walls[PerimeterSide.LEFT.getValue()] = new Wall(locWall0, new Rectangle(0, 0, wallThickness, this.containerBounds.height));
+        walls[PerimeterSide.TOP.getValue()] = new Wall(locWall1, new Rectangle(0, 0, this.containerBounds.width, wallThickness));
+        walls[PerimeterSide.RIGHT.getValue()] = new Wall(locWall2, new Rectangle(0, 0, 10, this.containerBounds.height));
+        walls[PerimeterSide.BOTTOM.getValue()] = new Wall(locWall3, new Rectangle(0, 0, this.containerBounds.width, wallThickness));
         
         return walls;
     }
     
     public Actor[] generateMiscellaneousActorsRandomly(){
-        int widthInset = (int)(this.universeBounds.getWidth() * .15);
-        int heightInset = (int)(this.universeBounds.getHeight() * .15);
+        int widthInset = (int)(this.containerBounds.getWidth() * .15);
+        int heightInset = (int)(this.containerBounds.getHeight() * .15);
                 
-        int acceptableWidth = (this.universeBounds.width - (widthInset*2));
-        int acceptableHeight = (this.universeBounds.height - (heightInset*2));
+        int acceptableWidth = (this.containerBounds.width - (widthInset*2));
+        int acceptableHeight = (this.containerBounds.height - (heightInset*2));
         
         int minimumX = widthInset;
-        int maximumX = this.universeBounds.width - widthInset;
+        int maximumX = this.containerBounds.width - widthInset;
         
         int minimumY = heightInset;
-        int maximumY = this.universeBounds.height - heightInset;
+        int maximumY = this.containerBounds.height - heightInset;
         
         int acceptableArea = acceptableWidth*acceptableHeight;
         

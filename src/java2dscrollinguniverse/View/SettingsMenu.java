@@ -57,7 +57,7 @@ import javax.swing.text.BadLocationException;
  */
 public class SettingsMenu extends JOptionPane{
     //---===---===---===---===---===---===---===---===---===---===---===---===    
-    private Color initialUniverseBGColor = SettingsSingleton.getInstance().getUniverseBackgroundColor();
+    private Color initialContainerBGColor = SettingsSingleton.getInstance().getContainerBackgroundColor();
     private Color initialCenterOfViewActorColor = SettingsSingleton.getInstance().getCenterOfViewActorColor();
     private Color initialPerimeterColor = SettingsSingleton.getInstance().getPerimeterColor();
     private Dimension initialViewDimension = SettingsSingleton.getInstance().getWindowDimension();
@@ -68,7 +68,7 @@ public class SettingsMenu extends JOptionPane{
     //end of initial data members
     
     //---===---===---===---===---===---===---===---===---===---===---===---===
-    private Color currentUniverseBGColor;
+    private Color currentContainerBGColor;
     private Color currentCenterOfViewActorColor;
     private Color currentPerimeterColor;
     private Dimension currentViewDimension;
@@ -110,7 +110,7 @@ public class SettingsMenu extends JOptionPane{
     public SettingsMenu(){
         super("", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
         
-        this.currentUniverseBGColor = this.initialUniverseBGColor;
+        this.currentContainerBGColor = this.initialContainerBGColor;
         this.currentCenterOfViewActorColor = this.initialCenterOfViewActorColor;
         this.currentPerimeterColor = this.initialPerimeterColor;
         this.currentViewDimension = new Dimension(this.initialViewDimension.width, this.initialViewDimension.height);
@@ -186,7 +186,7 @@ public class SettingsMenu extends JOptionPane{
                                 cInit = this.currentCenterOfViewActorColor;
                                 break;
                             case "Background Of Universe":
-                                cInit = this.currentUniverseBGColor;
+                                cInit = this.currentContainerBGColor;
                                 break;
                         }
 
@@ -205,7 +205,7 @@ public class SettingsMenu extends JOptionPane{
                                 this.currentCenterOfViewActorColor = c;
                                 break;
                             case "Background Of Universe":
-                                this.currentUniverseBGColor = c;
+                                this.currentContainerBGColor = c;
                                 break;
                         }
                         
@@ -324,7 +324,7 @@ public class SettingsMenu extends JOptionPane{
     private void updateApplyChangesButton(){
     
         boolean changesFound = true;
-        if(this.initialUniverseBGColor.equals(this.currentUniverseBGColor)&&
+        if(this.initialContainerBGColor.equals(this.currentContainerBGColor)&&
                 this.initialViewDimension.equals(this.currentViewDimension)&&
                 this.initialCenterOfViewActorSpeed == this.currentCenterOfViewActorSpeed&&
                 this.initialCenterOfViewActorColor.equals(this.currentCenterOfViewActorColor)&&
@@ -339,7 +339,7 @@ public class SettingsMenu extends JOptionPane{
     }
     
     private void applyChanges(){
-        this.initialUniverseBGColor = this.currentUniverseBGColor;
+        this.initialContainerBGColor = this.currentContainerBGColor;
         this.initialPerimeterColor = this.currentPerimeterColor;
         this.initialCenterOfViewActorColor = this.currentCenterOfViewActorColor;
         this.initialCenterOfViewActorSpeed = this.currentCenterOfViewActorSpeed;
@@ -347,7 +347,7 @@ public class SettingsMenu extends JOptionPane{
         this.initialShouldDisplayHUDMap = this.currentShouldDisplayHUDMap;
         this.initialWindowCornerHUDMap = this.currentWindowCornerHUDMap;
         
-        SettingsSingleton.getInstance().setUniverseBackgroundColor(this.initialUniverseBGColor);
+        SettingsSingleton.getInstance().setContainerBackgroundColor(this.initialContainerBGColor);
         SettingsSingleton.getInstance().setPerimeterColor(this.initialPerimeterColor);
         SettingsSingleton.getInstance().setCenterOfViewActorColor(this.initialCenterOfViewActorColor);
         SettingsSingleton.getInstance().setCenterOfViewActorSpeed(this.initialCenterOfViewActorSpeed);
@@ -371,7 +371,7 @@ public class SettingsMenu extends JOptionPane{
                 c = this.currentCenterOfViewActorColor;
                 break;
             case "Background Of Universe":
-                c = this.currentUniverseBGColor;
+                c = this.currentContainerBGColor;
                 break;        
         }
         
