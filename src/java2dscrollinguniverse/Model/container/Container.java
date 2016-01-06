@@ -25,6 +25,10 @@ package java2dscrollinguniverse.Model.container;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
@@ -37,7 +41,7 @@ import java2dscrollinguniverse.Model.actors.Wall;
  */
 public class Container {
     
-    private Actor[] membersOfContainer;
+    private ArrayList<Actor> membersOfContainer;
     private Dimension boundsDimension;
     private MemberFactory factory;
     
@@ -173,7 +177,7 @@ public class Container {
     /**
      * @return the membersOfContainer
      */
-    public Actor[] getMembersOfContainer() {
+    public ArrayList<Actor> getMembersOfContainer() {
         return membersOfContainer;
     }
 
@@ -189,6 +193,37 @@ public class Container {
      */
     public void setBoundsDimension(Dimension boundsDimension) {
         this.boundsDimension = boundsDimension;
+    }
+    
+    public ArrayList<Actor> getMembersIntersectingWithPoint(Point p){
+        ArrayList<Actor> returnActors = new ArrayList();
+        
+        for(Actor aInContainer: this.getMembersOfContainer()){
+        
+            Shape shapeWhenDrawn = this.getShapeWithOffsetFromOrigin(aInContainer.getShape(),
+                    aInContainer.getTopLeftLocation());
+            
+            if(shapeWhenDrawn.contains(p))
+                returnActors.add(aInContainer);
+        
+        }
+        
+        return returnActors;
+    }
+    
+    public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){
+                
+        if(s instanceof Rectangle){
+            Rectangle returnShape = new Rectangle(p.x, p.y, s.getBounds().width, s.getBounds().height);
+            return returnShape;
+        }else if(s instanceof Ellipse2D.Double){
+            Ellipse2D.Double returnShape = new Ellipse2D.Double(p.getX(), p.getY(), s.getBounds().getWidth(), s.getBounds().getHeight());
+            return returnShape;
+        }
+        
+        //TODO: include more shapes than just rectangle
+        
+        return s;
     }
     
     

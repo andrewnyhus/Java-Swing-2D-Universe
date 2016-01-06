@@ -123,6 +123,11 @@ public class MainViewComponent extends JPanel{
                 
                 g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
                 
+                String alString = a.getActorLabel().getLabelText();
+                Point alPoint = a.getLocationOfLabelPosition();
+                
+                this.drawActorLabel(alPoint, alString, g2d);
+                
             }
         }
     }
@@ -140,9 +145,14 @@ public class MainViewComponent extends JPanel{
             Point currentWallTopLeftLocationToDraw =
                     centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
             
-            
-            
             g2d.fill(this.getShapeWithOffsetFromOrigin(currentWallShape, currentWallTopLeftLocationToDraw));
+
+            String wlString = w.getActorLabel().getLabelText();
+            Point wlPoint = w.getLocationOfLabelPosition();
+
+            this.drawActorLabel(wlPoint, wlString, g2d);
+            
+            
         }
     }
 
@@ -161,7 +171,7 @@ public class MainViewComponent extends JPanel{
         //set topLeft location to the bgRectShape variable, and use it to draw
         //bgRectShape.getBounds2D()..setLocation(bgRectTopLeftLocationToDraw.getX(), bgRectTopLeftLocationToDraw.getX());
         
-        g2d.fill(this.getShapeWithOffsetFromOrigin(bgRectShape, bgRectTopLeftLocationToDraw));
+        g2d.fill(this.getShapeWithOffsetFromOrigin(bgRectShape, bgRectTopLeftLocationToDraw));    
     }
 
     private Dimension drawCenterOfViewActor(Graphics2D g2d) {
@@ -174,13 +184,13 @@ public class MainViewComponent extends JPanel{
                 (viewDimensions.height/2) );
         g2d.fill(this.getShapeWithOffsetFromOrigin(centerOfViewActorShape, centerViewPoint));
         
-        Point centerOfViewActorLabelLoc = new Point(centerViewPoint.x +
-                            centerOfViewActorShape.getBounds().width + 15,
-                            centerViewPoint.y + centerOfViewActorShape.getBounds().height/2 );
+        Point centerOfViewActorLabelLoc = this.updatedContainer.getCenterOfViewActor().
+                                            getLocationOfLabelPosition();
         
-        g2d.drawString("<< Center Of View",
-                                            centerOfViewActorLabelLoc.x,
-                                            centerOfViewActorLabelLoc.y);
+        String centerOfViewActorLabelStr = this.updatedContainer.getCenterOfViewActor().
+                                            getActorLabel().getLabelText();
+
+        this.drawActorLabel(centerOfViewActorLabelLoc, centerOfViewActorLabelStr, g2d);
         
         return viewDimensions;
     }
@@ -209,7 +219,7 @@ public class MainViewComponent extends JPanel{
             
             
             g2d.fill(mapActorShape);
-            
+
             
             if(map.getChildActors() != null){
                 for(Actor childActor: map.getChildActors()){
@@ -275,5 +285,17 @@ public class MainViewComponent extends JPanel{
         return s;
     }
     
+    private void drawActorLabel(Point labelLocInContainer, String s, Graphics2D g2d){
         
+        labelLocInContainer.x += this.getCenterOfViewActorOffsetFromModelToView().
+                                                                    getXMovement();
+        labelLocInContainer.y += this.getCenterOfViewActorOffsetFromModelToView().
+                                                                    getYMovement();
+        //now labelLocInContainer represents the location to be drawn in the view
+        //no longer does it represent the location of the label in the container data model
+        
+        g2d.drawString(s, labelLocInContainer.x, labelLocInContainer.y);
+        
+    }
+
 }

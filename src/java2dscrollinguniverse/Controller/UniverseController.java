@@ -27,11 +27,16 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
+import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.container.Container;
 import java2dscrollinguniverse.SettingsSingleton;
 import java2dscrollinguniverse.View.MainViewComponent;
@@ -87,6 +92,7 @@ public class UniverseController implements KeyListener, ActionListener{
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.addKeyListenerToView();
+        this.addMouseListenerToView();
     }
     
     public Container getContainer(){
@@ -314,6 +320,46 @@ public class UniverseController implements KeyListener, ActionListener{
      */
     public void setContainer(Container container) {
         this.container = container;
+    }
+    
+    public Point translatePointInViewToPointInContainer(Point pInView){
+        TwoDimensionalMovement currentViewOffset = UniverseController.this.view.
+                                getCenterOfViewActorOffsetFromModelToView();
+
+        Point translatedPoint = new Point(pInView.x - currentViewOffset.getXMovement(),
+                                          pInView.y - currentViewOffset.getYMovement());
+        return translatedPoint;
+    }
+
+    private void addMouseListenerToView() {
+        
+        MouseAdapter mouseHandler = (new MouseAdapter(){
+            
+            @Override
+            public void mouseDragged(MouseEvent e){
+                super.mouseDragged(e);
+                //this fires repeatedly after each mouse movement during a drag
+                //action by the user
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e){
+                super.mouseClicked(e);
+                //this method fires if the point at mouseEntered and mouseReleased are the same
+
+                Point p = UniverseController.this.translatePointInViewToPointInContainer(e.getPoint());
+                
+                ArrayList<Actor> actorsClickedOn = UniverseController.this.getContainer().getMembersIntersectingWithPoint(p);
+                
+                System.out.println("clicked on:" + actorsClickedOn);
+                
+            }
+            
+        });
+        
+        this.view.addMouseListener(mouseHandler);
+        this.view.addMouseMotionListener(mouseHandler);
+        
     }
     
 }

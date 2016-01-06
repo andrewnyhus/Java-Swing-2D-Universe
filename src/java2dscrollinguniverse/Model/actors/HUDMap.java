@@ -29,6 +29,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.container.Container;
 
@@ -86,7 +87,7 @@ public class HUDMap extends Actor{
 
     
     
-    private Actor[] generateChildActors(int ratioContainerToMapOf){
+    private Actor[] generateChildActorsForMap(int ratioContainerToMapOf){
 
         //setting up
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=                        
@@ -101,8 +102,8 @@ public class HUDMap extends Actor{
         
         Point viewMapPoint = new Point(viewMapPointX, viewMapPointY);
 
-        Actor[] membersOfContainer = this.container.getMembersOfContainer();
-        int numChildActors = 2/*for viewMap & center point*/ + membersOfContainer.length;
+        ArrayList<Actor> membersOfContainer = this.container.getMembersOfContainer();
+        int numChildActors = 2/*for viewMap & center point*/ + membersOfContainer.size();
         
         Actor[] childActors = new Actor[numChildActors];
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=                
@@ -217,7 +218,7 @@ public class HUDMap extends Actor{
         Point mapContainerRectPoint = new Point(pointX, pointY);
                 
         this.setTopLeftLocation(mapContainerRectPoint);
-        this.setChildActors(this.generateChildActors(scaleRatioContainerOverMapRepr));
+        this.setChildActors(this.generateChildActorsForMap(scaleRatioContainerOverMapRepr));
         
     }
 

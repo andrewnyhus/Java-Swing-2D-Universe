@@ -26,6 +26,7 @@ package java2dscrollinguniverse.Model.actors;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
+import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
 
 /**
  *
@@ -38,12 +39,14 @@ public class Actor {
     Color color;
     private Shape shape;
     private Actor[] childActors;
+    private ActorLabel actorLabel;
     
     public Actor(ActorType type, Point loc, Color color){
         this.type = type;
         this.topLeftLocation = loc;
         this.color = color;
         this.childActors = null;
+        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_TOP);
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s){
@@ -52,6 +55,7 @@ public class Actor {
         this.color = color;
         this.shape = s;        
         this.childActors = null;
+        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_TOP);
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors){
@@ -60,13 +64,18 @@ public class Actor {
         this.color = color;
         this.shape = s;        
         this.childActors = childActors;
+        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_TOP);
     }
 
-    
+    public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors, ActorLabel actorLabel){
+        this.type = type;
+        this.topLeftLocation = loc;
+        this.color = color;
+        this.shape = s;        
+        this.childActors = childActors;
+        this.actorLabel = actorLabel;
+    }
 
-    
- 
-    
     public int getWidth(){
         return this.getShape().getBounds().width;
     }
@@ -177,10 +186,87 @@ public class Actor {
     }
     
     
+    public Point getLocationOfLabelPosition(){
+        Point currentActorLoc = this.getTopLeftLocation();
+        int labelPosX = currentActorLoc.x, labelPosY = currentActorLoc.y;
+        int offsetFromActor = 12;
+        switch(this.getActorLabel().getPosition()){
+        
+            case LEFT_OF_TOP:
+                //leave labelPosX alone, should have same x value as actor
+                labelPosY -= offsetFromActor; //just above actor
+                break;
+                
+            case MIDDLE_OF_TOP:
+                labelPosX += this.getWidth()/2; // actor.x + 1/2 of width
+                labelPosY -= offsetFromActor;//just above actor
+                break;
+            
+            case RIGHT_OF_TOP:
+                labelPosX += this.getWidth()*(4/5); //label.x should be mostly at right corner 
+                labelPosY -= offsetFromActor;//just above actor
+                break;
+                
+            case TOP_OF_RIGHT:
+                labelPosX += offsetFromActor + this.getWidth();//label.x is actor.x + width + offsetFromActor
+                //labelPosY is left alone, since it's at the top
+                break;
+                
+            case MIDDLE_OF_RIGHT:
+                labelPosX += offsetFromActor + this.getWidth();//label.x is actor.x + width + offsetFromActor
+                labelPosY += this.getHeight()/2; //label.y aligned with actor along y axis
+                break;
+                
+            case BOTTOM_OF_RIGHT:
+                labelPosX += offsetFromActor + this.getWidth();//label.x is actor.x + width + offsetFromActor
+                labelPosY += this.getHeight()*(4/5);//mostly at bottom of actor
+                break;
+                
+            case RIGHT_OF_BOTTOM:
+                labelPosX += this.getWidth()*(4/5); //label.x should be mostly at right corner 
+                labelPosY += this.getHeight() + offsetFromActor;//label.y is below actor
+                break;
+                
+            case MIDDLE_OF_BOTTOM:
+                labelPosX += this.getWidth()/2; // actor.x + 1/2 of width
+                labelPosY += this.getHeight() + offsetFromActor;//label.y is below actor
+                break;
+                
+            case LEFT_OF_BOTTOM:
+                //leave labelPosX alone, should have same x value as actor
+                labelPosY += this.getHeight() + offsetFromActor;//label.y is below actor
+                break;
+                
+        }
+        
+        return new Point(labelPosX, labelPosY);
+        
+    }
+    
     public static Actor copyInstanceOfActor(Actor a){
         return new Actor(a.getType(), a.getTopLeftLocation(),
                 a.getColor(), a.getShape(), a.getChildActors());
     }
+
+    /**
+     * @return the actorLabel
+     */
+    public ActorLabel getActorLabel() {
+        return actorLabel;
+    }
+
+    /**
+     * @param actorLabel the actorLabel to set
+     */
+    public void setActorLabel(ActorLabel actorLabel) {
+        this.actorLabel = actorLabel;
+    }
     
+    @Override
+    public String toString(){
+        return "Shape:" + this.getShape().getClass().getName() +
+                "\nw:" + this.shape.getBounds().width + " h:" + this.shape.getBounds().height +
+                "\nx:" + this.getTopLeftLocation().x + " y:" + this.getTopLeftLocation().y;
+    }
     
 }

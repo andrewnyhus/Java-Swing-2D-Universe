@@ -25,6 +25,7 @@ package java2dscrollinguniverse.Model.actors;
 
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
+import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
 import java2dscrollinguniverse.SettingsSingleton;
 
 /**
@@ -35,11 +36,12 @@ public class CenterOfViewActor extends Actor{
     
     public CenterOfViewActor(int centerOfViewActorWidth, int centerOfViewActorHeight){
         super(ActorType.centerOfViewActor, 
-                new Point(SettingsSingleton.getInstance().getWindowWidth()/2 ,//x
-                        SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
-                        SettingsSingleton.getInstance().getCenterOfViewActorColor(), 
-                        new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth,
-                                                        1.0*centerOfViewActorHeight));
+            new Point(SettingsSingleton.getInstance().getWindowWidth()/2 ,//x
+                    SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
+            SettingsSingleton.getInstance().getCenterOfViewActorColor(),//color 
+            new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth, 1.0*centerOfViewActorHeight),//shape
+            null,//childActors
+            new ActorLabel("^CenterOfView Actor", PositionOfLabel.MIDDLE_OF_BOTTOM));//label
     }
     
     

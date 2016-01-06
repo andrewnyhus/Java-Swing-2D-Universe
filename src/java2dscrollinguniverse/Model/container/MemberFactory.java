@@ -29,6 +29,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java.util.Random;
 import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.actors.Actor;
@@ -75,7 +76,7 @@ public class MemberFactory {
         return walls;
     }
     
-    public Actor[] generateMiscellaneousActorsRandomly(){
+    public ArrayList<Actor> generateMiscellaneousActorsRandomly(){
         int widthInset = (int)(this.containerBounds.getWidth() * .15);
         int heightInset = (int)(this.containerBounds.getHeight() * .15);
                 
@@ -98,7 +99,7 @@ public class MemberFactory {
         
         int numActors = randomGen.nextInt(maxNumActors);
         
-        Actor[] actors = new Actor[numActors];
+        ArrayList<Actor> actors = new ArrayList(numActors);
         
         for(int i = 0; i < numActors; i++){
             //ActorType type, Point loc, Color color, Shape s
@@ -133,9 +134,7 @@ public class MemberFactory {
             }else{
                 s = null;
             }
-            
-            actors[i] = new Actor(ActorType.miscObject, p, c, s);
-        
+            actors.add(i, new Actor(ActorType.miscObject, p, c, s));
         }
         
         return actors;
