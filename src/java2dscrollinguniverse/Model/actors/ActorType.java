@@ -29,10 +29,8 @@ package java2dscrollinguniverse.Model.actors;
  */
 public enum ActorType {
 
-    /**
-     *Different values that correspond to
-     */
-    miscObject(0), wall(1), player(2), HUDElement(3);
+    
+    miscObject(0), wall(1), centerOfViewActor(2), HUDElement(3);
     
     private int value;
     
@@ -49,8 +47,8 @@ public enum ActorType {
     /**
      * Returns a boolean value that represents whether or not the actor's
      * position within the view should be fixed or if it should change.  
-     * The player object should be fixed at the center, and any HUD elements
-     * should have a fixed location.  
+     * The centerOfViewActor object should be fixed at the center, and any HUD elements
+ should have a fixed location.  
      * @return bool viewLocShouldChange
      */
     public boolean viewLocationShouldChange(){

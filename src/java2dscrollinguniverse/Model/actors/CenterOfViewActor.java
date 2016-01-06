@@ -31,19 +31,20 @@ import java2dscrollinguniverse.SettingsSingleton;
  *
  * @author andrewnyhus
  */
-public class Player extends Actor{
+public class CenterOfViewActor extends Actor{
     
-    public Player(int playerWidth, int playerHeight){
-        super(ActorType.player, 
+    public CenterOfViewActor(int centerOfViewActorWidth, int centerOfViewActorHeight){
+        super(ActorType.centerOfViewActor, 
                 new Point(SettingsSingleton.getInstance().getWindowWidth()/2 ,//x
                         SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
-                SettingsSingleton.getInstance().getPlayerColor(), 
-                new Ellipse2D.Double(0.0, 0.0, 1.0*playerWidth, 1.0*playerHeight));
+                        SettingsSingleton.getInstance().getCenterOfViewActorColor(), 
+                        new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth,
+                                                        1.0*centerOfViewActorHeight));
     }
     
     
-    public static Player copyInstanceOfPlayer(Player p){
-        return new Player(p.getWidth(), p.getHeight());
+    public static CenterOfViewActor copyInstanceOfCenterOfViewActor(CenterOfViewActor cva){
+        return new CenterOfViewActor(cva.getWidth(), cva.getHeight());
     }
 
 }

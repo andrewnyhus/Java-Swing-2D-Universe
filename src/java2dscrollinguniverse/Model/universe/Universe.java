@@ -28,7 +28,7 @@ import java.awt.Point;
 import java2dscrollinguniverse.Model.PerimeterSide;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.actors.Player;
+import java2dscrollinguniverse.Model.actors.CenterOfViewActor;
 import java2dscrollinguniverse.Model.actors.Wall;
 
 /**
@@ -43,7 +43,7 @@ public class Universe {
     
     private Wall[] perimeterWalls;//wall: (0)left (1)top (2)right (3)bottom.
     private Actor bgRect;
-    private Player player;
+    private CenterOfViewActor centerOfViewActor;
     
     public Universe(Dimension boundsDimension){
         this.boundsDimension = boundsDimension;
@@ -51,7 +51,7 @@ public class Universe {
         
         this.perimeterWalls = this.factory.generateWalls();
         this.bgRect = this.factory.getBackgroundRect();
-        this.player = new Player(15, 15);//create player with width and height
+        this.centerOfViewActor = new CenterOfViewActor(15, 15);//create centerOfViewActor with width and height
         
         this.membersOfUniverse = this.factory.generateMiscellaneousActorsRandomly();
     }
@@ -63,8 +63,8 @@ public class Universe {
         return this.perimeterWalls;
     }
     
-    public Player getPlayer(){
-        return this.player;
+    public CenterOfViewActor getCenterOfViewActor(){
+        return this.centerOfViewActor;
     }
     
     public void attemptToMoveActor(Actor a, TwoDimensionalMovement movement){

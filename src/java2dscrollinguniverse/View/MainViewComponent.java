@@ -90,8 +90,8 @@ public class MainViewComponent extends JPanel{
             
             //Begin painting :) ...picasso style
             
-            //gets the difference of (center of view) - (player location in model)
-            TwoDimensionalMovement playerOffsetFromModel = this.getPlayerOffsetFromModelToView();
+            //gets the offset of view's center from origin of the universe
+            TwoDimensionalMovement centerOfViewOffsetFromModel = this.getCenterOfViewActorOffsetFromModelToView();
             
             //set "pen" with proper color for background rectangle
             g2d.setColor(SettingsSingleton.getInstance().getUniverseBackgroundColor());
@@ -101,11 +101,9 @@ public class MainViewComponent extends JPanel{
             
             //get top left location of backgroundRect
             Point bgRectTopLeftLocationToDraw = 
-                    playerOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedUniverse.getBackgroundRect().getTopLeftLocation());
+                    centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedUniverse.getBackgroundRect().getTopLeftLocation());
             
-            //** TODO: update this top left loc to be appropriate with the offset of centering 
-            //the player within the view.
-            
+                        
             //set topLeft location to the bgRectShape variable, and use it to draw
             //bgRectShape.getBounds2D()..setLocation(bgRectTopLeftLocationToDraw.getX(), bgRectTopLeftLocationToDraw.getX());
             
@@ -121,7 +119,7 @@ public class MainViewComponent extends JPanel{
                 
                 //get top left location of the current wall
                 Point currentWallTopLeftLocationToDraw =
-                        playerOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
+                        centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
                 
                 
                 
@@ -143,7 +141,7 @@ public class MainViewComponent extends JPanel{
 
                     //get top left location of the current Actor
                     Point currentActorTopLeftLocationToDraw =
-                            playerOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+                            centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
 
                     g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
                 
@@ -156,16 +154,12 @@ public class MainViewComponent extends JPanel{
             
             
             
-            //set "pen" to proper color for drawing the player
-            g2d.setColor(SettingsSingleton.getInstance().getPlayerColor());
+            //set "pen" to proper color for drawing the centerOfViewActor
+            g2d.setColor(SettingsSingleton.getInstance().getCenterOfViewActorColor());
             
-            // get shape of player 
-            Shape playerShape = this.updatedUniverse.getPlayer().getShape();
+            // get shape of centerOfViewActor 
+            Shape centerOfViewActorShape = this.updatedUniverse.getCenterOfViewActor().getShape();
             
-            // get top left location of player 
-                //**was working: Point playerTopLeftLocationToDraw = this.updatedUniverse.getPlayer().getTopLeftLocation();
-            
-            //experimental
             Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
             
             Point centerViewPoint = new Point( (viewDimensions.width/2),
@@ -173,14 +167,14 @@ public class MainViewComponent extends JPanel{
             
             
             
-            g2d.fill(this.getShapeWithOffsetFromOrigin(playerShape, centerViewPoint));
+            g2d.fill(this.getShapeWithOffsetFromOrigin(centerOfViewActorShape, centerViewPoint));
             
             boolean showHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
                         
             if(showHUDMap){
                 WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
                 
-                HUDMap map = new HUDMap(this.getPlayerOffsetFromModelToView(),
+                HUDMap map = new HUDMap(this.getCenterOfViewActorOffsetFromModelToView(),
                         viewDimensions, this.updatedUniverse, HUDMapWindowCorner);
 
                 g2d.setColor(map.getColor());
@@ -238,18 +232,16 @@ public class MainViewComponent extends JPanel{
             
     }
     
-    public TwoDimensionalMovement getPlayerOffsetFromModelToView(){
+    public TwoDimensionalMovement getCenterOfViewActorOffsetFromModelToView(){
         
-        //Rectangle playerBounds = this.updatedUniverse.getPlayer().getShape().getBounds();
         
         Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
-        //Dimension playerDimensions = new Dimension(playerBounds.width, playerBounds.height);
         
         Point centerViewPoint = new Point(viewDimensions.width/2, viewDimensions.height/2);
-        Point playerPointInModel = this.updatedUniverse.getPlayer().getTopLeftLocation();
+        Point centerOfViewActorPointInModel = this.updatedUniverse.getCenterOfViewActor().getTopLeftLocation();
         
-        return new TwoDimensionalMovement(centerViewPoint.x - playerPointInModel.x,
-                centerViewPoint.y - playerPointInModel.y);        
+        return new TwoDimensionalMovement(centerViewPoint.x - centerOfViewActorPointInModel.x,
+                centerViewPoint.y - centerOfViewActorPointInModel.y);        
     }
     
     

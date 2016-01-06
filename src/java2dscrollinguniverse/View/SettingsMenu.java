@@ -58,10 +58,10 @@ import javax.swing.text.BadLocationException;
 public class SettingsMenu extends JOptionPane{
     //---===---===---===---===---===---===---===---===---===---===---===---===    
     private Color initialUniverseBGColor = SettingsSingleton.getInstance().getUniverseBackgroundColor();
-    private Color initialPlayerColor = SettingsSingleton.getInstance().getPlayerColor();
+    private Color initialCenterOfViewActorColor = SettingsSingleton.getInstance().getCenterOfViewActorColor();
     private Color initialPerimeterColor = SettingsSingleton.getInstance().getPerimeterColor();
     private Dimension initialViewDimension = SettingsSingleton.getInstance().getWindowDimension();
-    private int initialPlayerSpeed = SettingsSingleton.getInstance().getPlayerSpeed();
+    private int initialCenterOfViewActorSpeed = SettingsSingleton.getInstance().getCenterOfViewActorSpeed();
     private boolean initialShouldDisplayHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
     private WindowCorner initialWindowCornerHUDMap = SettingsSingleton.getInstance().getHUDMapCorner();
     //---===---===---===---===---===---===---===---===---===---===---===---===
@@ -69,10 +69,10 @@ public class SettingsMenu extends JOptionPane{
     
     //---===---===---===---===---===---===---===---===---===---===---===---===
     private Color currentUniverseBGColor;
-    private Color currentPlayerColor;
+    private Color currentCenterOfViewActorColor;
     private Color currentPerimeterColor;
     private Dimension currentViewDimension;
-    private int currentPlayerSpeed;
+    private int currentCenterOfViewActorSpeed;
     private boolean currentShouldDisplayHUDMap;
     private WindowCorner currentWindowCornerHUDMap;
     //---===---===---===---===---===---===---===---===---===---===---===---===    
@@ -82,13 +82,13 @@ public class SettingsMenu extends JOptionPane{
     //---===---===---===---===---===---===---===---===---===---===---===---===
     private EnterNumericalValueField viewWidthField, viewHeightField;
     private JLabel viewWidthLabel, viewHeightLabel;
-    private String[] colorObjectChoices = {"Perimeter", "Player", "Background Of Universe"};
+    private String[] colorObjectChoices = {"Perimeter", "Center of View Actor", "Background Of Universe"};
 
     private JComboBox colorUpdateObjectSelector = new JComboBox(colorObjectChoices);
     private JButton setColorButton;
     
-    private JLabel playerSpeedLabel = new JLabel();
-    private JSlider playerSpeedSlider;
+    private JLabel centerOfViewActorSpeedLabel = new JLabel();
+    private JSlider centerOfViewActorSpeedSlider;
     
     private Icon iconObject = null;
 
@@ -111,10 +111,10 @@ public class SettingsMenu extends JOptionPane{
         super("", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
         
         this.currentUniverseBGColor = this.initialUniverseBGColor;
-        this.currentPlayerColor = this.initialPlayerColor;
+        this.currentCenterOfViewActorColor = this.initialCenterOfViewActorColor;
         this.currentPerimeterColor = this.initialPerimeterColor;
         this.currentViewDimension = new Dimension(this.initialViewDimension.width, this.initialViewDimension.height);
-        this.currentPlayerSpeed = this.initialPlayerSpeed;
+        this.currentCenterOfViewActorSpeed = this.initialCenterOfViewActorSpeed;
         this.currentShouldDisplayHUDMap = this.initialShouldDisplayHUDMap;
         this.currentWindowCornerHUDMap = this.initialWindowCornerHUDMap;
         
@@ -182,8 +182,8 @@ public class SettingsMenu extends JOptionPane{
                             case "Perimeter":
                                 cInit = this.currentPerimeterColor;
                                 break;
-                            case "Player":
-                                cInit = this.currentPlayerColor;
+                            case "Center of View Actor":
+                                cInit = this.currentCenterOfViewActorColor;
                                 break;
                             case "Background Of Universe":
                                 cInit = this.currentUniverseBGColor;
@@ -201,8 +201,8 @@ public class SettingsMenu extends JOptionPane{
                             case "Perimeter":
                                 this.currentPerimeterColor = c;
                                 break;
-                            case "Player":
-                                this.currentPlayerColor = c;
+                            case "Center of View Actor":
+                                this.currentCenterOfViewActorColor = c;
                                 break;
                             case "Background Of Universe":
                                 this.currentUniverseBGColor = c;
@@ -215,12 +215,12 @@ public class SettingsMenu extends JOptionPane{
         });
         
         
-        this.playerSpeedSlider = new JSlider(15, 25);
-        this.playerSpeedSlider.setValue(this.currentPlayerSpeed);
+        this.centerOfViewActorSpeedSlider = new JSlider(15, 25);
+        this.centerOfViewActorSpeedSlider.setValue(this.currentCenterOfViewActorSpeed);
         
-        this.playerSpeedSlider.addChangeListener((ChangeEvent e) -> {
-            this.currentPlayerSpeed = this.playerSpeedSlider.getValue();
-            this.updatePlayerSpeedLabel();
+        this.centerOfViewActorSpeedSlider.addChangeListener((ChangeEvent e) -> {
+            this.currentCenterOfViewActorSpeed = this.centerOfViewActorSpeedSlider.getValue();
+            this.updateCenterOfViewActorSpeedLabel();
             this.updateApplyChangesButton();
         });
         
@@ -259,7 +259,7 @@ public class SettingsMenu extends JOptionPane{
         });
         
         this.updateColorIcon();
-        this.updatePlayerSpeedLabel();        
+        this.updateCenterOfViewActorSpeedLabel();        
         this.updateApplyChangesButton();
 
     }
@@ -271,7 +271,7 @@ public class SettingsMenu extends JOptionPane{
         
         Object[] message = {
             this.setColorButton, this.colorUpdateObjectSelector, 
-            this.playerSpeedLabel, this.playerSpeedSlider,
+            this.centerOfViewActorSpeedLabel, this.centerOfViewActorSpeedSlider,
             increaseWindowString, this.viewWidthLabel, this.viewWidthField,
             this.viewHeightLabel, this.viewHeightField, 
             this.displayHUDMap, this.dontDisplayHUDMap, 
@@ -281,8 +281,8 @@ public class SettingsMenu extends JOptionPane{
         return message;
     }
     
-    private void updatePlayerSpeedLabel(){
-        this.playerSpeedLabel.setText("Player speed was: " + this.initialPlayerSpeed + ", set speed to: " + this.currentPlayerSpeed);
+    private void updateCenterOfViewActorSpeedLabel(){
+        this.centerOfViewActorSpeedLabel.setText("Center of View Actor speed was: " + this.initialCenterOfViewActorSpeed + ", set speed to: " + this.currentCenterOfViewActorSpeed);
     }
     
     private void updateCurrentViewDimension(){
@@ -326,8 +326,8 @@ public class SettingsMenu extends JOptionPane{
         boolean changesFound = true;
         if(this.initialUniverseBGColor.equals(this.currentUniverseBGColor)&&
                 this.initialViewDimension.equals(this.currentViewDimension)&&
-                this.initialPlayerSpeed == this.currentPlayerSpeed&&
-                this.initialPlayerColor.equals(this.currentPlayerColor)&&
+                this.initialCenterOfViewActorSpeed == this.currentCenterOfViewActorSpeed&&
+                this.initialCenterOfViewActorColor.equals(this.currentCenterOfViewActorColor)&&
                 this.initialPerimeterColor.equals(this.currentPerimeterColor)&&
                 this.initialShouldDisplayHUDMap == this.currentShouldDisplayHUDMap&&
                 this.initialWindowCornerHUDMap == this.currentWindowCornerHUDMap){
@@ -341,16 +341,16 @@ public class SettingsMenu extends JOptionPane{
     private void applyChanges(){
         this.initialUniverseBGColor = this.currentUniverseBGColor;
         this.initialPerimeterColor = this.currentPerimeterColor;
-        this.initialPlayerColor = this.currentPlayerColor;
-        this.initialPlayerSpeed = this.currentPlayerSpeed;
+        this.initialCenterOfViewActorColor = this.currentCenterOfViewActorColor;
+        this.initialCenterOfViewActorSpeed = this.currentCenterOfViewActorSpeed;
         this.initialViewDimension = this.currentViewDimension;
         this.initialShouldDisplayHUDMap = this.currentShouldDisplayHUDMap;
         this.initialWindowCornerHUDMap = this.currentWindowCornerHUDMap;
         
         SettingsSingleton.getInstance().setUniverseBackgroundColor(this.initialUniverseBGColor);
         SettingsSingleton.getInstance().setPerimeterColor(this.initialPerimeterColor);
-        SettingsSingleton.getInstance().setPlayerColor(this.initialPlayerColor);
-        SettingsSingleton.getInstance().setPlayerSpeed(this.initialPlayerSpeed);
+        SettingsSingleton.getInstance().setCenterOfViewActorColor(this.initialCenterOfViewActorColor);
+        SettingsSingleton.getInstance().setCenterOfViewActorSpeed(this.initialCenterOfViewActorSpeed);
         SettingsSingleton.getInstance().setWindowDimension(this.initialViewDimension);
         SettingsSingleton.getInstance().setShouldShowHUDMap(this.initialShouldDisplayHUDMap);
         SettingsSingleton.getInstance().setHUDMapCorner(this.initialWindowCornerHUDMap);
@@ -367,8 +367,8 @@ public class SettingsMenu extends JOptionPane{
             case "Perimeter":
                 c = this.currentPerimeterColor;
                 break;
-            case "Player":
-                c = this.currentPlayerColor;
+            case "Center of View Actor":
+                c = this.currentCenterOfViewActorColor;
                 break;
             case "Background Of Universe":
                 c = this.currentUniverseBGColor;

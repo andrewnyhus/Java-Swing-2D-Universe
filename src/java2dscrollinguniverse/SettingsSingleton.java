@@ -37,13 +37,13 @@ public class SettingsSingleton {
     
     private Color universeBackgroundColor;
     private Color perimeterColor;
-    private Color playerColor;
+    private Color centerOfViewActorColor;
     
     private final Color defaultUniverseBackgroundColorValue = new Color(133, 133, 133);
     private final Color defaultPerimeterColorValue = new Color(255, 127, 0);
-    private final Color defaultPlayerColorValue = new Color(255, 255, 255);
+    private final Color defaultCenterOfViewActorColorValue = new Color(255, 255, 255);
     private Dimension windowDimension = new Dimension(500, 500);//default window size
-    private int playerSpeed = 20; //to be implemented later in player class
+    private int CenterOfViewActorSpeed = 20; //camera scroll speed
     
     private boolean shouldShowHUDMap = true;
     private WindowCorner hudMapCorner = WindowCorner.BOTTOM_LEFT;
@@ -56,8 +56,8 @@ public class SettingsSingleton {
         //set perimeter yellow
         this.perimeterColor = defaultPerimeterColorValue;
         
-        //set player to be white
-        this.playerColor = defaultPlayerColorValue;
+        //set CenterOfViewActor to be white
+        this.centerOfViewActorColor = defaultCenterOfViewActorColorValue;
         
         
     }
@@ -107,14 +107,14 @@ public class SettingsSingleton {
     }
     
     
-    public void setPlayerColor(Color c){
-        this.playerColor = c;
+    public void setCenterOfViewActorColor(Color c){
+        this.centerOfViewActorColor = c;
     }
     
     public void revertToDefaultColors(){
         settings.revertToDefaultUniverseColor();
         settings.revertToDefaultPerimeterColor();
-        settings.revertToDefaultPlayerColor();
+        settings.revertToDefaultCenterOfViewActorColor();
     }
     
     public void revertToDefaultUniverseColor(){
@@ -125,22 +125,22 @@ public class SettingsSingleton {
         settings.setPerimeterColor(defaultPerimeterColorValue);
     }
     
-    public void revertToDefaultPlayerColor(){
-        settings.setPlayerColor(defaultPlayerColorValue);
+    public void revertToDefaultCenterOfViewActorColor(){
+        settings.setCenterOfViewActorColor(defaultCenterOfViewActorColorValue);
     }
 
     /**
-     * @return the playerSpeed
+     * @return the CenterOfViewActorSpeed
      */
-    public int getPlayerSpeed() {
-        return playerSpeed;
+    public int getCenterOfViewActorSpeed() {
+        return CenterOfViewActorSpeed;
     }
 
     /**
-     * @param playerSpeed the playerSpeed to set
+     * @param CenterOfViewActorSpeed the CenterOfViewActorSpeed to set
      */
-    public void setPlayerSpeed(int playerSpeed) {
-        this.playerSpeed = playerSpeed;
+    public void setCenterOfViewActorSpeed(int CenterOfViewActorSpeed) {
+        this.CenterOfViewActorSpeed = CenterOfViewActorSpeed;
     }
 
     /**
@@ -158,10 +158,10 @@ public class SettingsSingleton {
     }
 
     /**
-     * @return the playerColor
+     * @return the centerOfViewActorColor
      */
-    public Color getPlayerColor() {
-        return playerColor;
+    public Color getCenterOfViewActorColor() {
+        return centerOfViewActorColor;
     }
 
     /**
