@@ -50,4 +50,11 @@ public class TwoDimensionalMovement {
         return new Point(this.xMovement + p.x, this.yMovement + p.y);
     }
     
+    public TwoDimensionalMovement getMovementDividedByFactor(int factor){
+        int xMovementNew = this.xMovement / factor;
+        int yMovementNew = this.yMovement / factor;
+        
+        return new TwoDimensionalMovement(xMovementNew, yMovementNew);        
+    }
+    
 }

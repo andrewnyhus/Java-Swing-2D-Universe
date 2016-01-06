@@ -32,16 +32,18 @@ import java.awt.Shape;
  * @author andrewnyhus
  */
 public class Actor {
+    
     private ActorType type;
-    //private Location topLeftLocation;
     private Point topLeftLocation;
     Color color;
     private Shape shape;
+    private Actor[] childActors;
     
     public Actor(ActorType type, Point loc, Color color){
         this.type = type;
         this.topLeftLocation = loc;
         this.color = color;
+        this.childActors = null;
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s){
@@ -49,16 +51,21 @@ public class Actor {
         this.topLeftLocation = loc;
         this.color = color;
         this.shape = s;        
+        this.childActors = null;
     }
     
-    
-    public void updateShape(Shape s){
-        this.shape = s;
+    public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors){
+        this.type = type;
+        this.topLeftLocation = loc;
+        this.color = color;
+        this.shape = s;        
+        this.childActors = childActors;
     }
+
     
-    public Shape getShape(){
-        return this.shape;
-    }
+
+    
+ 
     
     public int getWidth(){
         return this.getShape().getBounds().width;
@@ -131,12 +138,45 @@ public class Actor {
     public void setTopLeftLocation(Point newLoc){
         this.topLeftLocation = newLoc;
 
-        //int width = (int) this.getShape().getBounds().getWidth();
-        //int height = (int) this.getShape().getBounds().getHeight();
-        
-        //this.shape = new Rectangle(this.topLeftLocation.getX(), this.topLeftLocation.getY(), width, height);
         
     }
+
+    /**
+     * @return the type
+     */
+    public ActorType getType() {
+        return type;
+    }
+
+    /**
+     * @return the childActors
+     */
+    public Actor[] getChildActors() {
+        return childActors;
+    }
+
+    /**
+     * @param childActors the childActors to set
+     */
+    public void setChildActors(Actor[] childActors) {
+        this.childActors = childActors;
+    }
+
+    /**
+     * @return the shape
+     */
+    public Shape getShape() {
+        return shape;
+    }
+
+    /**
+     * @param shape the shape to set
+     */
+    public void setShape(Shape shape) {
+        this.shape = shape;
+    }
+    
+    
     
     
 }

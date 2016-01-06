@@ -34,6 +34,9 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
+import java2dscrollinguniverse.Model.actors.ActorType;
+import java2dscrollinguniverse.Model.actors.HUDMap;
+import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
 import java2dscrollinguniverse.SettingsSingleton;
@@ -88,7 +91,7 @@ public class MainViewComponent extends JPanel{
             //Begin painting :) ...picasso style
             
             //gets the difference of (center of view) - (player location in model)
-            TwoDimensionalMovement playerOffsetFromModel = this.getOffPlayerOffsetFromModelToView();
+            TwoDimensionalMovement playerOffsetFromModel = this.getPlayerOffsetFromModelToView();
             
             //set "pen" with proper color for background rectangle
             g2d.setColor(SettingsSingleton.getInstance().getUniverseBackgroundColor());
@@ -120,11 +123,6 @@ public class MainViewComponent extends JPanel{
                 Point currentWallTopLeftLocationToDraw =
                         playerOffsetFromModel.getPointWithMovementAppliedFromPoint(w.getTopLeftLocation());
                 
-                //** TODO: update this top left loc to be appropriate with the offset of centering 
-                //the player within the view.
-                
-                //set topLeft location to the currentWallShape variable, and then fill it
-                //currentWallShape.getBounds().translate(currentWallTopLeftLocationToDraw.x, currentWallTopLeftLocationToDraw.y);
                 
                 
                 g2d.fill(this.getShapeWithOffsetFromOrigin(currentWallShape, currentWallTopLeftLocationToDraw));
@@ -133,19 +131,23 @@ public class MainViewComponent extends JPanel{
             
             
             for(Actor a: this.updatedUniverse.getMembersOfUniverse()){
-            
-                //set "pen" to proper color for actors
-                g2d.setColor(a.getColor());
                 
-                // get shape of current actor in iteration
-                Shape currentActorShape = a.getShape();
                 
-                //get top left location of the current Actor
-                Point currentActorTopLeftLocationToDraw =
-                        playerOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+                if(a.getType().viewLocationShouldChange()){
+                
+                    //set "pen" to proper color for current actor
+                    g2d.setColor(a.getColor());
 
-                g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
-            
+                    // get shape of current actor in iteration
+                    Shape currentActorShape = a.getShape();
+
+                    //get top left location of the current Actor
+                    Point currentActorTopLeftLocationToDraw =
+                            playerOffsetFromModel.getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+
+                    g2d.fill(this.getShapeWithOffsetFromOrigin(currentActorShape, currentActorTopLeftLocationToDraw));
+                
+                }
             }
             
             
@@ -169,19 +171,74 @@ public class MainViewComponent extends JPanel{
             Point centerViewPoint = new Point( (viewDimensions.width/2),
                     (viewDimensions.height/2) );
             
-            //** TODO: center player in the view but keep surroundings intact  in relation to player
             
             
             g2d.fill(this.getShapeWithOffsetFromOrigin(playerShape, centerViewPoint));
             
-            
-            
-            
+            boolean showHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
+                        
+            if(showHUDMap){
+                WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
+                
+                HUDMap map = new HUDMap(this.getPlayerOffsetFromModelToView(),
+                        viewDimensions, this.updatedUniverse, HUDMapWindowCorner);
+
+                g2d.setColor(map.getColor());
+
+                Shape mapShapeToConvert = map.getShape();
+
+                Shape mapActorShape;
+
+                Point mapActorPoint = map.getTopLeftLocation();
+
+                mapActorShape = new Rectangle(mapActorPoint.x, mapActorPoint.y,
+                        mapShapeToConvert.getBounds().width, 
+                        mapShapeToConvert.getBounds().height);
+
+
+                g2d.fill(mapActorShape);
+
+
+                if(map.getChildActors() != null){
+                            for(Actor childActor: map.getChildActors()){
+                                //set "pen" to proper color for current child actor 
+                                g2d.setColor(childActor.getColor());
+
+                                // get shape of current child actor
+                                Shape currentChildActorShapeToConvert = childActor.getShape();
+                                Shape currentChildActorShape = null;
+
+                                Point currentChildActorPoint = childActor.getTopLeftLocation();
+
+                                if(currentChildActorShapeToConvert instanceof Rectangle){
+
+                                    currentChildActorShape = new Rectangle(currentChildActorPoint.x,
+                                            currentChildActorPoint.y,
+                                            currentChildActorShapeToConvert.getBounds().width,
+                                            currentChildActorShapeToConvert.getBounds().height);
+
+                                }else if(currentChildActorShapeToConvert instanceof Ellipse2D.Double){
+
+                                    currentChildActorShape = new Ellipse2D.Double(currentChildActorPoint.getX(),
+                                            currentChildActorPoint.getY(),
+                                            currentChildActorShapeToConvert.getBounds().getWidth(),
+                                            currentChildActorShapeToConvert.getBounds().getHeight());
+
+
+                                }else{
+                                    currentChildActorShape = currentChildActorShapeToConvert;
+                                }                          
+
+                                g2d.fill(currentChildActorShape);
+                            }
+                        }            
+            }
+                        
             
             
     }
     
-    public TwoDimensionalMovement getOffPlayerOffsetFromModelToView(){
+    public TwoDimensionalMovement getPlayerOffsetFromModelToView(){
         
         //Rectangle playerBounds = this.updatedUniverse.getPlayer().getShape().getBounds();
         
@@ -194,6 +251,7 @@ public class MainViewComponent extends JPanel{
         return new TwoDimensionalMovement(centerViewPoint.x - playerPointInModel.x,
                 centerViewPoint.y - playerPointInModel.y);        
     }
+    
     
     public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){
                 
