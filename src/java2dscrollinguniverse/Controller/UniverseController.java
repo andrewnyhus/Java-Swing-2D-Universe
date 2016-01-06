@@ -44,10 +44,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -63,10 +60,8 @@ public class UniverseController implements KeyListener, ActionListener{
     
     public UniverseController() {
         this.frame = new JFrame("2D Universe");
-            
-
-        
-        Dimension d = new Dimension(2000, 500);//this.getDimensionFromUser("Please enter the size of the universe");
+                    
+        Dimension d = new Dimension(2000, 2200);//this.getDimensionFromUser("Please enter the size of the universe");
                 
         this.universe = new Universe(d);
         

@@ -44,6 +44,7 @@ public class SettingsSingleton {
     private Dimension windowDimension = new Dimension(500, 500);//default window size
     private int playerSpeed = 20; //to be implemented later in player class
     
+    private boolean shouldShowHUDMap = true;
     
     private SettingsSingleton(){
         
@@ -160,9 +161,20 @@ public class SettingsSingleton {
     public Color getPlayerColor() {
         return playerColor;
     }
-    
-    
-    
+
+    /**
+     * @return the shouldShowHUDMap
+     */
+    public boolean shouldShowHUDMap() {
+        return shouldShowHUDMap;
+    }
+
+    /**
+     * @param shouldShowHUDMap the shouldShowHUDMap to set
+     */
+    public void setShouldShowHUDMap(boolean shouldShowHUDMap) {
+        this.shouldShowHUDMap = shouldShowHUDMap;
+    }
     
     
 }
