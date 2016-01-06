@@ -36,6 +36,7 @@ import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.ActorType;
 import java2dscrollinguniverse.Model.actors.HUDMap;
+import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 import java2dscrollinguniverse.Model.actors.Wall;
 import java2dscrollinguniverse.Model.universe.Universe;
 import java2dscrollinguniverse.SettingsSingleton;
@@ -175,9 +176,12 @@ public class MainViewComponent extends JPanel{
             g2d.fill(this.getShapeWithOffsetFromOrigin(playerShape, centerViewPoint));
             
             boolean showHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
-            
+                        
             if(showHUDMap){
-                HUDMap map = new HUDMap(this.getPlayerOffsetFromModelToView(), viewDimensions, this.updatedUniverse);
+                WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
+                
+                HUDMap map = new HUDMap(this.getPlayerOffsetFromModelToView(),
+                        viewDimensions, this.updatedUniverse, HUDMapWindowCorner);
 
                 g2d.setColor(map.getColor());
 

@@ -102,7 +102,7 @@ public class HUDMap extends Actor{
         Point viewMapPoint = new Point(viewMapPointX, viewMapPointY);
 
         Actor[] membersOfUniverse = this.universe.getMembersOfUniverse();
-        int numChildActors = 1/*for viewMap*/ + membersOfUniverse.length;
+        int numChildActors = 2/*for viewMap & center point*/ + membersOfUniverse.length;
         
         Actor[] childActors = new Actor[numChildActors];
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=                
@@ -141,14 +141,30 @@ public class HUDMap extends Actor{
         
         int viewMapWidth = this.getWindowDimension().width/ratioUniverseToMapOf;
         int viewMapHeight = this.getWindowDimension().height/ratioUniverseToMapOf;
-        
         Rectangle viewMapRect = new Rectangle(0, 0, viewMapWidth, viewMapHeight);
         
         Actor viewMap = new Actor(ActorType.HUDElement, viewMapPoint, this.colorOfWindowRepresentation, viewMapRect);
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
         //done creating view map actor
                 
-        childActors[childActors.length - 1] = viewMap;
+        //added view map actor to the array
+        childActors[childActors.length - 2] = viewMap;
+
+        //create and add centerOfViewHUDMenu actor to the array
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        int centerOfViewX = viewMap.getTopLeftLocation().x + viewMapWidth/2;
+        int centerOfViewY = viewMap.getTopLeftLocation().y + viewMapHeight/2;
+        double diameter = (0.06)*((viewMapWidth+viewMapHeight)/2.0);
+        
+        Ellipse2D.Double centerOfViewShape = new Ellipse2D.Double(0.0, 0.0, diameter, diameter);
+        
+        Actor centerOfViewInHUDMenu = new Actor(ActorType.HUDElement,
+                new Point(centerOfViewX, centerOfViewY),
+                new Color(0, 235, 0), centerOfViewShape);
+        
+        childActors[childActors.length - 1] = centerOfViewInHUDMenu;
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        //done adding centerOfViewHUDMenu actor 
         
         return childActors;
     }
@@ -165,7 +181,9 @@ public class HUDMap extends Actor{
 
         int scaleRatioUniverseOverMapRepr = (this.universe.getBoundsDimension().width/
                                                 universeRect.width);
-                
+
+        universeRect.width += (int)(universeRect.getWidth()*.10);
+        universeRect.height += (int)(universeRect.getHeight()*.10);
         
         this.shape = new Rectangle(0, 0, universeRect.width, universeRect.height);
         
@@ -275,7 +293,7 @@ public class HUDMap extends Actor{
     private Dimension getProperSizeForDimensionWithLimits(Dimension currentDimension, int maxMapWidthOrHeight){
         double givenHeightOverWidthRatio = (double)currentDimension.height/
                                              (double)currentDimension.width;
-        
+
         Dimension returnDimension;
         
         if(givenHeightOverWidthRatio == 1.0){

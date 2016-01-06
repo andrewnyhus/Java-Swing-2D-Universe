@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -62,6 +63,7 @@ public class SettingsMenu extends JOptionPane{
     private Dimension initialViewDimension = SettingsSingleton.getInstance().getWindowDimension();
     private int initialPlayerSpeed = SettingsSingleton.getInstance().getPlayerSpeed();
     private boolean initialShouldDisplayHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
+    private WindowCorner initialWindowCornerHUDMap = SettingsSingleton.getInstance().getHUDMapCorner();
     //---===---===---===---===---===---===---===---===---===---===---===---===
     //end of initial data members
     
@@ -72,6 +74,7 @@ public class SettingsMenu extends JOptionPane{
     private Dimension currentViewDimension;
     private int currentPlayerSpeed;
     private boolean currentShouldDisplayHUDMap;
+    private WindowCorner currentWindowCornerHUDMap;
     //---===---===---===---===---===---===---===---===---===---===---===---===    
     //end of class variables
     
@@ -95,6 +98,9 @@ public class SettingsMenu extends JOptionPane{
     private JRadioButton dontDisplayHUDMap;
     private ButtonGroup hudMapButtonGroup;
     
+    private String[] cornerChoices = {"Top Right", "Top Left", "Bottom Left", "Bottom Right"};
+    private JComboBox hudMapCornerSelector = new JComboBox(cornerChoices);
+    
     
     //---===---===---===---===---===---===---===---===---===---===---===---===    
     //end of GUI components
@@ -110,6 +116,7 @@ public class SettingsMenu extends JOptionPane{
         this.currentViewDimension = new Dimension(this.initialViewDimension.width, this.initialViewDimension.height);
         this.currentPlayerSpeed = this.initialPlayerSpeed;
         this.currentShouldDisplayHUDMap = this.initialShouldDisplayHUDMap;
+        this.currentWindowCornerHUDMap = this.initialWindowCornerHUDMap;
         
         this.initGUIComponents();
         
@@ -119,6 +126,14 @@ public class SettingsMenu extends JOptionPane{
 
     private void initGUIComponents(){
         
+        this.hudMapCornerSelector.setSelectedIndex(SettingsSingleton.getInstance().getHUDMapCorner().getValue());
+        
+        this.hudMapCornerSelector.addActionListener((ActionEvent e) -> {
+            int selectedIndex = this.hudMapCornerSelector.getSelectedIndex();
+            this.currentWindowCornerHUDMap = WindowCorner.values()[selectedIndex];
+
+            this.updateApplyChangesButton();
+        });
         
         this.colorUpdateObjectSelector.addActionListener((ActionEvent e) -> {
             this.updateColorIcon();
@@ -259,7 +274,8 @@ public class SettingsMenu extends JOptionPane{
             this.playerSpeedLabel, this.playerSpeedSlider,
             increaseWindowString, this.viewWidthLabel, this.viewWidthField,
             this.viewHeightLabel, this.viewHeightField, 
-            this.displayHUDMap, this.dontDisplayHUDMap, this.applyChangesButton
+            this.displayHUDMap, this.dontDisplayHUDMap, 
+            "HUD Map Corner: ", this.hudMapCornerSelector, this.applyChangesButton
         };
         
         return message;
@@ -313,7 +329,8 @@ public class SettingsMenu extends JOptionPane{
                 this.initialPlayerSpeed == this.currentPlayerSpeed&&
                 this.initialPlayerColor.equals(this.currentPlayerColor)&&
                 this.initialPerimeterColor.equals(this.currentPerimeterColor)&&
-                this.initialShouldDisplayHUDMap == this.currentShouldDisplayHUDMap){
+                this.initialShouldDisplayHUDMap == this.currentShouldDisplayHUDMap&&
+                this.initialWindowCornerHUDMap == this.currentWindowCornerHUDMap){
             changesFound = false;            
         }
         
@@ -328,6 +345,7 @@ public class SettingsMenu extends JOptionPane{
         this.initialPlayerSpeed = this.currentPlayerSpeed;
         this.initialViewDimension = this.currentViewDimension;
         this.initialShouldDisplayHUDMap = this.currentShouldDisplayHUDMap;
+        this.initialWindowCornerHUDMap = this.currentWindowCornerHUDMap;
         
         SettingsSingleton.getInstance().setUniverseBackgroundColor(this.initialUniverseBGColor);
         SettingsSingleton.getInstance().setPerimeterColor(this.initialPerimeterColor);
@@ -335,6 +353,7 @@ public class SettingsMenu extends JOptionPane{
         SettingsSingleton.getInstance().setPlayerSpeed(this.initialPlayerSpeed);
         SettingsSingleton.getInstance().setWindowDimension(this.initialViewDimension);
         SettingsSingleton.getInstance().setShouldShowHUDMap(this.initialShouldDisplayHUDMap);
+        SettingsSingleton.getInstance().setHUDMapCorner(this.initialWindowCornerHUDMap);
         
         this.updateApplyChangesButton();
     }

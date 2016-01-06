@@ -25,6 +25,7 @@ package java2dscrollinguniverse;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 
 /**
  *
@@ -45,6 +46,7 @@ public class SettingsSingleton {
     private int playerSpeed = 20; //to be implemented later in player class
     
     private boolean shouldShowHUDMap = true;
+    private WindowCorner hudMapCorner = WindowCorner.BOTTOM_LEFT;
     
     private SettingsSingleton(){
         
@@ -174,6 +176,20 @@ public class SettingsSingleton {
      */
     public void setShouldShowHUDMap(boolean shouldShowHUDMap) {
         this.shouldShowHUDMap = shouldShowHUDMap;
+    }
+
+    /**
+     * @return the hudMapCorner
+     */
+    public WindowCorner getHUDMapCorner() {
+        return hudMapCorner;
+    }
+
+    /**
+     * @param hudMapCorner the hudMapCorner to set
+     */
+    public void setHUDMapCorner(WindowCorner hudMapCorner) {
+        this.hudMapCorner = hudMapCorner;
     }
     
     

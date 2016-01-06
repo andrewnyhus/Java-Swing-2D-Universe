@@ -26,6 +26,7 @@ package java2dscrollinguniverse.Controller;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -61,7 +62,8 @@ public class UniverseController implements KeyListener, ActionListener{
     public UniverseController() {
         this.frame = new JFrame("2D Universe");
                     
-        Dimension d = new Dimension(2000, 2200);//this.getDimensionFromUser("Please enter the size of the universe");
+        //Dimension d = new Dimension(3000, 1000);
+        Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
                 
         this.universe = new Universe(d);
         
@@ -198,87 +200,28 @@ public class UniverseController implements KeyListener, ActionListener{
                 break;
             case "settings":
                 
-                SettingsMenu pane = new SettingsMenu();
-                JDialog d = pane.createDialog("Settings");
-                d.setSize(750, 500);
-                d.setVisible(true);
-                
-                Dimension newSizeOfFrame = 
-                        new Dimension(
-                                this.origSizeOfFrame.width + SettingsSingleton.getInstance().getWindowWidth(),
-                                this.origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
-                
-                
-                this.frame.setSize(newSizeOfFrame);
-                this.view.setSize(SettingsSingleton.getInstance().getWindowDimension());
-                this.view.repaint();
-                
-                
-                /*JButton a = new JButton("a");
-                a.setBackground(Color.green);
-
-                a.addActionListener((ActionEvent e1) -> {
-                    System.out.println("a");
-                    a.setBackground(Color.red);
-                });
-                
-                JPanel settingsPanel = new JPanel();
-                settingsPanel.setOpaque(true);
-                settingsPanel.setBackground(Color.YELLOW);
-                settingsPanel.add(a);
-                
-                JOptionPane.showMessageDialog(frame, settingsPanel, "Hello World!",
-                                        JOptionPane.INFORMATION_MESSAGE);  */              
-                
-                /*JTextField screenSizeWidth = new JTextField("" + SettingsSingleton.getInstance().getScreenWidth()),
-                        screenSizeHeight = new JTextField("" + SettingsSingleton.getInstance().getScreenHeight());
-                
-                        //JColorChooser colorChooserBgUniverse = new JColorChooser(SettingsSingleton.getInstance().getUniverseBackgroundColor());
-
-                JButton btnUniverseBGColor = new JButton(" ");
-                btnUniverseBGColor.setBackground(SettingsSingleton.getInstance().getUniverseBackgroundColor());
-
-                btnUniverseBGColor.addActionListener((ActionEvent e1) -> {
-                    Color c;
-                    c = JColorChooser.showDialog(((Component) e1.getSource()).getParent(), "Set Background Color Of Universe (Main)", 
-                            SettingsSingleton.getInstance().getUniverseBackgroundColor());
-                    System.out.println("color: " + c);
-                    if(c != null){
-                        btnUniverseBGColor.setBackground(c);
-                    }
-                    
-                });
-               
-                
-                
-                Object[] message = {
-                    "Appearance: ", "-----------",
-                    "Screen Size", "W: ", screenSizeWidth, "H: ", screenSizeHeight,
-                    "Colors:\n-----------\nBackground:", btnUniverseBGColor
-                    
-                };
-                
-                
-                int option = JOptionPane.showOptionDialog(this.frame, 
-                        message, 
-                        "Settings Menu", 
-                        JOptionPane.DEFAULT_OPTION, 
-                        JOptionPane.INFORMATION_MESSAGE, 
-                        null, 
-                        new String[]{"Update Settings"}, // this is the array
-                        "default");
-                System.out.println("opt: " + option);
-                
-                if(option == 0){
-                    
-                }*/
-                
-                         
+                displaySettingsMenu();
                 
                 break;
         }
         
-        System.out.println(actionCommand);
+    }
+
+    private void displaySettingsMenu() throws HeadlessException {
+        SettingsMenu pane = new SettingsMenu();
+        JDialog d = pane.createDialog("Settings");
+        d.setSize(750, 500);
+        d.setVisible(true);
+        
+        Dimension newSizeOfFrame =
+                new Dimension(
+                        this.origSizeOfFrame.width + SettingsSingleton.getInstance().getWindowWidth(),
+                        this.origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
+        
+        
+        this.frame.setSize(newSizeOfFrame);
+        this.view.setSize(SettingsSingleton.getInstance().getWindowDimension());
+        this.view.repaint();
     }
     
     
