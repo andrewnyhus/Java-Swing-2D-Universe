@@ -38,12 +38,13 @@ public class SettingsSingleton {
     private Color containerBackgroundColor;
     private Color perimeterColor;
     private Color centerOfViewActorColor;
+    private Color labelColor;
     
     private final Color defaultContainerBackgroundColorValue = new Color(133, 133, 133);
     private final Color defaultPerimeterColorValue = new Color(255, 127, 0);
     private final Color defaultCenterOfViewActorColorValue = new Color(255, 255, 255);
     private Dimension windowDimension = new Dimension(500, 500);//default window size
-    private int CenterOfViewActorSpeed = 20; //camera scroll speed
+    private int cameraScrollingSpeed = 20; //camera scroll speed
     
     private boolean shouldShowHUDMap = true;
     private WindowCorner hudMapCorner = WindowCorner.BOTTOM_LEFT;
@@ -59,6 +60,8 @@ public class SettingsSingleton {
         //set CenterOfViewActor to be white
         this.centerOfViewActorColor = defaultCenterOfViewActorColorValue;
         
+        //set label color to be green
+        this.labelColor = new Color(0, 235, 0);
         
     }
     
@@ -130,17 +133,17 @@ public class SettingsSingleton {
     }
 
     /**
-     * @return the CenterOfViewActorSpeed
+     * @return the cameraScrollingSpeed
      */
-    public int getCenterOfViewActorSpeed() {
-        return CenterOfViewActorSpeed;
+    public int getCameraScrollingSpeed() {
+        return cameraScrollingSpeed;
     }
 
     /**
-     * @param CenterOfViewActorSpeed the CenterOfViewActorSpeed to set
+     * @param cameraScrollingSpeed the cameraScrollingSpeed to set
      */
-    public void setCenterOfViewActorSpeed(int CenterOfViewActorSpeed) {
-        this.CenterOfViewActorSpeed = CenterOfViewActorSpeed;
+    public void setCameraScrollingSpeed(int cameraScrollingSpeed) {
+        this.cameraScrollingSpeed = cameraScrollingSpeed;
     }
 
     /**
@@ -190,6 +193,20 @@ public class SettingsSingleton {
      */
     public void setHUDMapCorner(WindowCorner hudMapCorner) {
         this.hudMapCorner = hudMapCorner;
+    }
+
+    /**
+     * @return the labelColor
+     */
+    public Color getLabelColor() {
+        return labelColor;
+    }
+
+    /**
+     * @param labelColor the labelColor to set
+     */
+    public void setLabelColor(Color labelColor) {
+        this.labelColor = labelColor;
     }
     
     

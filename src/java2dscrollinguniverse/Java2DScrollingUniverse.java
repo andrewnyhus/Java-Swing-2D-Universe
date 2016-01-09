@@ -42,6 +42,10 @@ public class Java2DScrollingUniverse {
         SwingUtilities.invokeLater(() -> {
             UniverseController mainController = new UniverseController();
         });
+
+
+        
+        
     }
     
 }

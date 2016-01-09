@@ -45,12 +45,6 @@ public class ActorLabel {
         return labelText;
     }
 
-    /**
-     * @param labelText the labelText to set
-     */
-    public void setLabelText(String labelText) {
-        this.labelText = labelText;
-    }
 
     
     /**
@@ -60,20 +54,13 @@ public class ActorLabel {
         return position;
     }
 
-    /**
-     * @param position the position to set
-     */
-    public void setPosition(PositionOfLabel position) {
-        this.position = position;
-    }
-    
     
     
     
     public enum PositionOfLabel{
         LEFT_OF_TOP(0), MIDDLE_OF_TOP(1), RIGHT_OF_TOP(2),
         TOP_OF_RIGHT(3), MIDDLE_OF_RIGHT(4), BOTTOM_OF_RIGHT(5), 
-        RIGHT_OF_BOTTOM(6), MIDDLE_OF_BOTTOM(9), LEFT_OF_BOTTOM(10);
+        RIGHT_OF_BOTTOM(6), MIDDLE_OF_BOTTOM(7), LEFT_OF_BOTTOM(8);
         
         private int value;
         

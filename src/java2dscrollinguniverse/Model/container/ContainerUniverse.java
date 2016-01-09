@@ -39,7 +39,7 @@ import java2dscrollinguniverse.Model.actors.Wall;
  *
  * @author andrewnyhus
  */
-public class Container {
+public class ContainerUniverse {
     
     private ArrayList<Actor> membersOfContainer;
     private Dimension boundsDimension;
@@ -49,7 +49,7 @@ public class Container {
     private Actor bgRect;
     private CenterOfViewActor centerOfViewActor;
     
-    public Container(Dimension boundsDimension){
+    public ContainerUniverse(Dimension boundsDimension){
         this.boundsDimension = boundsDimension;
         this.factory = new MemberFactory(this.getBoundsDimension());
         
@@ -59,16 +59,14 @@ public class Container {
         
         this.membersOfContainer = this.factory.generateMiscellaneousActorsRandomly();
     }
-    
-    public Actor getBackgroundRect(){
-        return this.bgRect;
-    }
-    public Wall[] getPerimeterWalls(){
-        return this.perimeterWalls;
-    }
-    
-    public CenterOfViewActor getCenterOfViewActor(){
-        return this.centerOfViewActor;
+
+    public boolean actorIsValidInContainerUniverse(Actor a){
+        if(a.getLeftMostValue() < this.getXMin() ||
+                a.getTopMostValue() < this.getYMin()||
+                a.getBottomMostValue() > this.getYMax()||
+                a.getRightMostValue() > this.getXMax())
+            return false;
+        return true;
     }
     
     public void attemptToMoveActor(Actor a, TwoDimensionalMovement movement){
@@ -124,18 +122,85 @@ public class Container {
         
     }
     
-    /**
-     * Returns the minimum x (leftmost) value that a bounded actor should be able to have in the 
-     * container.
-     * @return xMin
-     */
-    public int getXMin(){
-        PerimeterSide leftSide = PerimeterSide.LEFT;
+    
+    public boolean foundDuplicateID(){
+        ArrayList<Integer> idsFound = new ArrayList();
         
-        int xMin = this.perimeterWalls[leftSide.getValue()].getRightMostValue();
+        for(Actor a: this.getMembersOfContainer()){
+            int currentId = a.getIdNumber();
+            
+            if(idsFound.indexOf(currentId) == -1){
+                idsFound.add(currentId);
+            }else{
+                return true;
+            }
+            
+        }
         
-        return xMin;
+        return false;
     }
+        
+    public Actor getBackgroundRect(){
+        return this.bgRect;
+    }
+
+    
+    /**
+     * @return the boundsDimension
+     */
+    public Dimension getBoundsDimension() {
+        return boundsDimension;
+    }
+   
+    public CenterOfViewActor getCenterOfViewActor(){
+        return this.centerOfViewActor;
+    }
+
+    public ArrayList<Actor> getMembersIntersectingWithPoint(Point p){
+        ArrayList<Actor> returnActors = new ArrayList();
+        
+        for(Actor aInContainer: this.getMembersOfContainer()){
+        
+            Shape shapeWhenDrawn = this.getShapeWithOffsetFromOrigin(aInContainer.getShape(),
+                    aInContainer.getTopLeftLocation());
+            
+            if(shapeWhenDrawn.contains(p))
+                returnActors.add(aInContainer);
+        
+        }
+        
+        return returnActors;
+    }    
+    
+    
+    /**
+     * @return the membersOfContainer
+     */
+    public ArrayList<Actor> getMembersOfContainer() {
+        return membersOfContainer;
+    }
+
+    
+    public Wall[] getPerimeterWalls(){
+        return this.perimeterWalls;
+    }
+    
+    
+    public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){
+                
+        if(s instanceof Rectangle){
+            Rectangle returnShape = new Rectangle(p.x, p.y, s.getBounds().width, s.getBounds().height);
+            return returnShape;
+        }else if(s instanceof Ellipse2D.Double){
+            Ellipse2D.Double returnShape = new Ellipse2D.Double(p.getX(), p.getY(), s.getBounds().getWidth(), s.getBounds().getHeight());
+            return returnShape;
+        }
+        
+        //TODO: include more shapes than just rectangle
+        
+        return s;
+    }    
+    
     
     /**
      * Returns maximum x (rightmost) value a bounded actor can have in the container.
@@ -151,16 +216,19 @@ public class Container {
     
     
     /**
-     * Returns minimum y (topmost) value a bounded actor can have in the container.
-     * @return yMin
+     * Returns the minimum x (leftmost) value that a bounded actor should be able to have in the 
+     * container.
+     * @return xMin
      */
-    public int getYMin(){
-        PerimeterSide topSide = PerimeterSide.TOP;
+    public int getXMin(){
+        PerimeterSide leftSide = PerimeterSide.LEFT;
         
-        int yMin = this.perimeterWalls[topSide.getValue()].getBottomMostValue();
-
-        return yMin;
+        int xMin = this.perimeterWalls[leftSide.getValue()].getRightMostValue();
+        
+        return xMin;
     }
+    
+    
     
     /**
      * Returns maximum y (bottommost) value a bounded actor can have in the container
@@ -174,19 +242,62 @@ public class Container {
         return yMax;
     }   
 
+    
+    
     /**
-     * @return the membersOfContainer
+     * Returns minimum y (topmost) value a bounded actor can have in the container.
+     * @return yMin
      */
-    public ArrayList<Actor> getMembersOfContainer() {
-        return membersOfContainer;
+    public int getYMin(){
+        PerimeterSide topSide = PerimeterSide.TOP;
+        
+        int yMin = this.perimeterWalls[topSide.getValue()].getBottomMostValue();
+
+        return yMin;
+    }
+    
+    public void handleDuplicates(){
+
+        ArrayList<Integer> arrayListOfIndexesToDelete = new ArrayList();
+        
+        for(int i = 0; i < this.membersOfContainer.size(); i++){
+            
+            Actor currentMember = this.membersOfContainer.get(i);
+            
+            int j = i + 1;
+            
+            while(j < this.membersOfContainer.size()){
+
+                Actor currentMemberToCompare = this.membersOfContainer.get(j);
+                if(currentMember.equals(currentMemberToCompare))
+                    arrayListOfIndexesToDelete.add(i);                
+                j++;
+            }
+                        
+        }
+        
+        for(int index: arrayListOfIndexesToDelete){
+            this.membersOfContainer.remove(index);
+        }
+        
+        this.resetIDsOfMembers();
+    
     }
 
-    /**
-     * @return the boundsDimension
-     */
-    public Dimension getBoundsDimension() {
-        return boundsDimension;
+    
+    public void resetIDsOfMembers(){
+    
+        while(this.foundDuplicateID()){
+            int i = 0;
+            for(Actor a: this.getMembersOfContainer()){
+                a.setIdNumber(i);
+                i++;
+            }
+        }
+    
     }
+    
+
 
     /**
      * @param boundsDimension the boundsDimension to set
@@ -195,36 +306,8 @@ public class Container {
         this.boundsDimension = boundsDimension;
     }
     
-    public ArrayList<Actor> getMembersIntersectingWithPoint(Point p){
-        ArrayList<Actor> returnActors = new ArrayList();
-        
-        for(Actor aInContainer: this.getMembersOfContainer()){
-        
-            Shape shapeWhenDrawn = this.getShapeWithOffsetFromOrigin(aInContainer.getShape(),
-                    aInContainer.getTopLeftLocation());
-            
-            if(shapeWhenDrawn.contains(p))
-                returnActors.add(aInContainer);
-        
-        }
-        
-        return returnActors;
-    }
+
     
-    public Shape getShapeWithOffsetFromOrigin(Shape s, Point p){
-                
-        if(s instanceof Rectangle){
-            Rectangle returnShape = new Rectangle(p.x, p.y, s.getBounds().width, s.getBounds().height);
-            return returnShape;
-        }else if(s instanceof Ellipse2D.Double){
-            Ellipse2D.Double returnShape = new Ellipse2D.Double(p.getX(), p.getY(), s.getBounds().getWidth(), s.getBounds().getHeight());
-            return returnShape;
-        }
-        
-        //TODO: include more shapes than just rectangle
-        
-        return s;
-    }
-    
+
     
 }

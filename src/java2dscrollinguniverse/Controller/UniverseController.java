@@ -23,8 +23,6 @@
  */
 package java2dscrollinguniverse.Controller;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Point;
@@ -37,15 +35,13 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.container.Container;
+import java2dscrollinguniverse.Model.container.ContainerUniverse;
 import java2dscrollinguniverse.SettingsSingleton;
+import java2dscrollinguniverse.View.EditActorPane;
 import java2dscrollinguniverse.View.MainViewComponent;
 import java2dscrollinguniverse.View.SettingsMenu;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -58,19 +54,21 @@ import javax.swing.JTextField;
  */
 public class UniverseController implements KeyListener, ActionListener{
     
-    private Container container;
+    private ContainerUniverse container;
     private final MainViewComponent view;
     private final JFrame frame;
     private JMenuBar menuBar;
     private final Dimension origSizeOfFrame;
-    
+    private EditActorPane actorEditor = null;
+    private JDialog actorEditorDialog = null
+;    
     public UniverseController() {
         this.frame = new JFrame("2D Universe");
                     
         Dimension d = new Dimension(3000, 1000);
         //Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
                 
-        this.container = new Container(d);
+        this.container = new ContainerUniverse(d);
         
         this.view = new MainViewComponent(this.container);
         
@@ -95,7 +93,7 @@ public class UniverseController implements KeyListener, ActionListener{
         this.addMouseListenerToView();
     }
     
-    public Container getContainer(){
+    public ContainerUniverse getContainer(){
         return this.container;
     }
  
@@ -219,6 +217,7 @@ public class UniverseController implements KeyListener, ActionListener{
         d.setSize(750, 500);
         d.setVisible(true);
         
+        
         Dimension newSizeOfFrame =
                 new Dimension(
                         this.origSizeOfFrame.width + SettingsSingleton.getInstance().getWindowWidth(),
@@ -228,6 +227,31 @@ public class UniverseController implements KeyListener, ActionListener{
         this.frame.setSize(newSizeOfFrame);
         this.view.setSize(SettingsSingleton.getInstance().getWindowDimension());
         this.view.repaint();
+    }
+    
+    private void displayActorEditor(Actor a){
+        
+        this.actorEditor = new EditActorPane(a, this.container);
+        this.actorEditorDialog = this.actorEditor.createDialog("Actor Editor");
+        
+        this.actorEditorDialog.setSize(450, 500);
+        this.actorEditorDialog.setVisible(true);
+        
+        this.view.repaint();
+        this.closeActorEditor();
+        
+    }
+    
+    private void closeActorEditor(){
+    
+        this.actorEditor.setVisible(false);
+        
+        this.actorEditorDialog.setVisible(false);
+        this.actorEditorDialog.dispose();
+    
+        this.actorEditor = null;
+        this.actorEditorDialog = null;
+        this.container.handleDuplicates();
     }
     
     
@@ -259,7 +283,7 @@ public class UniverseController implements KeyListener, ActionListener{
         
         TwoDimensionalMovement movement;
         
-        int centerOfViewActorVelocity = SettingsSingleton.getInstance().getCenterOfViewActorSpeed();
+        int centerOfViewActorVelocity = SettingsSingleton.getInstance().getCameraScrollingSpeed();
         //handle various cases of the keycode value.
         switch(keycode){
                 
@@ -318,7 +342,7 @@ public class UniverseController implements KeyListener, ActionListener{
     /**
      * @param container the container to set
      */
-    public void setContainer(Container container) {
+    public void setContainer(ContainerUniverse container) {
         this.container = container;
     }
     
@@ -351,7 +375,14 @@ public class UniverseController implements KeyListener, ActionListener{
                 
                 ArrayList<Actor> actorsClickedOn = UniverseController.this.getContainer().getMembersIntersectingWithPoint(p);
                 
-                System.out.println("clicked on:" + actorsClickedOn);
+                if(actorsClickedOn.size() > 0){
+                    //System.out.println("Clicked on: " + actorsClickedOn.get(actorsClickedOn.size()-1));
+                    
+                    UniverseController.this.displayActorEditor(
+                                            actorsClickedOn.get(actorsClickedOn.size()-1));
+                }else{
+                    //System.out.println("Clicked on the container");
+                }                                
                 
             }
             

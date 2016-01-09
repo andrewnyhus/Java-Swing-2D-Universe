@@ -29,9 +29,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.ButtonGroup;
@@ -43,12 +40,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 
 
 /**
@@ -61,7 +55,7 @@ public class SettingsMenu extends JOptionPane{
     private Color initialCenterOfViewActorColor = SettingsSingleton.getInstance().getCenterOfViewActorColor();
     private Color initialPerimeterColor = SettingsSingleton.getInstance().getPerimeterColor();
     private Dimension initialViewDimension = SettingsSingleton.getInstance().getWindowDimension();
-    private int initialCenterOfViewActorSpeed = SettingsSingleton.getInstance().getCenterOfViewActorSpeed();
+    private int initialCenterOfViewActorSpeed = SettingsSingleton.getInstance().getCameraScrollingSpeed();
     private boolean initialShouldDisplayHUDMap = SettingsSingleton.getInstance().shouldShowHUDMap();
     private WindowCorner initialWindowCornerHUDMap = SettingsSingleton.getInstance().getHUDMapCorner();
     //---===---===---===---===---===---===---===---===---===---===---===---===
@@ -82,12 +76,12 @@ public class SettingsMenu extends JOptionPane{
     //---===---===---===---===---===---===---===---===---===---===---===---===
     private EnterNumericalValueField viewWidthField, viewHeightField;
     private JLabel viewWidthLabel, viewHeightLabel;
-    private String[] colorObjectChoices = {"Perimeter", "Center of View Actor", "Background Of Universe"};
+    private final String[] colorObjectChoices = {"Perimeter", "Center of View Actor", "Background Of Universe"};
 
-    private JComboBox colorUpdateObjectSelector = new JComboBox(colorObjectChoices);
+    private final JComboBox colorUpdateObjectSelector = new JComboBox(colorObjectChoices);
     private JButton setColorButton;
     
-    private JLabel centerOfViewActorSpeedLabel = new JLabel();
+    private final JLabel centerOfViewActorSpeedLabel;
     private JSlider centerOfViewActorSpeedSlider;
     
     private Icon iconObject = null;
@@ -98,8 +92,8 @@ public class SettingsMenu extends JOptionPane{
     private JRadioButton dontDisplayHUDMap;
     private ButtonGroup hudMapButtonGroup;
     
-    private String[] cornerChoices = {"Top Right", "Top Left", "Bottom Left", "Bottom Right"};
-    private JComboBox hudMapCornerSelector = new JComboBox(cornerChoices);
+    private final String[] cornerChoices = {"Top Right", "Top Left", "Bottom Left", "Bottom Right"};
+    private final JComboBox hudMapCornerSelector = new JComboBox(cornerChoices);
     
     
     //---===---===---===---===---===---===---===---===---===---===---===---===    
@@ -109,6 +103,7 @@ public class SettingsMenu extends JOptionPane{
     
     public SettingsMenu(){
         super("", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
+        this.centerOfViewActorSpeedLabel = new JLabel();
         
         this.currentContainerBGColor = this.initialContainerBGColor;
         this.currentCenterOfViewActorColor = this.initialCenterOfViewActorColor;
@@ -123,7 +118,44 @@ public class SettingsMenu extends JOptionPane{
         this.setMessage(this.getMessageObjectArray());
         
     }
-
+    
+    private void applyChanges(){
+        this.initialContainerBGColor = this.currentContainerBGColor;
+        this.initialPerimeterColor = this.currentPerimeterColor;
+        this.initialCenterOfViewActorColor = this.currentCenterOfViewActorColor;
+        this.initialCenterOfViewActorSpeed = this.currentCenterOfViewActorSpeed;
+        this.initialViewDimension = this.currentViewDimension;
+        this.initialShouldDisplayHUDMap = this.currentShouldDisplayHUDMap;
+        this.initialWindowCornerHUDMap = this.currentWindowCornerHUDMap;
+        
+        SettingsSingleton.getInstance().setContainerBackgroundColor(this.initialContainerBGColor);
+        SettingsSingleton.getInstance().setPerimeterColor(this.initialPerimeterColor);
+        SettingsSingleton.getInstance().setCenterOfViewActorColor(this.initialCenterOfViewActorColor);
+        SettingsSingleton.getInstance().setCameraScrollingSpeed(this.initialCenterOfViewActorSpeed);
+        SettingsSingleton.getInstance().setWindowDimension(this.initialViewDimension);
+        SettingsSingleton.getInstance().setShouldShowHUDMap(this.initialShouldDisplayHUDMap);
+        SettingsSingleton.getInstance().setHUDMapCorner(this.initialWindowCornerHUDMap);
+        
+        this.updateApplyChangesButton();
+    }
+    
+   private Object[] getMessageObjectArray(){
+        String increaseWindowString = "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\nIncrease Window Size (enter only numeric characters)\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n ";
+        
+        
+        
+        Object[] message = {
+            this.setColorButton, this.colorUpdateObjectSelector, 
+            this.centerOfViewActorSpeedLabel, this.centerOfViewActorSpeedSlider,
+            increaseWindowString, this.viewWidthLabel, this.viewWidthField,
+            this.viewHeightLabel, this.viewHeightField, 
+            this.displayHUDMap, this.dontDisplayHUDMap, 
+            "HUD Map Corner: ", this.hudMapCornerSelector, this.applyChangesButton
+        };
+        
+        return message;
+    }
+ 
     private void initGUIComponents(){
         
         this.hudMapCornerSelector.setSelectedIndex(SettingsSingleton.getInstance().getHUDMapCorner().getValue());
@@ -264,25 +296,48 @@ public class SettingsMenu extends JOptionPane{
 
     }
     
-    private Object[] getMessageObjectArray(){
-        String increaseWindowString = "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\nIncrease Window Size (enter only numeric characters)\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n ";
+    private void updateApplyChangesButton(){
+    
+        boolean changesFound = true;
+        if(this.initialContainerBGColor.equals(this.currentContainerBGColor)&&
+                this.initialViewDimension.equals(this.currentViewDimension)&&
+                this.initialCenterOfViewActorSpeed == this.currentCenterOfViewActorSpeed&&
+                this.initialCenterOfViewActorColor.equals(this.currentCenterOfViewActorColor)&&
+                this.initialPerimeterColor.equals(this.currentPerimeterColor)&&
+                this.initialShouldDisplayHUDMap == this.currentShouldDisplayHUDMap&&
+                this.initialWindowCornerHUDMap == this.currentWindowCornerHUDMap){
+            changesFound = false;            
+        }
         
+        this.applyChangesButton.setEnabled(changesFound);
         
-        
-        Object[] message = {
-            this.setColorButton, this.colorUpdateObjectSelector, 
-            this.centerOfViewActorSpeedLabel, this.centerOfViewActorSpeedSlider,
-            increaseWindowString, this.viewWidthLabel, this.viewWidthField,
-            this.viewHeightLabel, this.viewHeightField, 
-            this.displayHUDMap, this.dontDisplayHUDMap, 
-            "HUD Map Corner: ", this.hudMapCornerSelector, this.applyChangesButton
-        };
-        
-        return message;
     }
     
     private void updateCenterOfViewActorSpeedLabel(){
         this.centerOfViewActorSpeedLabel.setText("Center of View Actor speed was: " + this.initialCenterOfViewActorSpeed + ", set speed to: " + this.currentCenterOfViewActorSpeed);
+    }
+    
+    private void updateColorIcon(){
+        String s = (String)this.colorUpdateObjectSelector.getSelectedItem();
+        Color c = null;
+        
+        switch(s){
+        
+            case "Perimeter":
+                c = this.currentPerimeterColor;
+                break;
+            case "Center of View Actor":
+                c = this.currentCenterOfViewActorColor;
+                break;
+            case "Background Of Universe":
+                c = this.currentContainerBGColor;
+                break;        
+        }
+        
+        if(c != null){
+            this.setIcon(new ColorIcon(c));
+        }
+        
     }
     
     private void updateCurrentViewDimension(){
@@ -321,68 +376,9 @@ public class SettingsMenu extends JOptionPane{
     
     }
     
-    private void updateApplyChangesButton(){
-    
-        boolean changesFound = true;
-        if(this.initialContainerBGColor.equals(this.currentContainerBGColor)&&
-                this.initialViewDimension.equals(this.currentViewDimension)&&
-                this.initialCenterOfViewActorSpeed == this.currentCenterOfViewActorSpeed&&
-                this.initialCenterOfViewActorColor.equals(this.currentCenterOfViewActorColor)&&
-                this.initialPerimeterColor.equals(this.currentPerimeterColor)&&
-                this.initialShouldDisplayHUDMap == this.currentShouldDisplayHUDMap&&
-                this.initialWindowCornerHUDMap == this.currentWindowCornerHUDMap){
-            changesFound = false;            
-        }
-        
-        this.applyChangesButton.setEnabled(changesFound);
-        
-    }
-    
-    private void applyChanges(){
-        this.initialContainerBGColor = this.currentContainerBGColor;
-        this.initialPerimeterColor = this.currentPerimeterColor;
-        this.initialCenterOfViewActorColor = this.currentCenterOfViewActorColor;
-        this.initialCenterOfViewActorSpeed = this.currentCenterOfViewActorSpeed;
-        this.initialViewDimension = this.currentViewDimension;
-        this.initialShouldDisplayHUDMap = this.currentShouldDisplayHUDMap;
-        this.initialWindowCornerHUDMap = this.currentWindowCornerHUDMap;
-        
-        SettingsSingleton.getInstance().setContainerBackgroundColor(this.initialContainerBGColor);
-        SettingsSingleton.getInstance().setPerimeterColor(this.initialPerimeterColor);
-        SettingsSingleton.getInstance().setCenterOfViewActorColor(this.initialCenterOfViewActorColor);
-        SettingsSingleton.getInstance().setCenterOfViewActorSpeed(this.initialCenterOfViewActorSpeed);
-        SettingsSingleton.getInstance().setWindowDimension(this.initialViewDimension);
-        SettingsSingleton.getInstance().setShouldShowHUDMap(this.initialShouldDisplayHUDMap);
-        SettingsSingleton.getInstance().setHUDMapCorner(this.initialWindowCornerHUDMap);
-        
-        this.updateApplyChangesButton();
-    }
-    
-    private void updateColorIcon(){
-        String s = (String)this.colorUpdateObjectSelector.getSelectedItem();
-        Color c = null;
-        
-        switch(s){
-        
-            case "Perimeter":
-                c = this.currentPerimeterColor;
-                break;
-            case "Center of View Actor":
-                c = this.currentCenterOfViewActorColor;
-                break;
-            case "Background Of Universe":
-                c = this.currentContainerBGColor;
-                break;        
-        }
-        
-        if(c != null){
-            this.setIcon(new ColorIcon(c));
-        }
-        
-    }
     
     
-    public class ColorIcon implements Icon{
+    private class ColorIcon implements Icon{
         
         private final int width = 60;
         private final int height = 60;

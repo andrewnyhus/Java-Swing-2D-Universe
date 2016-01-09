@@ -36,17 +36,18 @@ public class Actor {
     
     private ActorType type;
     private Point topLeftLocation;
-    Color color;
+    private Color color;
     private Shape shape;
     private Actor[] childActors;
     private ActorLabel actorLabel;
+    private int idNumber;
     
     public Actor(ActorType type, Point loc, Color color){
         this.type = type;
         this.topLeftLocation = loc;
         this.color = color;
         this.childActors = null;
-        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_TOP);
+        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM);
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s){
@@ -55,7 +56,7 @@ public class Actor {
         this.color = color;
         this.shape = s;        
         this.childActors = null;
-        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_TOP);
+        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM);
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors){
@@ -64,7 +65,7 @@ public class Actor {
         this.color = color;
         this.shape = s;        
         this.childActors = childActors;
-        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_TOP);
+        this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM);
     }
 
     public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors, ActorLabel actorLabel){
@@ -76,6 +77,21 @@ public class Actor {
         this.actorLabel = actorLabel;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof Actor){
+            Actor a = (Actor)obj;
+            return (a.actorLabel.getLabelText().equals(this.actorLabel.getLabelText()))&&
+            (a.actorLabel.getPosition().getValue()==this.actorLabel.getPosition().getValue())&&
+            (a.shape.equals(this.shape))&&
+            (a.color.equals(this.color))&&
+            (a.topLeftLocation.equals(this.topLeftLocation));
+            
+        }else{
+            return false;
+        }
+    }
+    
     public int getWidth(){
         return this.getShape().getBounds().width;
     }
@@ -84,9 +100,6 @@ public class Actor {
         return this.getShape().getBounds().height;
     }
     
-    public Color getColor(){
-        return this.color;
-    }
     
     /**
      * Returns the left most (minimum x) value within the actors bounds.
@@ -245,7 +258,7 @@ public class Actor {
     
     public static Actor copyInstanceOfActor(Actor a){
         return new Actor(a.getType(), a.getTopLeftLocation(),
-                a.getColor(), a.getShape(), a.getChildActors());
+                a.getColor(), a.getShape(), a.getChildActors(), a.getActorLabel());
     }
 
     /**
@@ -267,6 +280,34 @@ public class Actor {
         return "Shape:" + this.getShape().getClass().getName() +
                 "\nw:" + this.shape.getBounds().width + " h:" + this.shape.getBounds().height +
                 "\nx:" + this.getTopLeftLocation().x + " y:" + this.getTopLeftLocation().y;
+    }
+
+    /**
+     * @return the idNumber
+     */
+    public int getIdNumber() {
+        return idNumber;
+    }
+
+    /**
+     * @param idNumber the idNumber to set
+     */
+    public void setIdNumber(int idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
     }
     
 }

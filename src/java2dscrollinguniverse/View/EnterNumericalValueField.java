@@ -29,7 +29,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 /**
@@ -66,21 +65,19 @@ public class EnterNumericalValueField extends JTextField{
         });
     }
     
-    public void paintRed(){
-        this.setBackground(Color.red);
-    }
     
-    
-
     /**
      * @return the type
      */
     public NumericalType getType() {
         return this.type;
     }
-
     
+    public void paintRed(){
+        this.setBackground(Color.red);
+    }
     
+        
     private enum NumericalType{
         INT(0), DOUBLE(1), FLOAT(2);
         private int value;

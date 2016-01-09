@@ -23,7 +23,6 @@
  */
 package java2dscrollinguniverse.Model.actors;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
 import java2dscrollinguniverse.SettingsSingleton;

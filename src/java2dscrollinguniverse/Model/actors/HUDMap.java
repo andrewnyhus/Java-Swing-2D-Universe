@@ -31,7 +31,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.container.Container;
+import java2dscrollinguniverse.Model.container.ContainerUniverse;
 
 /**
  *
@@ -41,7 +41,7 @@ public class HUDMap extends Actor{
     
     private WindowCorner cornerOfWindow;
     private Dimension windowDimension;
-    private Container container;
+    private ContainerUniverse container;
     private Actor[] childActors;
     private Shape shape;
     private TwoDimensionalMovement centerViewOffsetFromContainerOrigin;
@@ -55,7 +55,7 @@ public class HUDMap extends Actor{
     
     public HUDMap(TwoDimensionalMovement centerViewOffset,
             Dimension windowDimension,
-            Container container){
+            ContainerUniverse container){
         
         super(ActorType.HUDElement, new Point(0, 0), Color.BLACK);
         //^^ that call to super disregarded colorOfContainerRepresentation because super must be the first
@@ -72,7 +72,7 @@ public class HUDMap extends Actor{
         
     public HUDMap(TwoDimensionalMovement centerViewOffset,
             Dimension windowDimension,
-            Container container,
+            ContainerUniverse container,
             WindowCorner cornerOfWindow){
         
         
@@ -222,66 +222,6 @@ public class HUDMap extends Actor{
         
     }
 
-    @Override
-    public Shape getShape(){
-        return this.shape;
-    }
-    
-    @Override
-    public void setShape(Shape s){
-        this.shape = s;
-    }
-    
-    /**
-     * @return the cornerOfWindow
-     */
-    public WindowCorner getCornerOfWindow() {
-        return cornerOfWindow;
-    }
-
-    /**
-     * @param cornerOfWindow the cornerOfWindow to set
-     */
-    public void setCornerOfWindow(WindowCorner cornerOfWindow) {
-        this.cornerOfWindow = cornerOfWindow;
-    }
-
-    /**
-     * @return the windowDimension
-     */
-    public Dimension getWindowDimension() {
-        return windowDimension;
-    }
-
-    /**
-     * @param windowDimension the windowDimension to set
-     */
-    public void setWindowDimension(Dimension windowDimension) {
-        this.windowDimension = windowDimension;
-    }
-
-    /**
-     * @return the container
-     */
-    private Container getContainer() {
-        return container;
-    }
-
-    /**
-     * @param container the container to set
-     */
-    public void setContainer(Container container) {
-        this.container = container;
-    }
-
-    /**
-     * @param childActors the childActors to set
-     */
-    @Override
-    public void setChildActors(Actor[] childActors) {
-        this.childActors = childActors;
-    }
-
     /**
      * @return the childActors
      */
@@ -289,7 +229,22 @@ public class HUDMap extends Actor{
     public Actor[] getChildActors() {
         return childActors;
     }
-    
+   
+    /**
+     * @return the container
+     */
+    private ContainerUniverse getContainer() {
+        return container;
+    }
+ 
+
+    /**
+     * @return the cornerOfWindow
+     */
+    public WindowCorner getCornerOfWindow() {
+        return cornerOfWindow;
+    }
+
     private Dimension getProperSizeForDimensionWithLimits(Dimension currentDimension, int maxMapWidthOrHeight){
         double givenHeightOverWidthRatio = (double)currentDimension.height/
                                              (double)currentDimension.width;
@@ -330,6 +285,11 @@ public class HUDMap extends Actor{
         
         return returnDimension;
     }
+        
+    @Override
+    public Shape getShape(){
+        return this.shape;
+    }
     
     private Shape getShapeShrunkByFactorPositionedAtPoint(Shape s, int factorToShrinkBy, Point p){
         
@@ -351,6 +311,53 @@ public class HUDMap extends Actor{
         
     }
     
+    /**
+     * @return the windowDimension
+     */
+    public Dimension getWindowDimension() {
+        return windowDimension;
+    }
+
+    
+    /**
+     * @param childActors the childActors to set
+     */
+    @Override
+    public void setChildActors(Actor[] childActors) {
+        this.childActors = childActors;
+    }
+
+
+    /**
+     * @param container the container to set
+     */
+    public void setContainer(ContainerUniverse container) {
+        this.container = container;
+    }
+
+    
+    /**
+     * @param cornerOfWindow the cornerOfWindow to set
+     */
+    public void setCornerOfWindow(WindowCorner cornerOfWindow) {
+        this.cornerOfWindow = cornerOfWindow;
+    }
+
+    
+    @Override
+    public void setShape(Shape s){
+        this.shape = s;
+    }
+
+    
+    /**
+     * @param windowDimension the windowDimension to set
+     */
+    public void setWindowDimension(Dimension windowDimension) {
+        this.windowDimension = windowDimension;
+    }
+
+
     public enum WindowCorner{
         TOP_RIGHT(0), TOP_LEFT(1), BOTTOM_LEFT(2), BOTTOM_RIGHT(3);
         

@@ -49,32 +49,6 @@ public class MemberFactory {
         this.containerBounds = containerBounds;
     }
     
-    public Actor getBackgroundRect(){
-        return new Actor(ActorType.miscObject, new Point(0, 0),
-                SettingsSingleton.getInstance().getContainerBackgroundColor(),
-                new Rectangle(0, 0, this.containerBounds.width, this.containerBounds.height));
-    }
-    
-    public Wall[] generateWalls(){
-        Wall[] walls = new Wall[4];
-        
-        Point topLeftLoc = new Point(0, 0);
-        Point topRightLoc = new Point(this.containerBounds.width, 0);
-        Point bottomLeftLoc = new Point(0, this.containerBounds.height);
-        
-        Point locWall0 = new Point(0, 0);
-        Point locWall1 = new Point(0, 0);
-        Point locWall2 = new Point(this.containerBounds.width - 10, 0);
-        Point locWall3 = new Point(0, this.containerBounds.height - 10);
-
-
-        walls[PerimeterSide.LEFT.getValue()] = new Wall(locWall0, new Rectangle(0, 0, wallThickness, this.containerBounds.height));
-        walls[PerimeterSide.TOP.getValue()] = new Wall(locWall1, new Rectangle(0, 0, this.containerBounds.width, wallThickness));
-        walls[PerimeterSide.RIGHT.getValue()] = new Wall(locWall2, new Rectangle(0, 0, 10, this.containerBounds.height));
-        walls[PerimeterSide.BOTTOM.getValue()] = new Wall(locWall3, new Rectangle(0, 0, this.containerBounds.width, wallThickness));
-        
-        return walls;
-    }
     
     public ArrayList<Actor> generateMiscellaneousActorsRandomly(){
         int widthInset = (int)(this.containerBounds.getWidth() * .15);
@@ -134,12 +108,41 @@ public class MemberFactory {
             }else{
                 s = null;
             }
-            actors.add(i, new Actor(ActorType.miscObject, p, c, s));
+            Actor aToAdd = new Actor(ActorType.miscObject, p, c, s);
+            aToAdd.setIdNumber(i);
+            actors.add(i, aToAdd);
         }
         
         return actors;
     }
     
+    
+    public Wall[] generateWalls(){
+        Wall[] walls = new Wall[4];
+        
+        Point topLeftLoc = new Point(0, 0);
+        Point topRightLoc = new Point(this.containerBounds.width, 0);
+        Point bottomLeftLoc = new Point(0, this.containerBounds.height);
+        
+        Point locWall0 = new Point(0, 0);
+        Point locWall1 = new Point(0, 0);
+        Point locWall2 = new Point(this.containerBounds.width - 10, 0);
+        Point locWall3 = new Point(0, this.containerBounds.height - 10);
+
+
+        walls[PerimeterSide.LEFT.getValue()] = new Wall(locWall0, new Rectangle(0, 0, wallThickness, this.containerBounds.height));
+        walls[PerimeterSide.TOP.getValue()] = new Wall(locWall1, new Rectangle(0, 0, this.containerBounds.width, wallThickness));
+        walls[PerimeterSide.RIGHT.getValue()] = new Wall(locWall2, new Rectangle(0, 0, 10, this.containerBounds.height));
+        walls[PerimeterSide.BOTTOM.getValue()] = new Wall(locWall3, new Rectangle(0, 0, this.containerBounds.width, wallThickness));
+        
+        return walls;
+    }
+    
+    public Actor getBackgroundRect(){
+        return new Actor(ActorType.miscObject, new Point(0, 0),
+                SettingsSingleton.getInstance().getContainerBackgroundColor(),
+                new Rectangle(0, 0, this.containerBounds.width, this.containerBounds.height));
+    }
     
 
 }

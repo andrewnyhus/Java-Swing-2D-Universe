@@ -41,7 +41,7 @@ public class CenterOfViewActor extends Actor{
             SettingsSingleton.getInstance().getCenterOfViewActorColor(),//color 
             new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth, 1.0*centerOfViewActorHeight),//shape
             null,//childActors
-            new ActorLabel("^CenterOfView Actor", PositionOfLabel.MIDDLE_OF_BOTTOM));//label
+            new ActorLabel("Camera/Window Center", PositionOfLabel.LEFT_OF_BOTTOM));//label
     }
     
     
