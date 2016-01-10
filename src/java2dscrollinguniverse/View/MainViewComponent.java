@@ -33,12 +33,14 @@ import java.awt.Shape;
 import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java2dscrollinguniverse.Controller.UniverseController;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.HUDMap;
 import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
 import java2dscrollinguniverse.Model.actors.Wall;
-import java2dscrollinguniverse.Model.container.ContainerUniverse;
 import java2dscrollinguniverse.SettingsSingleton;
 import javax.swing.JPanel;
 
@@ -48,12 +50,12 @@ import javax.swing.JPanel;
  */
 public class MainViewComponent extends JPanel{
     
-    private ContainerUniverse updatedContainer;
-    private ArrayList<LabelTuple> arrayListOfLabelsToDraw;    
+    private UniverseController controller;
+    private ArrayList<LabelTuple> arrayListOfLabelsToDraw; 
     
     
-    public MainViewComponent(ContainerUniverse container){
-        this.updatedContainer = container;
+    public MainViewComponent(UniverseController controller){
+        this.controller = controller;
     }
     
     /**
@@ -79,16 +81,16 @@ public class MainViewComponent extends JPanel{
         //set "pen" to proper color for drawing the centerOfViewActor
         g2d.setColor(SettingsSingleton.getInstance().getCenterOfViewActorColor());
         // get shape of centerOfViewActor
-        Shape centerOfViewActorShape = this.updatedContainer.getCenterOfViewActor().getShape();
+        Shape centerOfViewActorShape = this.controller.getContainer().getCenterOfViewActor().getShape();
         Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
         Point centerViewPoint = new Point( (viewDimensions.width/2),
                 (viewDimensions.height/2) );
         g2d.fill(this.getShapeWithOffsetFromOrigin(centerOfViewActorShape, centerViewPoint));
         
-        Point centerOfViewActorLabelLoc = this.updatedContainer.getCenterOfViewActor().
+        Point centerOfViewActorLabelLoc = this.controller.getContainer().getCenterOfViewActor().
                                             getLocationOfLabelPosition();
         
-        String centerOfViewActorLabelStr = this.updatedContainer.getCenterOfViewActor().
+        String centerOfViewActorLabelStr = this.controller.getContainer().getCenterOfViewActor().
                                             getActorLabel().getLabelText();
 
         this.prepareToDrawString(centerOfViewActorLabelLoc, centerOfViewActorLabelStr);
@@ -101,11 +103,11 @@ public class MainViewComponent extends JPanel{
         g2d.setColor(SettingsSingleton.getInstance().getContainerBackgroundColor());
         
         //get shape of background rect
-        Shape bgRectShape = this.updatedContainer.getBackgroundRect().getShape();
+        Shape bgRectShape = this.controller.getContainer().getBackgroundRect().getShape();
         
         //get top left location of backgroundRect
         Point bgRectTopLeftLocationToDraw =
-                centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.updatedContainer.getBackgroundRect().getTopLeftLocation());
+                centerOfViewOffsetFromModel.getPointWithMovementAppliedFromPoint(this.controller.getContainer().getBackgroundRect().getTopLeftLocation());
         
         
         //set topLeft location to the bgRectShape variable, and use it to draw
@@ -122,7 +124,7 @@ public class MainViewComponent extends JPanel{
             WindowCorner HUDMapWindowCorner = SettingsSingleton.getInstance().getHUDMapCorner();
             
             HUDMap map = new HUDMap(this.getCenterOfViewActorOffsetFromModelToView(),
-                    viewDimensions, this.updatedContainer, HUDMapWindowCorner);
+                    viewDimensions, this.controller.getContainer(), HUDMapWindowCorner);
             
             g2d.setColor(map.getColor());
             
@@ -177,7 +179,7 @@ public class MainViewComponent extends JPanel{
     }
     
     private void drawMembersOfContainer(Graphics2D g2d, TwoDimensionalMovement centerOfViewOffsetFromModel) {
-        for(Actor a: this.updatedContainer.getMembersOfContainer()){
+        for(Actor a: this.controller.getContainer().getMembersOfContainer()){
             
             
             if(a.getType().viewLocationShouldChange()){
@@ -196,8 +198,29 @@ public class MainViewComponent extends JPanel{
                 
                 String alString = a.getActorLabel().getLabelText();
                 Point alPoint = a.getLocationOfLabelPosition();
-                
+                                
                 this.prepareToDrawString(alPoint, alString);
+                
+                
+                if(a.getChildActors() != null){
+                    for(Actor childActor : a.getChildActors()){
+                        
+                        g2d.setColor(childActor.getColor());
+                        Shape currentChildShape = childActor.getShape();
+                        Point childActorOffset = childActor.getTopLeftLocation();
+                        Point childActorPointToDraw = new Point(currentActorTopLeftLocationToDraw.x + childActorOffset.x,
+                                                            currentActorTopLeftLocationToDraw.y + childActorOffset.y);
+                        
+
+                        g2d.fill(this.getShapeWithOffsetFromOrigin(currentChildShape, childActorPointToDraw));
+        
+                        String childLblString = childActor.getActorLabel().getLabelText();
+                        Point childLblLoc = childActor.getLocationOfLabelPosition();
+
+                        this.prepareToDrawString(childLblLoc, childLblString);
+                        
+                    }
+                }
                 
             }
         }
@@ -205,7 +228,7 @@ public class MainViewComponent extends JPanel{
 
     private void drawWalls(Graphics2D g2d, TwoDimensionalMovement centerOfViewOffsetFromModel) {
         //iterate through all walls in perimeter of the container
-        for(Wall w: this.updatedContainer.getPerimeterWalls()){
+        for(Wall w: this.controller.getContainer().getPerimeterWalls()){
             //set "pen" to proper color for walls
             g2d.setColor(SettingsSingleton.getInstance().getPerimeterColor());
             
@@ -233,7 +256,7 @@ public class MainViewComponent extends JPanel{
         Dimension viewDimensions = SettingsSingleton.getInstance().getWindowDimension();
         
         Point centerViewPoint = new Point(viewDimensions.width/2, viewDimensions.height/2);
-        Point centerOfViewActorPointInModel = this.updatedContainer.getCenterOfViewActor().getTopLeftLocation();
+        Point centerOfViewActorPointInModel = this.controller.getContainer().getCenterOfViewActor().getTopLeftLocation();
         
         return new TwoDimensionalMovement(centerViewPoint.x - centerOfViewActorPointInModel.x,
                 centerViewPoint.y - centerOfViewActorPointInModel.y);        
@@ -273,14 +296,14 @@ public class MainViewComponent extends JPanel{
             //Begin painting :) ...picasso style
             
             this.arrayListOfLabelsToDraw = new ArrayList();
-            
+            this.controller.getContainer().stepAllActors();
+
             //gets the offset of view's center from origin of the container (0, 0)
             TwoDimensionalMovement centerOfViewOffsetFromModel = this.getCenterOfViewActorOffsetFromModelToView();
             
             drawContainerBackground(g2d, centerOfViewOffsetFromModel);
             
             drawWalls(g2d, centerOfViewOffsetFromModel);
-            
             drawMembersOfContainer(g2d, centerOfViewOffsetFromModel);
             
             Dimension viewDimensions = drawCenterOfViewActor(g2d);            
@@ -290,7 +313,13 @@ public class MainViewComponent extends JPanel{
             g2d.setColor(SettingsSingleton.getInstance().getLabelColor());
             this.drawActorLabels(g2d);
             
-            
+        try {
+            //if(this.shouldRepaint())
+            Thread.sleep(10);//sleep for 1/100th of a second
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainViewComponent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            this.repaint();
             
     }
 
@@ -326,14 +355,32 @@ public class MainViewComponent extends JPanel{
         
     }
 
-    
-    
-    public void updatedContainer(ContainerUniverse container){
-        this.updatedContainer = container;
-        this.repaint();
+    /**
+     * Determines if the view should repaint.
+     * @return foundNonzeroVelocity - boolean value to see if an actor was
+     * found moving, and if there was one, then the method returns true.
+     */
+    private boolean shouldRepaint(){
+        boolean foundNonzeroVelocity = false;
+        
+        TwoDimensionalMovement centerOfViewVel = this.controller.getContainer().
+                                            getCenterOfViewActor().getVelocity();
+        //first check if center of view is moving
+        if(centerOfViewVel.getXMovement() == 0 && centerOfViewVel.getYMovement() == 0){
+            foundNonzeroVelocity = true;
+        }
+        
+        for(Actor a: this.controller.getContainer().getMembersOfContainer()){
+            TwoDimensionalMovement currentVel = a.getVelocity();
+            if(currentVel.getXMovement() == 0 && currentVel.getYMovement() == 0){
+                foundNonzeroVelocity = true;
+            }
+        }
+        
+        return foundNonzeroVelocity;
     }
-    
-    
+
+        
     class LabelTuple{
         private String string;
         private Point locInView;

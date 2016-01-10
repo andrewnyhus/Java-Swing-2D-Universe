@@ -1,7 +1,7 @@
-/* 
+/*
  * The MIT License
  *
- * Copyright 2015 andrewnyhus.
+ * Copyright 2016 andrewnyhus.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse;
+package Examples;
 
-
+import java.awt.Dimension;
 import java2dscrollinguniverse.Controller.UniverseController;
 import javax.swing.SwingUtilities;
 
@@ -31,21 +31,21 @@ import javax.swing.SwingUtilities;
  *
  * @author andrewnyhus
  */
-public class Java2DScrollingUniverse {
-
+public class PingPong {
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Dimension game_size = new Dimension(600, 400);
         
         SwingUtilities.invokeLater(() -> {
-            UniverseController mainController = new UniverseController();
+            //UniverseController mainController = new UniverseController("PingPong", game_size, false);
+            //mainController.getContainer()
         });
-
-
-        
         
     }
+    
     
 }

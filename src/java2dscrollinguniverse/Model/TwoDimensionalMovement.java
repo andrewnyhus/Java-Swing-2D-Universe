@@ -30,31 +30,57 @@ import java.awt.Point;
  * @author andrewnyhus
  */
 public class TwoDimensionalMovement {
-    private final int xMovement;
-    private final int yMovement;
+    private int xMovement;
+    private int yMovement;
     
     public TwoDimensionalMovement(int x, int y){
         this.xMovement = x;
         this.yMovement = y;
     }
     
-    public int getXMovement(){
-        return this.xMovement;
-    }
-    
-    public int getYMovement(){
-        return this.yMovement;
-    }
     
     public Point getPointWithMovementAppliedFromPoint(Point p){
-        return new Point(this.xMovement + p.x, this.yMovement + p.y);
+        return new Point(this.getXMovement() + p.x, this.getYMovement() + p.y);
     }
     
     public TwoDimensionalMovement getMovementDividedByFactor(int factor){
-        int xMovementNew = this.xMovement / factor;
-        int yMovementNew = this.yMovement / factor;
+        int xMovementNew = this.getXMovement() / factor;
+        int yMovementNew = this.getYMovement() / factor;
         
         return new TwoDimensionalMovement(xMovementNew, yMovementNew);        
+    }
+
+    /**
+     * @return the xMovement
+     */
+    public int getXMovement() {
+        return xMovement;
+    }
+
+    /**
+     * @param xMovement the xMovement to set
+     */
+    public void setXMovement(int xMovement) {
+        this.xMovement = xMovement;
+    }
+
+    /**
+     * @return the yMovement
+     */
+    public int getYMovement() {
+        return yMovement;
+    }
+
+    /**
+     * @param yMovement the yMovement to set
+     */
+    public void setYMovement(int yMovement) {
+        this.yMovement = yMovement;
+    }
+    
+    @Override
+    public String toString(){
+        return "dx:" + this.xMovement + "dy:" + this.yMovement;
     }
     
 }

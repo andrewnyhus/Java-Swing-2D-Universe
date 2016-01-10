@@ -35,9 +35,10 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
+import java2dscrollinguniverse.Model.actors.CenterOfViewActor;
 import java2dscrollinguniverse.Model.container.ContainerUniverse;
 import java2dscrollinguniverse.SettingsSingleton;
-import java2dscrollinguniverse.View.EditActorPane;
+import java2dscrollinguniverse.View.ActorInspectorPane;
 import java2dscrollinguniverse.View.MainViewComponent;
 import java2dscrollinguniverse.View.SettingsMenu;
 import javax.swing.JDialog;
@@ -59,18 +60,45 @@ public class UniverseController implements KeyListener, ActionListener{
     private final JFrame frame;
     private JMenuBar menuBar;
     private final Dimension origSizeOfFrame;
-    private EditActorPane actorEditor = null;
-    private JDialog actorEditorDialog = null
-;    
-    public UniverseController() {
+    
+    
+    public UniverseController(String title, Dimension d, Actor[] preloadedMembers){
+        this.frame = new JFrame(title);
+                                   
+        this.container = new ContainerUniverse(d, preloadedMembers);
+        
+        this.view = new MainViewComponent(this);
+        
+        this.origSizeOfFrame = this.frame.getSize();
+        
+        this.frame.add(this.view);
+        
+        Dimension newSizeOfFrame = 
+                new Dimension(
+                        origSizeOfFrame.width+ SettingsSingleton.getInstance().getWindowWidth(),
+                        origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
+        
+
+        this.frame.setSize(newSizeOfFrame);
+        this.frame.setResizable(false);
+
+        this.addMenuBar();
+        this.frame.setVisible(true);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.addKeyListenerToView();
+        this.addMouseListenerToView();    
+    }
+     
+    /*public UniverseController(Actor[] preloadedMembers) {
         this.frame = new JFrame("2D Universe");
                     
         Dimension d = new Dimension(3000, 1000);
         //Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
                 
-        this.container = new ContainerUniverse(d);
+        this.container = new ContainerUniverse(d, preloadedMembers);
         
-        this.view = new MainViewComponent(this.container);
+        this.view = new MainViewComponent(this);
         
         this.origSizeOfFrame = this.frame.getSize();
         
@@ -91,7 +119,7 @@ public class UniverseController implements KeyListener, ActionListener{
 
         this.addKeyListenerToView();
         this.addMouseListenerToView();
-    }
+    }*/
     
     public ContainerUniverse getContainer(){
         return this.container;
@@ -229,33 +257,25 @@ public class UniverseController implements KeyListener, ActionListener{
         this.view.repaint();
     }
     
-    private void displayActorEditor(Actor a){
+    
+    
+    public void displayActorInspector(Actor a){
+        ActorInspectorPane inspector = new ActorInspectorPane(a, this.container);
+        JDialog inspectorDialog = inspector.createDialog("Actor Inspector");
         
-        this.actorEditor = new EditActorPane(a, this.container);
-        this.actorEditorDialog = this.actorEditor.createDialog("Actor Editor");
-        
-        this.actorEditorDialog.setSize(450, 500);
-        this.actorEditorDialog.setVisible(true);
+        inspectorDialog.setSize(450, 500);
+        inspectorDialog.setVisible(true);
         
         this.view.repaint();
-        this.closeActorEditor();
-        
-    }
-    
-    private void closeActorEditor(){
-    
-        this.actorEditor.setVisible(false);
-        
-        this.actorEditorDialog.setVisible(false);
-        this.actorEditorDialog.dispose();
-    
-        this.actorEditor = null;
-        this.actorEditorDialog = null;
+
+        inspector.setVisible(false);
+        inspectorDialog.setVisible(false);
+        inspectorDialog.dispose();
+        inspector = null;
+        inspectorDialog = null;
         this.container.handleDuplicates();
     }
-    
-    
-    
+        
     //Below is the implementation for the KeyListener methods.
     //These handle detection of various keys being pressed on the keyboard.
     
@@ -279,56 +299,75 @@ public class UniverseController implements KeyListener, ActionListener{
         
         //store the int that corresponds to the key that was pressed
         int keycode = e.getKeyCode();
-        
-        
-        TwoDimensionalMovement movement;
-        
-        int centerOfViewActorVelocity = SettingsSingleton.getInstance().getCameraScrollingSpeed();
-        //handle various cases of the keycode value.
-        switch(keycode){
-                
-                //if key pressed was left arrow
-                case KeyEvent.VK_LEFT:
-                    movement = new TwoDimensionalMovement(-centerOfViewActorVelocity, 0);
-                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
-                    this.view.updatedContainer(this.getContainer());
-                    
-                    break;
-                    
-                //if key pressed was right arrow    
-                case KeyEvent.VK_RIGHT:
-                    movement = new TwoDimensionalMovement(centerOfViewActorVelocity, 0);
-                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
-                    this.view.updatedContainer(this.getContainer());
 
-                    break;
-                
-                //if key pressed was up arrow
-                case KeyEvent.VK_UP:
-                    //***Note: remember that moving "up" visually to the user
-                    // is equivalent to a decrease in y value since the origin 0, 0 is
-                    //in the top left.  Oh Java Swing, we love you. 
-                    movement = new TwoDimensionalMovement(0, -centerOfViewActorVelocity);
-                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
-                    this.view.updatedContainer(this.getContainer());
+        if(SettingsSingleton.getInstance().getScrollMode().isArrowKeyScrollingEnabled()){
+            TwoDimensionalMovement movement;
 
-                    break;
-                    
-                //if key pressed was down arrow 
-                case KeyEvent.VK_DOWN:
-                    //similarly moving down visually is equivalent to an increase in y value
-                    movement = new TwoDimensionalMovement(0, centerOfViewActorVelocity);
-                    this.getContainer().attemptToMoveActor(this.container.getCenterOfViewActor(), movement);
-                    this.view.updatedContainer(this.getContainer());
-                    
-                    break;
-                    
-                //otherwise
-                default:
-                    //do nothing here, because if the user presses a key
-                    //other then the up down left or right arrow key, the program 
-                    //will land in this default case.
-                    break;
+            int centerOfViewActorVelocity = SettingsSingleton.getInstance().getCameraScrollingSpeed();
+            //handle various cases of the keycode value.
+            switch(keycode){
+
+                    //if key pressed was left arrow
+                    case KeyEvent.VK_LEFT:
+                        CenterOfViewActor newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+                        newCenterOfViewActor.setVelocity(new TwoDimensionalMovement(-centerOfViewActorVelocity, 0));
+                        UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+                        UniverseController.this.view.repaint();
+
+
+                        break;
+
+                    //if key pressed was right arrow    
+                    case KeyEvent.VK_RIGHT:
+                        movement = new TwoDimensionalMovement(centerOfViewActorVelocity, 0);
+                        
+                        newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+                        newCenterOfViewActor.setVelocity(movement);
+                        UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+                        UniverseController.this.view.repaint();
+
+                        break;
+
+                    //if key pressed was up arrow
+                    case KeyEvent.VK_UP:
+                        //***Note: remember that moving "up" visually to the user
+                        // is equivalent to a decrease in y value since the origin 0, 0 is
+                        //in the top left.  Oh Java Swing, we love you. 
+                        movement = new TwoDimensionalMovement(0, -centerOfViewActorVelocity);
+
+                        newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+                        newCenterOfViewActor.setVelocity(movement);
+                        UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+                        UniverseController.this.view.repaint();
+                        
+                        break;
+
+                    //if key pressed was down arrow 
+                    case KeyEvent.VK_DOWN:
+                        //similarly moving down visually is equivalent to an increase in y value
+                        movement = new TwoDimensionalMovement(0, centerOfViewActorVelocity);
+
+                        newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+                        newCenterOfViewActor.setVelocity(movement);
+                        UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+                        UniverseController.this.view.repaint();
+                        
+                        
+                        break;
+
+                    //otherwise
+                    default:
+                        //do nothing here, because if the user presses a key
+                        //other then the up down left or right arrow key, the program 
+                        //will land in this default case.
+                        
+                        newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+                        newCenterOfViewActor.setVelocity(new TwoDimensionalMovement(0,0));
+                        UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+                        UniverseController.this.view.repaint();
+                        
+                        break;
+            }
         }
         
     }
@@ -336,6 +375,13 @@ public class UniverseController implements KeyListener, ActionListener{
     @Override
     public void keyReleased(KeyEvent e) {
         //ignore
+        if(SettingsSingleton.getInstance().getScrollMode().isArrowKeyScrollingEnabled()){
+            CenterOfViewActor newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+            newCenterOfViewActor.setVelocity(new TwoDimensionalMovement(0,0));
+            UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+            UniverseController.this.view.repaint();
+        }
+
     }
  //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -355,33 +401,108 @@ public class UniverseController implements KeyListener, ActionListener{
         return translatedPoint;
     }
 
+    /**
+     * This method creates an object of class "MouseAdapter" which listens
+     * for mouse clicks, mouse drags, movements of the mouse, and more.
+     */
     private void addMouseListenerToView() {
         
         MouseAdapter mouseHandler = (new MouseAdapter(){
             
+            /**
+             * This method fires when the user moves their mouse within the frame.
+             * @param e - an event object which holds important info such as the
+             *  current location of the mouse.
+             */
             @Override
-            public void mouseDragged(MouseEvent e){
-                super.mouseDragged(e);
-                //this fires repeatedly after each mouse movement during a drag
-                //action by the user
+            public void mouseMoved(MouseEvent e){
+
+                //mouse location
+                Point mouseLoc = e.getPoint();
+                if(SettingsSingleton.getInstance().getScrollMode().isMouseScrollingEnabled()){
+                    //this range is the distance from the view bounds that if the mouse
+                    //enters, the view should scroll in that direction.
+                    int rangeIfMouseEntersToScroll = 60;
+
+                    //if mouse reaches this x value or lower, view scrolls left
+                    int mouseXMin = rangeIfMouseEntersToScroll;
+
+                    //if mouse reaches this x value or greater, view scrolls right
+                    int mouseXMax = UniverseController.this.view.getWidth() - 
+                                                        rangeIfMouseEntersToScroll;
+
+                    //if mouse reaches this y value or lower, view scrolls up
+                    int mouseYMin = rangeIfMouseEntersToScroll;
+
+                    //if mouse reaches this y value or greater, view scrolls down
+                    int mouseYMax = UniverseController.this.view.getHeight() - 
+                                                        rangeIfMouseEntersToScroll;
+
+                    boolean foundMouseInScrollRegionX = false;
+                    boolean foundMouseInScrollRegionY = false;
+                    int viewScrollingVelocity = SettingsSingleton.getInstance().getCameraScrollingSpeed();
+                    TwoDimensionalMovement viewMovement = new TwoDimensionalMovement(0, 0);
+
+                    //if mouse on left, scroll left
+                    if(mouseLoc.x < mouseXMin){
+                        viewMovement.setXMovement(-viewScrollingVelocity);
+                        foundMouseInScrollRegionX = true;
+                    }
+
+                    //if mouse on right, scroll right
+                    if(mouseLoc.x > mouseXMax){
+                        viewMovement.setXMovement(viewScrollingVelocity);
+                        foundMouseInScrollRegionX = true;
+                    }
+
+                    //if mouse on top, scroll up
+                    if(mouseLoc.y < mouseYMin){
+                        viewMovement.setYMovement(-viewScrollingVelocity);
+                        foundMouseInScrollRegionY = true;
+                    }
+
+                    //if mouse on bottom, scroll down
+                    if(mouseLoc.y > mouseYMax){
+                        viewMovement.setYMovement(viewScrollingVelocity);
+                        foundMouseInScrollRegionY = true;
+                    }
+
+                    if(!foundMouseInScrollRegionX){
+                        viewMovement.setXMovement(0);
+                    }
+
+                    if(!foundMouseInScrollRegionY){
+                        viewMovement.setYMovement(0);
+                    }
+
+                    //apply calculated scroll velocity to the CenterOfView Actor
+                    CenterOfViewActor newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
+                    newCenterOfViewActor.setVelocity(viewMovement);
+                    UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
+                    UniverseController.this.view.repaint();
+                }
             }
             
+            /**
+             * This method is called when a mouse is pressed and 
+             * released in the same location.
+             * @param e -an event object that hold information about
+             * the mouse click.
+             */
             @Override
             public void mouseClicked(MouseEvent e){
                 super.mouseClicked(e);
-                //this method fires if the point at mouseEntered and mouseReleased are the same
 
                 Point p = UniverseController.this.translatePointInViewToPointInContainer(e.getPoint());
                 
                 ArrayList<Actor> actorsClickedOn = UniverseController.this.getContainer().getMembersIntersectingWithPoint(p);
                 
                 if(actorsClickedOn.size() > 0){
-                    //System.out.println("Clicked on: " + actorsClickedOn.get(actorsClickedOn.size()-1));
                     
-                    UniverseController.this.displayActorEditor(
+                    UniverseController.this.displayActorInspector(
                                             actorsClickedOn.get(actorsClickedOn.size()-1));
                 }else{
-                    //System.out.println("Clicked on the container");
+                    //User clicked on no actors, only the ContainerUniverse.
                 }                                
                 
             }

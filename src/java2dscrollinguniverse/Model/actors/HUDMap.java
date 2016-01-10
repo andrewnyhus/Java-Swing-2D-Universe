@@ -32,6 +32,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.container.ContainerUniverse;
+import java2dscrollinguniverse.SettingsSingleton;
 
 /**
  *
@@ -161,7 +162,7 @@ public class HUDMap extends Actor{
         
         Actor centerOfViewInHUDMenu = new Actor(ActorType.HUDElement,
                 new Point(centerOfViewX, centerOfViewY),
-                new Color(0, 235, 0), centerOfViewShape);
+                SettingsSingleton.getInstance().getCenterOfViewActorColor(), centerOfViewShape);
         
         childActors[childActors.length - 1] = centerOfViewInHUDMenu;
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

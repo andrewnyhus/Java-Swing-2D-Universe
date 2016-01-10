@@ -1,4 +1,4 @@
-/*
+/* 
  * The MIT License
  *
  * Copyright 2015 andrewnyhus.
@@ -21,32 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.actors;
+package Examples;
 
-import java.awt.Point;
-import java.awt.geom.Ellipse2D;
-import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java2dscrollinguniverse.Controller.UniverseController;
 import java2dscrollinguniverse.SettingsSingleton;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author andrewnyhus
  */
-public class CenterOfViewActor extends Actor{
-    
-    public CenterOfViewActor(int centerOfViewActorWidth, int centerOfViewActorHeight){
-        super(ActorType.centerOfViewActor, 
-            new Point(SettingsSingleton.getInstance().getWindowWidth()/2 ,//x
-                    SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
-            SettingsSingleton.getInstance().getCenterOfViewActorColor(),//color 
-            new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth, 1.0*centerOfViewActorHeight),//shape
-            null,//childActors
-            new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM));//label
-    }
-    
-    
-    public static CenterOfViewActor copyInstanceOfCenterOfViewActor(CenterOfViewActor cva){
-        return new CenterOfViewActor(cva.getWidth(), cva.getHeight());
-    }
+public class RandomlyGeneratedUniverse {
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        
+        SwingUtilities.invokeLater(() -> {
+            Dimension d = new Dimension(1000, 400);
+            UniverseController mainController = new UniverseController("", d,null);
+            SettingsSingleton.getInstance().setCameraScrollingSpeed(8);
+            Color transparentColor = new Color(255, 255, 255, 0);
+            SettingsSingleton.getInstance().setCenterOfViewActorColor(transparentColor);
+        });
+
+    }
+    
 }

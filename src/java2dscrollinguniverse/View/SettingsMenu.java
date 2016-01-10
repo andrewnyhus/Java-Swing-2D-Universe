@@ -247,7 +247,7 @@ public class SettingsMenu extends JOptionPane{
         });
         
         
-        this.centerOfViewActorSpeedSlider = new JSlider(15, 25);
+        this.centerOfViewActorSpeedSlider = new JSlider(0, 10);
         this.centerOfViewActorSpeedSlider.setValue(this.currentCenterOfViewActorSpeed);
         
         this.centerOfViewActorSpeedSlider.addChangeListener((ChangeEvent e) -> {

@@ -26,6 +26,7 @@ package java2dscrollinguniverse.Model.actors;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
+import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
 
 /**
@@ -41,6 +42,7 @@ public class Actor {
     private Actor[] childActors;
     private ActorLabel actorLabel;
     private int idNumber;
+    private TwoDimensionalMovement velocity;
     
     public Actor(ActorType type, Point loc, Color color){
         this.type = type;
@@ -48,6 +50,7 @@ public class Actor {
         this.color = color;
         this.childActors = null;
         this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM);
+        this.velocity = new TwoDimensionalMovement(0,0);
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s){
@@ -57,6 +60,7 @@ public class Actor {
         this.shape = s;        
         this.childActors = null;
         this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM);
+        this.velocity = new TwoDimensionalMovement(0,0);
     }
     
     public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors){
@@ -66,6 +70,7 @@ public class Actor {
         this.shape = s;        
         this.childActors = childActors;
         this.actorLabel = new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM);
+        this.velocity = new TwoDimensionalMovement(0,0);
     }
 
     public Actor(ActorType type, Point loc, Color color, Shape s, Actor[] childActors, ActorLabel actorLabel){
@@ -75,6 +80,7 @@ public class Actor {
         this.shape = s;        
         this.childActors = childActors;
         this.actorLabel = actorLabel;
+        this.velocity = new TwoDimensionalMovement(0,0);
     }
 
     @Override
@@ -157,10 +163,8 @@ public class Actor {
  the currently drawn portion of the world (Java Swing stuff).
      * @param newLoc 
      */
-    public void setTopLeftLocation(Point newLoc){
+    public void setTopLeftLocation(Point newLoc){        
         this.topLeftLocation = newLoc;
-
-        
     }
 
     /**
@@ -257,8 +261,11 @@ public class Actor {
     }
     
     public static Actor copyInstanceOfActor(Actor a){
-        return new Actor(a.getType(), a.getTopLeftLocation(),
+        Actor returnA = new Actor(a.getType(), a.getTopLeftLocation(),
                 a.getColor(), a.getShape(), a.getChildActors(), a.getActorLabel());
+
+        returnA.setVelocity(a.getVelocity());
+        return returnA;
     }
 
     /**
@@ -277,11 +284,22 @@ public class Actor {
     
     @Override
     public String toString(){
-        return "Shape:" + this.getShape().getClass().getName() +
+        return "Id #:" + this.idNumber +
+                "\nShape:" + this.getShape().getClass().getName() +
                 "\nw:" + this.shape.getBounds().width + " h:" + this.shape.getBounds().height +
                 "\nx:" + this.getTopLeftLocation().x + " y:" + this.getTopLeftLocation().y;
     }
 
+    public String[] getListOfPropertyStrings(){
+        String[] returnStrings = new String[4];
+        returnStrings[0] = "ID:" + this.idNumber;
+        returnStrings[1] = "Shape:" + this.getShape().getClass().getSimpleName();
+        returnStrings[2] = "Width:" + this.shape.getBounds().width +
+                            " Height:" + this.shape.getBounds().height;
+        returnStrings[3] = "X:" + this.getTopLeftLocation().x + " Y:" + this.getTopLeftLocation().y;
+        return returnStrings;
+    }
+    
     /**
      * @return the idNumber
      */
@@ -308,6 +326,21 @@ public class Actor {
      */
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    /**
+     * @return the velocity
+     */
+    public TwoDimensionalMovement getVelocity() {
+        return velocity;
+    }
+
+    /**
+     * @param velocity the velocity to set
+     */
+    public void setVelocity(TwoDimensionalMovement velocity) {
+        this.velocity = velocity;
+        
     }
     
 }

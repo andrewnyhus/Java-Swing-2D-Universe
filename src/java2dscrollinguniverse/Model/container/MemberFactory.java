@@ -32,6 +32,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Random;
 import java2dscrollinguniverse.Model.PerimeterSide;
+import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.ActorType;
 import java2dscrollinguniverse.Model.actors.Wall;
@@ -99,17 +100,28 @@ public class MemberFactory {
             int width = 40 + randomGen.nextInt(25);
             int height = 40 + randomGen.nextInt(25);
             
-            if(shapeTypeNum == 0){
-                //shape is ellipse2d.double
-                s = new Ellipse2D.Double(0.0, 0.0, (double)width, (double)height);
-            }else if(shapeTypeNum == 1){
-                //shape is rectangle
-                s = new Rectangle(0, 0, width, height);
-            }else{
-                s = null;
+            switch (shapeTypeNum) {
+                case 0:
+                    //shape is ellipse2d.double
+                    s = new Ellipse2D.Double(0.0, 0.0, (double)width, (double)height);
+                    break;
+                case 1:
+                    //shape is rectangle
+                    s = new Rectangle(0, 0, width, height);
+                    break;
+                default:
+                    s = null;
+                    break;
             }
+            
+            int xVel = randomGen.nextInt(8) - 4;
+            int yVel = randomGen.nextInt(8) - 4;
+
+            TwoDimensionalMovement aVelocity = new TwoDimensionalMovement(xVel, yVel);
+            
             Actor aToAdd = new Actor(ActorType.miscObject, p, c, s);
             aToAdd.setIdNumber(i);
+            aToAdd.setVelocity(aVelocity);
             actors.add(i, aToAdd);
         }
         

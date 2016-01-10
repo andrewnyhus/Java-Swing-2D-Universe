@@ -44,11 +44,16 @@ public class SettingsSingleton {
     private final Color defaultPerimeterColorValue = new Color(255, 127, 0);
     private final Color defaultCenterOfViewActorColorValue = new Color(255, 255, 255);
     private Dimension windowDimension = new Dimension(500, 500);//default window size
-    private int cameraScrollingSpeed = 20; //camera scroll speed
+    private int cameraScrollingSpeed = 2; //camera scroll speed
     
     private boolean shouldShowHUDMap = true;
     private WindowCorner hudMapCorner = WindowCorner.BOTTOM_LEFT;
+    private ViewScrollMode scrollMode = ViewScrollMode.MOUSE_ONLY;
     
+    /**
+     * Constructor for the settings class which is a singleton, meaning that it is the only instance of itself
+     * in the program, which is because we simply cannot and should not have multiple sets of settings values.
+     */
     private SettingsSingleton(){
         
         //set container background color to be gray
@@ -64,7 +69,13 @@ public class SettingsSingleton {
         this.labelColor = new Color(0, 235, 0);
         
     }
-    
+
+    /**
+     * Rather than creating a constructor for this singleton Settings class, we access the 
+     * single instance of the Settings object through this method and edit/retrieve our settings values
+     * that way.
+     * @return a SettingsSingleton instance.
+     */
     public static SettingsSingleton getInstance(){
         if(settings == null){
             settings = new SettingsSingleton();
@@ -72,18 +83,27 @@ public class SettingsSingleton {
         
         return settings;
     }
-    
-    
-  
-    
+      
+    /**
+     * Gives access to the size of the window.
+     * @return this.windowDimension - window size
+     */
     public Dimension getWindowDimension(){
         return this.windowDimension;
     }
     
+    /**
+     * Gives access to the window width
+     * @return int width- width of window
+     */
     public int getWindowWidth(){
         return this.windowDimension.width;
     }
-    
+
+    /**
+     * Gives access to the window height
+     * @return int height- height of window
+     */    
     public int getWindowHeight(){
         return this.windowDimension.height;
     }
@@ -208,6 +228,45 @@ public class SettingsSingleton {
     public void setLabelColor(Color labelColor) {
         this.labelColor = labelColor;
     }
+
+    /**
+     * @return the scrollMode
+     */
+    public ViewScrollMode getScrollMode() {
+        return scrollMode;
+    }
+
+    /**
+     * @param scrollMode the scrollMode to set
+     */
+    public void setScrollMode(ViewScrollMode scrollMode) {
+        this.scrollMode = scrollMode;
+    }
     
+    
+    public enum ViewScrollMode{
+        DONT_SCROLL(0), ARROW_KEYS_ONLY(1), MOUSE_ONLY(2), ARROW_KEYS_AND_MOUSE(3);
+        
+        private int value;
+        
+        private ViewScrollMode(int value){
+            this.value = value;
+        }
+        
+        public boolean isMouseScrollingEnabled(){
+            return (this.value == ViewScrollMode.MOUSE_ONLY.getValue() ||
+                    this.value == ViewScrollMode.ARROW_KEYS_AND_MOUSE.getValue());
+        }
+        
+        public boolean isArrowKeyScrollingEnabled(){
+            return (this.value == ViewScrollMode.ARROW_KEYS_ONLY.getValue() ||
+                    this.value == ViewScrollMode.ARROW_KEYS_AND_MOUSE.getValue());
+        }
+        
+        public int getValue(){
+            return this.value;
+        }
+        
+    }
     
 }

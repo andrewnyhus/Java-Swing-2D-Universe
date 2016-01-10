@@ -34,6 +34,7 @@ import java2dscrollinguniverse.Model.TwoDimensionalMovement;
 import java2dscrollinguniverse.Model.actors.Actor;
 import java2dscrollinguniverse.Model.actors.CenterOfViewActor;
 import java2dscrollinguniverse.Model.actors.Wall;
+import java2dscrollinguniverse.SettingsSingleton;
 
 /**
  *
@@ -49,15 +50,27 @@ public class ContainerUniverse {
     private Actor bgRect;
     private CenterOfViewActor centerOfViewActor;
     
-    public ContainerUniverse(Dimension boundsDimension){
+    private boolean actorsWerePreloaded;
+    
+    public ContainerUniverse(Dimension boundsDimension, Actor[] preloadedMembers){
         this.boundsDimension = boundsDimension;
+        
         this.factory = new MemberFactory(this.getBoundsDimension());
         
         this.perimeterWalls = this.factory.generateWalls();
         this.bgRect = this.factory.getBackgroundRect();
         this.centerOfViewActor = new CenterOfViewActor(15, 15);//create centerOfViewActor with width and height
-        
-        this.membersOfContainer = this.factory.generateMiscellaneousActorsRandomly();
+    
+        if(preloadedMembers == null){
+            this.membersOfContainer = this.factory.generateMiscellaneousActorsRandomly();
+            this.actorsWerePreloaded = false;
+        }else{
+            this.membersOfContainer = new ArrayList();
+            for(Actor a: preloadedMembers){
+                boolean add = this.membersOfContainer.add(a);
+            }
+            this.actorsWerePreloaded = true;
+        }
     }
 
     public boolean actorIsValidInContainerUniverse(Actor a){
@@ -69,59 +82,131 @@ public class ContainerUniverse {
         return true;
     }
     
-    public void attemptToMoveActor(Actor a, TwoDimensionalMovement movement){
+    /**
+     * This method makes all actors, including the camera/CenterOfView actor
+     * take a step forward with their current velocity; All actors except for 
+     * the camera/CenterOfView actor should "bounce" off of walls upon colliding.
+     */
+    public void stepAllActors(){
+    
+        //first handling CenterOfView Actor since it should not "bounce"
+        //off of the walls upon collision, but instead it should take on 
+        //velocity of zero for that component.  Otherwise, this follows the same
+        //logic as stepActor, which has more comments than this segment does.
+        //--------------------------------------------------
+        //create test clone actor
+        Actor testCenterActor = Actor.copyInstanceOfActor(this.getCenterOfViewActor());
+        Point currentLoc = testCenterActor.getTopLeftLocation();
+        TwoDimensionalMovement currentVel = testCenterActor.getVelocity();
         
-        //get actor's current location
-        Point origActorLoc = a.getTopLeftLocation();
-        //store actor's location if the move is completed successfully
-        Point actorLocIfMoveCompleted = new Point(origActorLoc.x + movement.getXMovement(),
-                                                  origActorLoc.y + movement.getYMovement());
+        testCenterActor.setTopLeftLocation(new Point(currentLoc.x + currentVel.getXMovement(),
+                                            currentLoc.y + currentVel.getYMovement()));
 
-        //clone Actor 'a' for assessing move before completing it on 'a'
-        Actor cloneActorToTest = Actor.copyInstanceOfActor(a);
-        
-        //completing move on the clone actor
-        cloneActorToTest.setTopLeftLocation(actorLocIfMoveCompleted);
-        
-        //
         int newX, newY;
         
-        //if clone actor too far left
-        if(cloneActorToTest.getLeftMostValue() < this.getXMin()){
+        if(testCenterActor.getRightMostValue() > this.getXMax()){
+            newX = this.getXMax() - testCenterActor.getWidth();
+            //collided with right, so zero out x velocity.
+            this.getCenterOfViewActor().getVelocity().setXMovement(0);           
+            
+        }else if(testCenterActor.getLeftMostValue() < this.getXMin()){
             newX = this.getXMin();
+            //collided with left, so zero out x velocity.
+            this.getCenterOfViewActor().getVelocity().setXMovement(0);
             
-        //if clone actor too far right    
-        }else if(cloneActorToTest.getRightMostValue() > this.getXMax()){
-            int cloneActorWidth = cloneActorToTest.getWidth();
-            newX = this.getXMax() - cloneActorWidth;
-            
-        //if clone actor location is okay     
         }else{
-            newX = actorLocIfMoveCompleted.x;
+            newX = testCenterActor.getTopLeftLocation().x ;
         }
         
-        //if clone actor is too far up
-        if(cloneActorToTest.getTopMostValue() < this.getYMin()){
+        if(testCenterActor.getBottomMostValue() > this.getYMax()){
+            newY = this.getYMax() - testCenterActor.getHeight();
+            //collided with bottom, so zero out y velocity.
+            this.getCenterOfViewActor().getVelocity().setYMovement(0);
+            
+        }else if(testCenterActor.getTopMostValue() < this.getYMin()){
             newY = this.getYMin();
+            //collided with top, so zero out y velocity.
+            this.getCenterOfViewActor().getVelocity().setYMovement(0);
             
-        //if clone actor is too far down
-        }else if(cloneActorToTest.getBottomMostValue() > this.getYMax()){
-            int cloneActorHeight = cloneActorToTest.getHeight();
-            newY = this.getYMax() - cloneActorHeight;
-            
-        //if clone actor location is okay     
         }else{
-            newY = actorLocIfMoveCompleted.y;
+            newY = testCenterActor.getTopLeftLocation().y;
         }
+
+        this.getCenterOfViewActor().setTopLeftLocation(new Point(newX, newY));
         
-        //store new location for actor 'a'
-        Point newLocForActor = new Point(newX, newY);
+        //--------------------------------------------------
         
-        //set new location for actor 'a'
-        a.setTopLeftLocation(newLocForActor);
+        //now calling stepActor() on all other members (not including background or walls
+        for(Actor a: this.getMembersOfContainer()){
+            this.stepActor(a);
+        }
         
     }
     
+    /**
+     * This is a helper function for stepAllActors, which calls this method
+     * on every Actor in the ContainerUniverse with the exception of the Background,
+     * Wall Actors, HUD elements and the CenterOfView Actor.
+     * @param a - actor to step
+     */
+    public void stepActor(Actor a){
+        
+        Point origPoint = a.getTopLeftLocation();
+        
+        //create clone of a to test before "stepping"
+        Actor testActor = Actor.copyInstanceOfActor(a);
+        
+        //current location of Actor testActor and a 
+        Point currentLoc = testActor.getTopLeftLocation();
+        
+        //current velocity of both actors
+        TwoDimensionalMovement currentVel = testActor.getVelocity();
+        
+        //move the testActor based solely on its velocity
+        testActor.setTopLeftLocation(new Point(currentLoc.x + currentVel.getXMovement(),
+                                                currentLoc.y + currentVel.getYMovement()));
+        
+        int newX, newY;
+        
+        //if testActor collides with the right wall, flip x axis velocity
+        //and move x value of current actor to be the highest it can be "hug the wall"
+        if(testActor.getRightMostValue() > this.getXMax()){
+            a.getVelocity().setXMovement(-currentVel.getXMovement());            
+            newX = this.getXMax() - a.getWidth();
+            
+        //else if the testActor collides with the left wall, flip x vel
+        //and "hug wall"
+        }else if(testActor.getLeftMostValue() < this.getXMin()){
+            a.getVelocity().setXMovement(-currentVel.getXMovement());
+            newX = this.getXMin();
+            
+        //else if the testActor collides with no wall on x axis, set test.x as a.x
+        //and leave velocity alone (unless applying friction or other forces).
+        }else{
+            newX = testActor.getTopLeftLocation().x;            
+        }
+        
+        //same logic for x axis as seen just above
+        if(testActor.getBottomMostValue() > this.getYMax()){
+            a.getVelocity().setYMovement(-currentVel.getYMovement());
+            newY = this.getYMax() - a.getHeight();
+        }else if(testActor.getTopMostValue() < this.getYMin()){
+            a.getVelocity().setYMovement(-currentVel.getYMovement());
+            newY = this.getYMin();
+        }else{
+            newY = testActor.getTopLeftLocation().y;
+        }        
+        
+        a.setTopLeftLocation(new Point(newX, newY));
+
+        //int changeX = a.getTopLeftLocation().x - origPoint.x;
+        //int changeY = a.getTopLeftLocation().y - origPoint.y;
+        
+        
+    }
+    
+    
+   
     
     public boolean foundDuplicateID(){
         ArrayList<Integer> idsFound = new ArrayList();
@@ -304,6 +389,20 @@ public class ContainerUniverse {
      */
     public void setBoundsDimension(Dimension boundsDimension) {
         this.boundsDimension = boundsDimension;
+    }
+
+    /**
+     * @return the actorsWerePreloaded
+     */
+    public boolean actorsWerePreloaded() {
+        return actorsWerePreloaded;
+    }
+
+    /**
+     * @param centerOfViewActor the centerOfViewActor to set
+     */
+    public void setCenterOfViewActor(CenterOfViewActor centerOfViewActor) {
+        this.centerOfViewActor = centerOfViewActor;
     }
     
 
