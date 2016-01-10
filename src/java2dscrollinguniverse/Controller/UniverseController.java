@@ -155,12 +155,12 @@ public class UniverseController implements KeyListener, ActionListener{
                     userResponseIsValid = true;
                 } else {
                     userResponseIsValid = false;
-                    JOptionPane.showMessageDialog(this.frame, "Invalid input, please make sure to enter only numerical characters (0-9) and no spaces");
+                    JOptionPane.showMessageDialog(this.getFrame(), "Invalid input, please make sure to enter only numerical characters (0-9) and no spaces");
                 }
 
             }else{
                 userResponseIsValid = false;
-                JOptionPane.showMessageDialog(this.frame, "Invalid input, please make sure to enter only numerical characters (0-9) and no spaces");
+                JOptionPane.showMessageDialog(this.getFrame(), "Invalid input, please make sure to enter only numerical characters (0-9) and no spaces");
             }
         }
         
@@ -212,7 +212,7 @@ public class UniverseController implements KeyListener, ActionListener{
         this.menuBar.add(newMenu);
         this.menuBar.add(settingsMenuItem);
         
-        this.frame.setJMenuBar(this.menuBar);
+        this.getFrame().setJMenuBar(this.menuBar);
         
     }
     
@@ -252,7 +252,7 @@ public class UniverseController implements KeyListener, ActionListener{
                         this.origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
         
         
-        this.frame.setSize(newSizeOfFrame);
+        this.getFrame().setSize(newSizeOfFrame);
         this.view.setSize(SettingsSingleton.getInstance().getWindowDimension());
         this.view.repaint();
     }
@@ -512,6 +512,13 @@ public class UniverseController implements KeyListener, ActionListener{
         this.view.addMouseListener(mouseHandler);
         this.view.addMouseMotionListener(mouseHandler);
         
+    }
+
+    /**
+     * @return the frame
+     */
+    public JFrame getFrame() {
+        return frame;
     }
     
 }
