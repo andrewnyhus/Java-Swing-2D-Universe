@@ -1,6 +1,6 @@
 Intro:
 neuLayout uses Java Swing, and does not use any third party libraries.  This application is essentially a 2-dimensional "universe" containing members, all of which extend from the Actor class.  The point of this application was to create something where you could visually represent something, anything, in a space larger than your screen or window, and scroll/move around in all four directions to explore the contents of the "universe" outside of what your window currently displays.  There is a HUD Map which represents the entirety of the universe, and displays it on a much smaller scale, and it also shows your view with respect to the rest of the universe.
-
+Checkout the project web page: http://andrewnyhus.github.io/neuLayout-Swing/
 
 Possible uses:
 
