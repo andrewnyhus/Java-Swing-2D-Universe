@@ -6,8 +6,7 @@ Possible uses:
 
 1) Simple 2d game engine.
 2) Summarizing events within a sports game based on the location they occurred within the field or court (i.e. Basketball game shot summary, Football game tackle/injury summary, etc.)
-3) Mapping out an area such as a home, building, or even community or city on a basic level.  This comes with the ability to store data within individual objects or entities, and also with the ability to draw connections from one actor to another.
-
+3) Mapping out an area such as a home, building, or even community or city on a basic level.
 
 Future Hopes:
 1) Implement a Connection object which extends Actor and is visually represented as a line between the two actors.  
@@ -21,5 +20,5 @@ Future Hopes:
 8) Doors- optional addons to an actor that act as a portal from the current universe container to a new one that is within that specific actor.  Doors are two-sided, so whenever you enter into an actor 
 9) To provide network capabilities.
 10) To port this to Android.
-11) To port this to Python using Tk.
+11) To port this to Python for web and for local (Tk for graphics on local version).
 
