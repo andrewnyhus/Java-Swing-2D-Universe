@@ -43,6 +43,9 @@ public class RandomlyGeneratedUniverse {
         // TODO code application logic here
         
         SwingUtilities.invokeLater(() -> {
+            
+            SettingsSingleton.getInstance().setShouldShowHUDMap(true);
+            
             Dimension d = new Dimension(1000, 400);
             UniverseController mainController = new UniverseController("", d,null);
             SettingsSingleton.getInstance().setCameraScrollingSpeed(8);

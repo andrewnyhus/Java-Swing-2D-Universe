@@ -90,36 +90,6 @@ public class UniverseController implements KeyListener, ActionListener{
         this.addMouseListenerToView();    
     }
      
-    /*public UniverseController(Actor[] preloadedMembers) {
-        this.frame = new JFrame("2D Universe");
-                    
-        Dimension d = new Dimension(3000, 1000);
-        //Dimension d = this.getDimensionFromUser("Please enter the size of the universe");
-                
-        this.container = new ContainerUniverse(d, preloadedMembers);
-        
-        this.view = new MainViewComponent(this);
-        
-        this.origSizeOfFrame = this.frame.getSize();
-        
-        this.frame.add(this.view);
-        
-        Dimension newSizeOfFrame = 
-                new Dimension(
-                        origSizeOfFrame.width+ SettingsSingleton.getInstance().getWindowWidth(),
-                        origSizeOfFrame.height + 45 + SettingsSingleton.getInstance().getWindowHeight());
-        
-
-        this.frame.setSize(newSizeOfFrame);
-        this.frame.setResizable(false);
-
-        this.addMenuBar();
-        this.frame.setVisible(true);
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.addKeyListenerToView();
-        this.addMouseListenerToView();
-    }*/
     
     public ContainerUniverse getContainer(){
         return this.container;
@@ -216,6 +186,11 @@ public class UniverseController implements KeyListener, ActionListener{
         
     }
     
+    /**
+     * Tells this.view to listen for any event
+     * related to the keyboard, and notify this
+     * UniverseController class.
+     */
     private void addKeyListenerToView(){
         this.view.addListener(this);
     }
