@@ -280,6 +280,8 @@ public class UniverseController implements KeyListener, ActionListener{
 
             int centerOfViewActorVelocity = SettingsSingleton.getInstance().getCameraScrollingSpeed();
             //handle various cases of the keycode value.
+
+            //currently just scrolls view
             switch(keycode){
 
                     //if key pressed was left arrow
