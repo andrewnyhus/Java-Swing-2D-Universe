@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.container;
+package neuLayout.Model.container;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -29,12 +29,12 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
-import java2dscrollinguniverse.Model.PerimeterSide;
-import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.actors.CenterOfViewActor;
-import java2dscrollinguniverse.Model.actors.Wall;
-import java2dscrollinguniverse.SettingsSingleton;
+import neuLayout.Model.PerimeterSide;
+import neuLayout.Model.TwoDimensionalMovement;
+import neuLayout.Model.actors.Actor;
+import neuLayout.Model.actors.CenterOfViewActor;
+import neuLayout.Model.actors.Wall;
+import neuLayout.SettingsSingleton;
 
 /**
  *

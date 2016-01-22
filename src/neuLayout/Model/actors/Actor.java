@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.actors;
+package neuLayout.Model.actors;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Shape;
-import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
+import neuLayout.Model.TwoDimensionalMovement;
+import neuLayout.Model.actors.ActorLabel.PositionOfLabel;
 
 /**
  *

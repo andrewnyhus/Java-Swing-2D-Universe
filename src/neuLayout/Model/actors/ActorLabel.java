@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 andrewnyhus.
+ * Copyright 2016 andrewnyhus.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,63 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.actors;
-
-import java.awt.Point;
-import java.awt.geom.Ellipse2D;
-import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
-import java2dscrollinguniverse.SettingsSingleton;
+package neuLayout.Model.actors;
 
 /**
  *
  * @author andrewnyhus
  */
-public class CenterOfViewActor extends Actor{
+public class ActorLabel {
     
-    public CenterOfViewActor(int centerOfViewActorWidth, int centerOfViewActorHeight){
-        super(ActorType.centerOfViewActor, 
-            new Point(SettingsSingleton.getInstance().getWindowWidth()/2 ,//x
-                    SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
-            SettingsSingleton.getInstance().getCenterOfViewActorColor(),//color 
-            new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth, 1.0*centerOfViewActorHeight),//shape
-            null,//childActors
-            new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM));//label
-    }
-    
-    
-    public static CenterOfViewActor copyInstanceOfCenterOfViewActor(CenterOfViewActor cva){
-        return new CenterOfViewActor(cva.getWidth(), cva.getHeight());
+    private String labelText;
+    private PositionOfLabel position;
+ 
+    public ActorLabel(String text, PositionOfLabel position){
+        this.labelText = text;
+        this.position = position;
     }
 
+    
+    /**
+     * @return the labelText
+     */
+    public String getLabelText() {
+        return labelText;
+    }
+
+
+    
+    /**
+     * @return the position
+     */
+    public PositionOfLabel getPosition() {
+        return position;
+    }
+
+    
+    
+    
+    public enum PositionOfLabel{
+        LEFT_OF_TOP(0), MIDDLE_OF_TOP(1), RIGHT_OF_TOP(2),
+        TOP_OF_RIGHT(3), MIDDLE_OF_RIGHT(4), BOTTOM_OF_RIGHT(5), 
+        RIGHT_OF_BOTTOM(6), MIDDLE_OF_BOTTOM(7), LEFT_OF_BOTTOM(8);
+        
+        private int value;
+        
+        private PositionOfLabel(int value){
+            this.value = value;
+        }
+
+        
+        /**
+         * @return the value
+         */
+        public int getValue() {
+            return value;
+        }
+        
+        
+    
+    }
+    
 }

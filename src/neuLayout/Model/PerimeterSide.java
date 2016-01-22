@@ -1,7 +1,7 @@
-/*
+/* 
  * The MIT License
  *
- * Copyright 2016 andrewnyhus.
+ * Copyright 2015 andrewnyhus.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,63 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.actors;
+package neuLayout.Model;
 
 /**
  *
  * @author andrewnyhus
  */
-public class ActorLabel {
-    
-    private String labelText;
-    private PositionOfLabel position;
- 
-    public ActorLabel(String text, PositionOfLabel position){
-        this.labelText = text;
-        this.position = position;
-    }
+public enum PerimeterSide {
+    LEFT(0), TOP(1), RIGHT(2), BOTTOM(3);
 
+    private int sideNum;
     
-    /**
-     * @return the labelText
-     */
-    public String getLabelText() {
-        return labelText;
-    }
-
-
-    
-    /**
-     * @return the position
-     */
-    public PositionOfLabel getPosition() {
-        return position;
-    }
-
-    
-    
-    
-    public enum PositionOfLabel{
-        LEFT_OF_TOP(0), MIDDLE_OF_TOP(1), RIGHT_OF_TOP(2),
-        TOP_OF_RIGHT(3), MIDDLE_OF_RIGHT(4), BOTTOM_OF_RIGHT(5), 
-        RIGHT_OF_BOTTOM(6), MIDDLE_OF_BOTTOM(7), LEFT_OF_BOTTOM(8);
-        
-        private int value;
-        
-        private PositionOfLabel(int value){
-            this.value = value;
-        }
-
-        
-        /**
-         * @return the value
-         */
-        public int getValue() {
-            return value;
-        }
-        
-        
-    
+    private PerimeterSide(int num){
+        this.sideNum = num;
     }
     
+    public int getValue(){
+        return this.sideNum;
+    }
+
 }

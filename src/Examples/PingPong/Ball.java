@@ -9,11 +9,11 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.util.Random;
-import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.actors.ActorLabel;
-import java2dscrollinguniverse.Model.actors.ActorLabel.PositionOfLabel;
-import java2dscrollinguniverse.Model.actors.ActorType;
+import neuLayout.Model.TwoDimensionalMovement;
+import neuLayout.Model.actors.Actor;
+import neuLayout.Model.actors.ActorLabel;
+import neuLayout.Model.actors.ActorLabel.PositionOfLabel;
+import neuLayout.Model.actors.ActorType;
 
 /**
  *

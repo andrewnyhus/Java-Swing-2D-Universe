@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2015 andrewnyhus.
@@ -21,38 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model.actors;
+package neuLayout.Model.actors;
+
+import java.awt.Point;
+import java.awt.geom.Ellipse2D;
+import neuLayout.Model.actors.ActorLabel.PositionOfLabel;
+import neuLayout.SettingsSingleton;
 
 /**
  *
  * @author andrewnyhus
  */
-public enum ActorType {
+public class CenterOfViewActor extends Actor{
+    
+    public CenterOfViewActor(int centerOfViewActorWidth, int centerOfViewActorHeight){
+        super(ActorType.centerOfViewActor, 
+            new Point(SettingsSingleton.getInstance().getWindowWidth()/2 ,//x
+                    SettingsSingleton.getInstance().getWindowHeight()/2 ),//y
+            SettingsSingleton.getInstance().getCenterOfViewActorColor(),//color 
+            new Ellipse2D.Double(0.0, 0.0, 1.0*centerOfViewActorWidth, 1.0*centerOfViewActorHeight),//shape
+            null,//childActors
+            new ActorLabel("", PositionOfLabel.LEFT_OF_BOTTOM));//label
+    }
+    
+    
+    public static CenterOfViewActor copyInstanceOfCenterOfViewActor(CenterOfViewActor cva){
+        return new CenterOfViewActor(cva.getWidth(), cva.getHeight());
+    }
 
-    
-    miscObject(0), wall(1), centerOfViewActor(2), HUDElement(3);
-    
-    private int value;
-    
-    private ActorType(int value){
-        this.value = value;
-    }
-    
-    public int getValue(){
-        return this.value;
-    }
-    
-    //TODO: implement an isBounded method and utilize this function in universe controller
-    
-    /**
-     * Returns a boolean value that represents whether or not the actor's
-     * position within the view should be fixed or if it should change.  
-     * The centerOfViewActor object should be fixed at the center, and any HUD elements
- should have a fixed location.  
-     * @return bool viewLocShouldChange
-     */
-    public boolean viewLocationShouldChange(){
-        return (this.value == 0 || this.value == 1);
-    }
-    
 }

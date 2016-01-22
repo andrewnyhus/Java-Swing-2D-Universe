@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse;
+package neuLayout;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
+import neuLayout.Model.actors.HUDMap.WindowCorner;
 
 /**
  *

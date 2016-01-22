@@ -26,8 +26,8 @@ package Examples;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java2dscrollinguniverse.Controller.UniverseController;
-import java2dscrollinguniverse.SettingsSingleton;
+import neuLayout.Controller.UniverseController;
+import neuLayout.SettingsSingleton;
 import javax.swing.SwingUtilities;
 
 /**

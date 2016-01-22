@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.View;
+package neuLayout.View;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,8 +32,8 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
-import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.container.ContainerUniverse;
+import neuLayout.Model.actors.Actor;
+import neuLayout.Model.container.ContainerUniverse;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;

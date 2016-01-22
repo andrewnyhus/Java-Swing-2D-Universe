@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.View;
+package neuLayout.View;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -29,8 +29,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
-import java2dscrollinguniverse.SettingsSingleton;
+import neuLayout.Model.actors.HUDMap.WindowCorner;
+import neuLayout.SettingsSingleton;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;

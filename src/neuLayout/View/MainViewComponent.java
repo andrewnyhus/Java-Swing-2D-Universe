@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.View;
+package neuLayout.View;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -35,13 +35,13 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java2dscrollinguniverse.Controller.UniverseController;
-import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.actors.HUDMap;
-import java2dscrollinguniverse.Model.actors.HUDMap.WindowCorner;
-import java2dscrollinguniverse.Model.actors.Wall;
-import java2dscrollinguniverse.SettingsSingleton;
+import neuLayout.Controller.UniverseController;
+import neuLayout.Model.TwoDimensionalMovement;
+import neuLayout.Model.actors.Actor;
+import neuLayout.Model.actors.HUDMap;
+import neuLayout.Model.actors.HUDMap.WindowCorner;
+import neuLayout.Model.actors.Wall;
+import neuLayout.SettingsSingleton;
 import javax.swing.JPanel;
 
 /**

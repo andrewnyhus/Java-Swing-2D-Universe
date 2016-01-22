@@ -10,12 +10,12 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java2dscrollinguniverse.Controller.UniverseController;
-import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.actors.ActorType;
-import java2dscrollinguniverse.Model.actors.CenterOfViewActor;
-import java2dscrollinguniverse.SettingsSingleton;
+import neuLayout.Controller.UniverseController;
+import neuLayout.Model.TwoDimensionalMovement;
+import neuLayout.Model.actors.Actor;
+import neuLayout.Model.actors.ActorType;
+import neuLayout.Model.actors.CenterOfViewActor;
+import neuLayout.SettingsSingleton;
 
 /**
  *

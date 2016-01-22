@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2015 andrewnyhus.
@@ -21,23 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Model;
+package neuLayout.Model.actors;
+
+import java.awt.Point;
+import java.awt.Shape;
+import neuLayout.SettingsSingleton;
 
 /**
  *
  * @author andrewnyhus
  */
-public enum PerimeterSide {
-    LEFT(0), TOP(1), RIGHT(2), BOTTOM(3);
-
-    private int sideNum;
+public class Wall extends Actor{
     
-    private PerimeterSide(int num){
-        this.sideNum = num;
+    
+    public Wall(Point topLeftLoc, Shape s){
+        super(ActorType.wall, topLeftLoc, SettingsSingleton.getInstance().getPerimeterColor(), s);
     }
     
-    public int getValue(){
-        return this.sideNum;
-    }
-
 }

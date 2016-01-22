@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package java2dscrollinguniverse.Controller;
+package neuLayout.Controller;
 
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -33,14 +33,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java2dscrollinguniverse.Model.TwoDimensionalMovement;
-import java2dscrollinguniverse.Model.actors.Actor;
-import java2dscrollinguniverse.Model.actors.CenterOfViewActor;
-import java2dscrollinguniverse.Model.container.ContainerUniverse;
-import java2dscrollinguniverse.SettingsSingleton;
-import java2dscrollinguniverse.View.ActorInspectorPane;
-import java2dscrollinguniverse.View.MainViewComponent;
-import java2dscrollinguniverse.View.SettingsMenu;
+import neuLayout.Model.TwoDimensionalMovement;
+import neuLayout.Model.actors.Actor;
+import neuLayout.Model.actors.CenterOfViewActor;
+import neuLayout.Model.container.ContainerUniverse;
+import neuLayout.SettingsSingleton;
+import neuLayout.View.ActorInspectorPane;
+import neuLayout.View.MainViewComponent;
+import neuLayout.View.SettingsMenu;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;

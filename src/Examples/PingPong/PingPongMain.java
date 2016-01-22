@@ -6,7 +6,7 @@
 package Examples.PingPong;
 
 import java.awt.Dimension;
-import java2dscrollinguniverse.SettingsSingleton;
+import neuLayout.SettingsSingleton;
 import javax.swing.SwingUtilities;
 
 /**
