@@ -45,7 +45,7 @@ import java2dscrollinguniverse.SettingsSingleton;
 public class MemberFactory {
 
     private Dimension containerBounds;
-    private final int wallThickness = 10;
+    private final int wallThickness = SettingsSingleton.getInstance().getBorderThickness();
     public MemberFactory(Dimension containerBounds) {
         this.containerBounds = containerBounds;
     }

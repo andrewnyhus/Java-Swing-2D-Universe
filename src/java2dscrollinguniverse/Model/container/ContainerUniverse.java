@@ -50,7 +50,7 @@ public class ContainerUniverse {
     private Actor bgRect;
     private CenterOfViewActor centerOfViewActor;
     
-    private boolean actorsWerePreloaded;
+    private boolean actorsWereNonRandom;
     
     public ContainerUniverse(Dimension boundsDimension, Actor[] preloadedMembers){
         this.boundsDimension = boundsDimension;
@@ -61,18 +61,26 @@ public class ContainerUniverse {
         this.bgRect = this.factory.getBackgroundRect();
         this.centerOfViewActor = new CenterOfViewActor(15, 15);//create centerOfViewActor with width and height
     
-        if(preloadedMembers == null){
+        if(SettingsSingleton.getInstance().isActorsShouldGenerateRandomly()){
             this.membersOfContainer = this.factory.generateMiscellaneousActorsRandomly();
-            this.actorsWerePreloaded = false;
+            this.actorsWereNonRandom = false;
         }else{
             this.membersOfContainer = new ArrayList();
-            for(Actor a: preloadedMembers){
-                boolean add = this.membersOfContainer.add(a);
+            if(preloadedMembers != null){
+                for(Actor a: preloadedMembers){
+                    boolean add = this.membersOfContainer.add(a);
+                }
             }
-            this.actorsWerePreloaded = true;
+            this.actorsWereNonRandom = true;
         }
     }
 
+    /**
+     * Tests if the given actor would be within the bounds 
+     * of the container.
+     * @param a
+     * @return boolean isValid
+     */
     public boolean actorIsValidInContainerUniverse(Actor a){
         if(a.getLeftMostValue() < this.getXMin() ||
                 a.getTopMostValue() < this.getYMin()||
@@ -80,6 +88,16 @@ public class ContainerUniverse {
                 a.getRightMostValue() > this.getXMax())
             return false;
         return true;
+    }
+    
+    /**
+     * Adds Actor a to the container, before doing this, you should
+     * use the method actorIsValidInContainerUniverse to make sure 
+     * that adding the Actor to the Container will work in the first place.
+     * @param a 
+     */
+    public void addActorToContainer(Actor a){
+        this.getMembersOfContainer().add(a);        
     }
     
     /**
@@ -139,6 +157,7 @@ public class ContainerUniverse {
         //now calling stepActor() on all other members (not including background or walls
         for(Actor a: this.getMembersOfContainer()){
             this.stepActor(a);
+            
         }
         
     }
@@ -183,6 +202,8 @@ public class ContainerUniverse {
         //else if the testActor collides with no wall on x axis, set test.x as a.x
         //and leave velocity alone (unless applying friction or other forces).
         }else{
+            
+            
             newX = testActor.getTopLeftLocation().x;            
         }
         
@@ -197,10 +218,26 @@ public class ContainerUniverse {
             newY = testActor.getTopLeftLocation().y;
         }        
         
-        a.setTopLeftLocation(new Point(newX, newY));
+        boolean collidedWithActor = false;
+        if(a.shouldCheckCollisions()){
+            for(Actor otherA: this.getMembersOfContainer()){
+                if (a.getShape()!= otherA.getShape()){
+                    Shape otherAShape = this.getShapeWithOffsetFromOrigin(otherA.getShape(), otherA.getTopLeftLocation());
+                    Shape aShape = this.getShapeWithOffsetFromOrigin(a.getShape(), a.getTopLeftLocation());
 
-        //int changeX = a.getTopLeftLocation().x - origPoint.x;
-        //int changeY = a.getTopLeftLocation().y - origPoint.y;
+                    if(aShape.intersects(otherAShape.getBounds2D())){
+                        collidedWithActor = true;
+                        a.handleCollisionWithActor(otherA);
+                        Point newPoint = a.getVelocity().getPointWithMovementAppliedFromPoint(a.getTopLeftLocation());
+                        newX = newPoint.x;
+                        newY = newPoint.y;
+                    }
+
+                }            
+            }
+        }
+
+        a.setTopLeftLocation(new Point(newX, newY));
         
         
     }
@@ -395,7 +432,7 @@ public class ContainerUniverse {
      * @return the actorsWerePreloaded
      */
     public boolean actorsWerePreloaded() {
-        return actorsWerePreloaded;
+        return actorsWereNonRandom;
     }
 
     /**

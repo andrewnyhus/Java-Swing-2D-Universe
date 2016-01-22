@@ -42,7 +42,9 @@ public class Actor {
     private Actor[] childActors;
     private ActorLabel actorLabel;
     private int idNumber;
+    private String idString = "";
     private TwoDimensionalMovement velocity;
+    private boolean checkCollisions = false;
     
     public Actor(ActorType type, Point loc, Color color){
         this.type = type;
@@ -342,5 +344,40 @@ public class Actor {
         this.velocity = velocity;
         
     }
+
+    /**
+     * @return the idString
+     */
+    public String getIdString() {
+        return idString;
+    }
+
+    /**
+     * @param idString the idString to set
+     */
+    public void setIdString(String idString) {
+        this.idString = idString;
+    }
+
+   
+    
+    public void handleCollisionWithActor(Actor aCollidedWith){
+        System.out.println("I," + this.getIdString() + " collided with: " + aCollidedWith.getIdString());
+    }
+
+    /**
+     * @return the checkCollisions
+     */
+    public boolean shouldCheckCollisions() {
+        return checkCollisions;
+    }
+
+    /**
+     * @param checkCollisions the checkCollisions to set
+     */
+    public void setShouldCheckCollisions(boolean checkCollisions) {
+        this.checkCollisions = checkCollisions;
+    }
+
     
 }

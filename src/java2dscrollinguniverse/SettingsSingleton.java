@@ -50,6 +50,9 @@ public class SettingsSingleton {
     private WindowCorner hudMapCorner = WindowCorner.BOTTOM_LEFT;
     private ViewScrollMode scrollMode = ViewScrollMode.MOUSE_ONLY;
     private boolean singleClickShowsInspector = false;
+    private int borderThickness = 10;
+    private boolean containerUniverseControllerShouldListenForKeys = true;
+    private boolean actorsShouldGenerateRandomly = false;
     
     /**
      * Constructor for the settings class which is a singleton, meaning that it is the only instance of itself
@@ -290,6 +293,48 @@ public class SettingsSingleton {
      */
     public void setSingleClickShowsInspector(boolean singleClickShowsInspector) {
         this.singleClickShowsInspector = singleClickShowsInspector;
+    }
+
+    /**
+     * @return the borderThickness
+     */
+    public int getBorderThickness() {
+        return borderThickness;
+    }
+
+    /**
+     * @param borderThickness the borderThickness to set
+     */
+    public void setBorderThickness(int borderThickness) {
+        this.borderThickness = borderThickness;
+    }
+
+    /**
+     * @return the containerUniverseShouldListenForKeys
+     */
+    public boolean shouldContainerUniverseControllerShouldListenForKeys() {
+        return containerUniverseControllerShouldListenForKeys;
+    }
+
+    /**
+     * @param containerUniverseShouldListenForKeys the containerUniverseShouldListenForKeys to set
+     */
+    public void setShouldContainerUniverseControllerShouldListenForKeys(boolean containerUniverseShouldListenForKeys) {
+        this.containerUniverseControllerShouldListenForKeys = containerUniverseShouldListenForKeys;
+    }
+
+    /**
+     * @return the actorsShouldGenerateRandomly
+     */
+    public boolean isActorsShouldGenerateRandomly() {
+        return actorsShouldGenerateRandomly;
+    }
+
+    /**
+     * @param actorsShouldGenerateRandomly the actorsShouldGenerateRandomly to set
+     */
+    public void setActorsShouldGenerateRandomly(boolean actorsShouldGenerateRandomly) {
+        this.actorsShouldGenerateRandomly = actorsShouldGenerateRandomly;
     }
     
     

@@ -86,7 +86,9 @@ public class UniverseController implements KeyListener, ActionListener{
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.addKeyListenerToView();
+        if(SettingsSingleton.getInstance().shouldContainerUniverseControllerShouldListenForKeys()){
+            this.addKeyListenerToView();
+        }
         this.addMouseListenerToView();    
     }
      
@@ -161,7 +163,7 @@ public class UniverseController implements KeyListener, ActionListener{
     /**
      * Setup, and set JMenuBar to this.frame.
      */
-    private void addMenuBar(){
+    protected void addMenuBar(){
         this.menuBar = new JMenuBar();
         
         JMenu newMenu = new JMenu("New");
@@ -192,7 +194,7 @@ public class UniverseController implements KeyListener, ActionListener{
      * UniverseController class.
      */
     private void addKeyListenerToView(){
-        this.view.addListener(this);
+        this.getView().addListener(this);
     }
     
     
@@ -228,8 +230,8 @@ public class UniverseController implements KeyListener, ActionListener{
         
         
         this.getFrame().setSize(newSizeOfFrame);
-        this.view.setSize(SettingsSingleton.getInstance().getWindowDimension());
-        this.view.repaint();
+        this.getView().setSize(SettingsSingleton.getInstance().getWindowDimension());
+        this.getView().repaint();
     }
     
     
@@ -241,7 +243,7 @@ public class UniverseController implements KeyListener, ActionListener{
         inspectorDialog.setSize(450, 500);
         inspectorDialog.setVisible(true);
         
-        this.view.repaint();
+        this.getView().repaint();
 
         inspector.setVisible(false);
         inspectorDialog.setVisible(false);
@@ -289,7 +291,7 @@ public class UniverseController implements KeyListener, ActionListener{
                         CenterOfViewActor newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
                         newCenterOfViewActor.setVelocity(new TwoDimensionalMovement(-centerOfViewActorVelocity, 0));
                         UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-                        UniverseController.this.view.repaint();
+                        UniverseController.this.getView().repaint();
 
 
                         break;
@@ -301,7 +303,7 @@ public class UniverseController implements KeyListener, ActionListener{
                         newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
                         newCenterOfViewActor.setVelocity(movement);
                         UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-                        UniverseController.this.view.repaint();
+                        UniverseController.this.getView().repaint();
 
                         break;
 
@@ -315,7 +317,7 @@ public class UniverseController implements KeyListener, ActionListener{
                         newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
                         newCenterOfViewActor.setVelocity(movement);
                         UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-                        UniverseController.this.view.repaint();
+                        UniverseController.this.getView().repaint();
                         
                         break;
 
@@ -327,7 +329,7 @@ public class UniverseController implements KeyListener, ActionListener{
                         newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
                         newCenterOfViewActor.setVelocity(movement);
                         UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-                        UniverseController.this.view.repaint();
+                        UniverseController.this.getView().repaint();
                         
                         
                         break;
@@ -341,7 +343,7 @@ public class UniverseController implements KeyListener, ActionListener{
                         newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
                         newCenterOfViewActor.setVelocity(new TwoDimensionalMovement(0,0));
                         UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-                        UniverseController.this.view.repaint();
+                        UniverseController.this.getView().repaint();
                         
                         break;
             }
@@ -356,7 +358,7 @@ public class UniverseController implements KeyListener, ActionListener{
             CenterOfViewActor newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
             newCenterOfViewActor.setVelocity(new TwoDimensionalMovement(0,0));
             UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-            UniverseController.this.view.repaint();
+            UniverseController.this.getView().repaint();
         }
 
     }
@@ -370,7 +372,7 @@ public class UniverseController implements KeyListener, ActionListener{
     }
     
     public Point translatePointInViewToPointInContainer(Point pInView){
-        TwoDimensionalMovement currentViewOffset = UniverseController.this.view.
+        TwoDimensionalMovement currentViewOffset = UniverseController.this.getView().
                                 getCenterOfViewActorOffsetFromModelToView();
 
         Point translatedPoint = new Point(pInView.x - currentViewOffset.getXMovement(),
@@ -405,14 +407,14 @@ public class UniverseController implements KeyListener, ActionListener{
                     int mouseXMin = rangeIfMouseEntersToScroll;
 
                     //if mouse reaches this x value or greater, view scrolls right
-                    int mouseXMax = UniverseController.this.view.getWidth() - 
+                    int mouseXMax = UniverseController.this.getView().getWidth() - 
                                                         rangeIfMouseEntersToScroll;
 
                     //if mouse reaches this y value or lower, view scrolls up
                     int mouseYMin = rangeIfMouseEntersToScroll;
 
                     //if mouse reaches this y value or greater, view scrolls down
-                    int mouseYMax = UniverseController.this.view.getHeight() - 
+                    int mouseYMax = UniverseController.this.getView().getHeight() - 
                                                         rangeIfMouseEntersToScroll;
 
                     boolean foundMouseInScrollRegionX = false;
@@ -456,7 +458,7 @@ public class UniverseController implements KeyListener, ActionListener{
                     CenterOfViewActor newCenterOfViewActor = UniverseController.this.container.getCenterOfViewActor();
                     newCenterOfViewActor.setVelocity(viewMovement);
                     UniverseController.this.container.setCenterOfViewActor(newCenterOfViewActor);
-                    UniverseController.this.view.repaint();
+                    UniverseController.this.getView().repaint();
                 }
             }
             
@@ -486,8 +488,8 @@ public class UniverseController implements KeyListener, ActionListener{
             
         });
         
-        this.view.addMouseListener(mouseHandler);
-        this.view.addMouseMotionListener(mouseHandler);
+        this.getView().addMouseListener(mouseHandler);
+        this.getView().addMouseMotionListener(mouseHandler);
         
     }
 
@@ -496,6 +498,13 @@ public class UniverseController implements KeyListener, ActionListener{
      */
     public JFrame getFrame() {
         return frame;
+    }
+
+    /**
+     * @return the view
+     */
+    public MainViewComponent getView() {
+        return view;
     }
     
 }
