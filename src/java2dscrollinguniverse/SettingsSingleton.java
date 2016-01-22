@@ -49,9 +49,8 @@ public class SettingsSingleton {
     private boolean shouldShowHUDMap = false;
     private WindowCorner hudMapCorner = WindowCorner.BOTTOM_LEFT;
     private ViewScrollMode scrollMode = ViewScrollMode.MOUSE_ONLY;
-    private boolean singleClickShowsInspector = false;
+    private ActionWhenActorIsClicked actionWhenActorIsClicked = ActionWhenActorIsClicked.NOTHING;
     private int borderThickness = 10;
-    private boolean containerUniverseControllerShouldListenForKeys = true;
     private boolean actorsShouldGenerateRandomly = false;
     
     /**
@@ -282,20 +281,6 @@ public class SettingsSingleton {
     }
 
     /**
-     * @return the singleClickShowsInspector
-     */
-    public boolean isSingleClickShowsInspector() {
-        return singleClickShowsInspector;
-    }
-
-    /**
-     * @param singleClickShowsInspector the singleClickShowsInspector to set
-     */
-    public void setSingleClickShowsInspector(boolean singleClickShowsInspector) {
-        this.singleClickShowsInspector = singleClickShowsInspector;
-    }
-
-    /**
      * @return the borderThickness
      */
     public int getBorderThickness() {
@@ -310,20 +295,6 @@ public class SettingsSingleton {
     }
 
     /**
-     * @return the containerUniverseShouldListenForKeys
-     */
-    public boolean shouldContainerUniverseControllerShouldListenForKeys() {
-        return containerUniverseControllerShouldListenForKeys;
-    }
-
-    /**
-     * @param containerUniverseShouldListenForKeys the containerUniverseShouldListenForKeys to set
-     */
-    public void setShouldContainerUniverseControllerShouldListenForKeys(boolean containerUniverseShouldListenForKeys) {
-        this.containerUniverseControllerShouldListenForKeys = containerUniverseShouldListenForKeys;
-    }
-
-    /**
      * @return the actorsShouldGenerateRandomly
      */
     public boolean isActorsShouldGenerateRandomly() {
@@ -335,6 +306,20 @@ public class SettingsSingleton {
      */
     public void setActorsShouldGenerateRandomly(boolean actorsShouldGenerateRandomly) {
         this.actorsShouldGenerateRandomly = actorsShouldGenerateRandomly;
+    }
+
+    /**
+     * @return the actionWhenActorIsClicked
+     */
+    public ActionWhenActorIsClicked getActionWhenActorIsClicked() {
+        return actionWhenActorIsClicked;
+    }
+
+    /**
+     * @param actionWhenActorIsClicked the actionWhenActorIsClicked to set
+     */
+    public void setActionWhenActorIsClicked(ActionWhenActorIsClicked actionWhenActorIsClicked) {
+        this.actionWhenActorIsClicked = actionWhenActorIsClicked;
     }
     
     
@@ -355,6 +340,21 @@ public class SettingsSingleton {
         public boolean isArrowKeyScrollingEnabled(){
             return (this.value == ViewScrollMode.ARROW_KEYS_ONLY.getValue() ||
                     this.value == ViewScrollMode.ARROW_KEYS_AND_MOUSE.getValue());
+        }
+        
+        public int getValue(){
+            return this.value;
+        }
+        
+    }
+
+    public enum ActionWhenActorIsClicked{
+        NOTHING(0), INSPECT_ACTOR(1), ENTER_DOOR_IF_EXISTS(2);
+        
+        private int value;
+        
+        private ActionWhenActorIsClicked(int value){
+            this.value = value;
         }
         
         public int getValue(){

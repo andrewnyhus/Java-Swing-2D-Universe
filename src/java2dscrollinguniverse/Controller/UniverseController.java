@@ -86,9 +86,8 @@ public class UniverseController implements KeyListener, ActionListener{
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        if(SettingsSingleton.getInstance().shouldContainerUniverseControllerShouldListenForKeys()){
-            this.addKeyListenerToView();
-        }
+        this.addKeyListenerToView();
+        
         this.addMouseListenerToView();    
     }
      
@@ -476,13 +475,25 @@ public class UniverseController implements KeyListener, ActionListener{
                 
                 ArrayList<Actor> actorsClickedOn = UniverseController.this.getContainer().getMembersIntersectingWithPoint(p);
                 
+                //if a single actor was clicked on, just making sure
+                //we don't incorrectly handle the wrong actor.
                 if(actorsClickedOn.size() > 0){
                     
-                    UniverseController.this.displayActorInspector(
-                                            actorsClickedOn.get(actorsClickedOn.size()-1));
-                }else{
-                    //User clicked on no actors, only the ContainerUniverse.
-                }                                
+                    switch(SettingsSingleton.getInstance().getActionWhenActorIsClicked()){
+                        
+                        case INSPECT_ACTOR:
+                            UniverseController.this.displayActorInspector(
+                                                    actorsClickedOn.get(actorsClickedOn.size()-1));
+                            break;
+                            
+                        case ENTER_DOOR_IF_EXISTS:
+                            
+                            //TODO: handle
+                            break;
+                        
+                    }
+                    
+                }                              
                 
             }
             
